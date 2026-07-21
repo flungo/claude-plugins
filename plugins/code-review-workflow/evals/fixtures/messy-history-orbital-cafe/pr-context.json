@@ -1,0 +1,12 @@
+{
+  "title": "Add loyalty points, offline queue, and receipt template rework",
+  "body_file": "pr-description.md",
+  "isDraft": false,
+  "baseRefName": "main",
+  "headRefName": "feature/loyalty-and-offline",
+  "reviewDecision": "APPROVED",
+  "statusCheckRollup": [
+    { "name": "lint-and-test", "conclusion": "SUCCESS" }
+  ],
+  "reviewThreads": []
+}

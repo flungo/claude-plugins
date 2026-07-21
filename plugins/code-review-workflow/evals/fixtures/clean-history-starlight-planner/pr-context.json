@@ -1,0 +1,12 @@
+{
+  "title": "Add moon-phase overlay, observatory search filters, and PDF trip export",
+  "body_file": "pr-description.md",
+  "isDraft": false,
+  "baseRefName": "main",
+  "headRefName": "feature/moon-search-export",
+  "reviewDecision": "APPROVED",
+  "statusCheckRollup": [
+    { "name": "lint-and-test", "conclusion": "SUCCESS" }
+  ],
+  "reviewThreads": []
+}

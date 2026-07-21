@@ -1,0 +1,12 @@
+{
+  "title": "Add owner onboarding: nova root module, CI plan, runbooks",
+  "body_file": "pr-description.md",
+  "isDraft": false,
+  "baseRefName": "main",
+  "headRefName": "feature/nova-owner-onboarding",
+  "reviewDecision": "APPROVED",
+  "statusCheckRollup": [
+    { "name": "terraform-plan", "conclusion": "SUCCESS" }
+  ],
+  "reviewThreads": []
+}

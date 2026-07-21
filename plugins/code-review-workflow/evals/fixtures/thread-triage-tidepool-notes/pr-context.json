@@ -1,0 +1,46 @@
+{
+  "title": "Add tag autocomplete",
+  "body_file": "pr-description.md",
+  "isDraft": false,
+  "baseRefName": "main",
+  "headRefName": "feature/tag-autocomplete",
+  "reviewDecision": "APPROVED",
+  "statusCheckRollup": [
+    { "name": "lint-and-test", "conclusion": "SUCCESS" }
+  ],
+  "reviewThreads": [
+    {
+      "id": "thread-a",
+      "file": "src/tags/autocomplete.py",
+      "isResolved": false,
+      "comments": [
+        {
+          "author": "reviewer1",
+          "body": "Can we make sure this doesn't throw if the tag list is empty?"
+        }
+      ]
+    },
+    {
+      "id": "thread-b",
+      "file": "src/tags/autocomplete.py",
+      "isResolved": false,
+      "comments": [
+        {
+          "author": "reviewer1",
+          "body": "Typo: 'recieve' should be 'receive' in the docstring."
+        }
+      ]
+    },
+    {
+      "id": "thread-c",
+      "file": "src/tags/autocomplete.py",
+      "isResolved": false,
+      "comments": [
+        {
+          "author": "reviewer2",
+          "body": "Should autocomplete matching be case-sensitive? search.query.matches() elsewhere in the app is case-insensitive, so this might surprise people."
+        }
+      ]
+    }
+  ]
+}

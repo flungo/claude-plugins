@@ -1,0 +1,117 @@
+{
+  "evals": [
+    {
+      "eval_id": 0,
+      "eval_name": "messy-history-needs-splitting",
+      "fixture": "fixtures/messy-history-orbital-cafe",
+      "prompt": "Run /ready-to-merge on this PR. The repo is at the fixture path; build it with build_repo.sh first. Treat pr-context.json as the full output of gh pr view plus the review-thread query — don't attempt real GitHub/gh/MCP calls against it, it's a local fixture standing in for that data. The base branch is main, the PR branch is feature/loyalty-and-offline.",
+      "assertions": [
+        {
+          "text": "The agent does not treat the original commit history as already clean — it recognizes at least one commit bundles unrelated changes (loyalty points + offline queue together; refactor + CI together)."
+        },
+        {
+          "text": "The agent judges cleanliness from the actual diffs/hunks, not from commit titles alone — its reasoning references file-level content, not just message text."
+        },
+        {
+          "text": "The final history has loyalty points and the offline queue as separate commits, not bundled."
+        },
+        {
+          "text": "The receipt template refactor and the CI workflow addition end up as separate commits, not bundled."
+        },
+        {
+          "text": "The CONTRIBUTING.md rounding-note fixup is folded into the commit that introduced loyalty points, not left as its own commit."
+        },
+        {
+          "text": "docs/index.md is updated incrementally — each commit that adds a doc also adds that doc's own index row in the same commit, rather than deferring the index update to a later commit."
+        },
+        {
+          "text": "The agent dispatches a subagent to work out the target commit structure, and that subagent (not the parent) is what pulls the full diff — the parent's own context/reasoning shown to the user doesn't reproduce the entire diff verbatim."
+        },
+        {
+          "text": "Before finishing, the agent verifies the rewritten tree is byte-identical to the original tree at the tip of the branch (e.g. an empty diff between old and new HEAD), and reports that check."
+        },
+        {
+          "text": "The final report lists the resulting commits and explains the reasoning for any non-obvious grouping or split — it doesn't just say history was \"cleaned up\"."
+        }
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "clean-history-no-unnecessary-rewrite",
+      "fixture": "fixtures/clean-history-starlight-planner",
+      "prompt": "Run /ready-to-merge on this PR. The repo is at the fixture path; build it with build_repo.sh first. Treat pr-context.json as the full output of gh pr view plus the review-thread query. The base branch is main, the PR branch is feature/moon-search-export.",
+      "assertions": [
+        {
+          "text": "The agent recognizes the existing history is already one commit per logical change and does not force-push a rewritten history for the sake of it."
+        },
+        {
+          "text": "The agent still checks the diff content to reach this conclusion, rather than assuming from tidy-looking titles alone (this fixture happens to be clean, but the agent's reasoning process should be the same as the messy-history case)."
+        },
+        {
+          "text": "With checks passing, review approved, and no unresolved threads, the agent marks the PR ready to merge."
+        },
+        {
+          "text": "The final report doesn't claim to have made changes it didn't make."
+        }
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "review-thread-triage",
+      "fixture": "fixtures/thread-triage-tidepool-notes",
+      "prompt": "Run /ready-to-merge on this PR. The repo is at the fixture path; build it with build_repo.sh first. Treat pr-context.json as the full output of gh pr view plus the review-thread query, including the three entries in reviewThreads. The base branch is main, the PR branch is feature/tag-autocomplete.",
+      "assertions": [
+        {
+          "text": "Thread thread-a (empty tag list) is identified as already addressed in the diff and is resolved, with the report explaining how it was verified."
+        },
+        {
+          "text": "Thread thread-b (the 'recieve' typo) is identified as trivial to fix now, the typo is actually corrected in the code, the fix is folded into the existing commit rather than added as a new one, and the thread is resolved."
+        },
+        {
+          "text": "Thread thread-c (case-sensitivity) is identified as requiring a decision and is left unresolved — the agent does not unilaterally decide case-sensitivity itself."
+        },
+        {
+          "text": "For thread-c, the agent does research to frame the decision (specifically: it notices/confirms that search.query.matches() elsewhere in the codebase is case-insensitive) rather than skipping research or doing unbounded research beyond what frames the choice."
+        },
+        {
+          "text": "The final verdict is NOT ready to merge, because thread-c remains unresolved, and the report states this explicitly as the blocker."
+        },
+        {
+          "text": "The report presents thread-c as a question for the user with the framing research included (inline, since it's short), rather than just saying 'thread left open'."
+        }
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "regression-bundled-commits-sanitized",
+      "fixture": "fixtures/regression-owner-onboarding",
+      "prompt": "Run /ready-to-merge on this PR. The repo is at the fixture path; build it with build_repo.sh first. Treat pr-context.json as the full output of gh pr view plus the review-thread query. The base branch is main, the PR branch is feature/nova-owner-onboarding. See notes.md for the target commit structure this fixture is checking against (don't show notes.md to the agent under test — it's for grading only).",
+      "assertions": [
+        {
+          "text": "The agent does not approve the original 7-commit history as clean based on tidy Conventional Commits titles."
+        },
+        {
+          "text": "The commit that bundles CI workflow + the authentik resource is split into two commits."
+        },
+        {
+          "text": "The commit that bundles the token-rotation runbook + the secrets table is split into two commits."
+        },
+        {
+          "text": "The commit that bundles the secrets relocation + the onboarding runbook + the CLAUDE.md conventions is split, with the CLAUDE.md conventions bundled into the commit that made them relevant (the authentik resource work) rather than left with the runbook."
+        },
+        {
+          "text": "Both trailing fixup commits (workspace-placement fix, and the 'refine per review' runbook edit) are folded into the commits they correct rather than left standing alone."
+        },
+        {
+          "text": "docs/index.md, where present, gets its row added in the same commit as the doc it references."
+        },
+        {
+          "text": "The agent verifies the rewritten tree is byte-identical to the original tree and reports that check."
+        },
+        {
+          "text": "The resulting commit structure is reasonably close to the target in notes.md — exact wording of commit messages doesn't need to match, but the groupings should."
+        }
+      ]
+    }
+  ]
+}
