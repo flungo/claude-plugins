@@ -1,0 +1,15 @@
+{
+  "name": "flungo-plugins",
+  "owner": {
+    "name": "flungo"
+  },
+  "description": "Personal Claude Code / Claude.ai plugins.",
+  "plugins": [
+    {
+      "name": "code-review-workflow",
+      "source": "./plugins/code-review-workflow",
+      "description": "Git/PR workflow conventions and commands (currently /ready-to-merge).",
+      "version": "0.1.0"
+    }
+  ]
+}
