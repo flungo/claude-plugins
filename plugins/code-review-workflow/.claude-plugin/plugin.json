@@ -1,0 +1,8 @@
+{
+  "name": "code-review-workflow",
+  "description": "Personal git/PR workflow commands and standing git conventions.",
+  "version": "0.1.0",
+  "author": {
+    "name": "flungo"
+  }
+}
