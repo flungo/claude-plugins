@@ -6,16 +6,27 @@ this repo rather than by re-uploading files by hand.
 
 ## Plugins
 
-- **[code-review-workflow](plugins/code-review-workflow)** — personal
-  git/PR workflow commands and standing git conventions. Currently one
-  command, `/ready-to-merge` (aliases "Ready to Merge?", "RTM?"); more
-  expected over time.
+- **[git-conventions](plugins/git-conventions)** — standing git/PR hygiene
+  conventions (branch management, Conventional Commits, linear history,
+  squash-vs-rebase, no fixup commits, force-push policy). Applies to all git
+  work, not just a named command.
+- **[contributor-workflow](plugins/contributor-workflow)** — personal
+  contributor/review workflow commands. Currently one command,
+  `/ready-to-merge` (aliases "Ready to Merge?", "RTM?"); more expected over
+  time. Depends on `git-conventions`.
 
 ## Install in Claude Code
 
 ```
 /plugin marketplace add flungo/claude-plugins
-/plugin install code-review-workflow@flungo-plugins
+/plugin install contributor-workflow@flungo-plugins
+```
+
+Installing `contributor-workflow` pulls in its `git-conventions` dependency
+automatically. To install just the standing conventions on their own:
+
+```
+/plugin install git-conventions@flungo-plugins
 ```
 
 To pull in updates later:
@@ -33,8 +44,9 @@ To pull in updates later:
 2. Under **Personal plugins**, click "+" → **Add marketplace**.
 3. Choose **Add from a repository** and paste this repo's URL:
    `https://github.com/flungo/claude-plugins`
-4. Claude parses `.claude-plugin/marketplace.json` and lists
-   `code-review-workflow` — install it.
+4. Claude parses `.claude-plugin/marketplace.json` and lists the plugins —
+   install `contributor-workflow` (which brings in `git-conventions`), or
+   `git-conventions` on its own.
 
 To pick up updates after pushing changes here, use the marketplace's
 "Update" action in the Plugins tab to pull the latest commit.
@@ -57,5 +69,5 @@ same shape, then add an entry to `.claude-plugin/marketplace.json`'s
 ## Conventions
 
 Commits in this repo follow the same git conventions documented in
-`plugins/code-review-workflow/skills/code-review-workflow/references/git-conventions.md`
+`plugins/git-conventions/skills/git-conventions/references/git-conventions.md`
 — Conventional Commits, linear history, one logical change per commit.
