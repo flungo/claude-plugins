@@ -1,0 +1,8 @@
+{
+  "name": "git-conventions",
+  "description": "Fabrizio's standing git/PR hygiene conventions — branch management, Conventional Commits, linear history, squash-vs-rebase, no fixup commits, and force-push policy — applied to all git work.",
+  "version": "0.1.0",
+  "author": {
+    "name": "flungo"
+  }
+}

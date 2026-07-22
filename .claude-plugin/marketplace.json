@@ -6,9 +6,15 @@
   "description": "Personal Claude Code / Claude.ai plugins.",
   "plugins": [
     {
-      "name": "code-review-workflow",
-      "source": "./plugins/code-review-workflow",
-      "description": "Git/PR workflow conventions and commands (currently /ready-to-merge).",
+      "name": "git-conventions",
+      "source": "./plugins/git-conventions",
+      "description": "Standing git/PR hygiene conventions (Conventional Commits, linear history, squash-vs-rebase, no fixup commits, force-push policy).",
+      "version": "0.1.0"
+    },
+    {
+      "name": "contributor-workflow",
+      "source": "./plugins/contributor-workflow",
+      "description": "Personal contributor/review workflow commands (currently /ready-to-merge); depends on git-conventions.",
       "version": "0.1.0"
     }
   ]
