@@ -80,7 +80,8 @@ In brief:
 
 ## Documentation standards
 
-This repo is the reference implementation of the future `docs-standards` plugin, so it follows that model (ADR-002):
+The authoritative documentation conventions are the `docs-standards` plugin (`plugins/docs-standards/skills/docs-standards/SKILL.md` and its `references/`) — this repo dogfoods them, enabling it at project scope via [`.claude/settings.json`](.claude/settings.json), and its own `docs/` is the plugin's reference implementation (ADR-002).
+In brief:
 
 - **Diátaxis split** — `docs/decisions/` (ADRs), `docs/plans/` (one-time,
   retired when done), and — when there is content — `docs/runbooks/`
@@ -91,8 +92,11 @@ This repo is the reference implementation of the future `docs-standards` plugin,
   sequentially, never deleted or renumbered.
 - **Plans** are ephemeral — never referenced from permanent docs — and retired
   in a second PR once complete. Only § Active work below may link a live plan.
-- **Agent-directed instructions** get a `> **🤖 Agent** — …` callout, reserved
-  for what an agent should *do* (one action per callout).
+- **Two callouts, kept distinct** — `> **🤖 Agent** — …` for an instruction to
+  an agent (one action per callout), and `> **Verify:** …` for uncertainty that
+  can't be checked without live access.
+- **Semantic line breaks** — top-level prose is written one sentence per line.
+- A session-end **doc-maintenance checklist** ships as the plugin's `Stop` hook.
 
 ## Active work
 
