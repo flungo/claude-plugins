@@ -1,8 +1,7 @@
 # Architecture Decision Records
 
-Decision-oriented records for `flungo-plugins`. ADRs are numbered sequentially
-and **never deleted or renumbered** — a superseded decision keeps its file with
-its Status updated to point at the newer ADR.
+Decision-oriented records for `flungo-plugins`.
+ADRs are numbered sequentially and **never deleted or renumbered** — a superseded decision keeps its file with its Status updated to point at the newer ADR.
 
 | # | Title | Status |
 |---|---|---|

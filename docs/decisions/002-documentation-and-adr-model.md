@@ -5,11 +5,8 @@
 
 ## Context
 
-This repository should dogfood the documentation conventions the marketplace
-itself will encode (in the future `docs-standards` plugin), the same way the
-sibling repos (`terraform-github`, `terraform-grafana-cloud`,
-`authentik.flungo.net`, `stalwart.flungo.net`) already do. Two specifics were
-open:
+This repository should dogfood the documentation conventions the marketplace itself will encode (in the future `docs-standards` plugin), the same way the sibling repos (`terraform-github`, `terraform-grafana-cloud`, `authentik.flungo.net`, `stalwart.flungo.net`) already do.
+Two specifics were open:
 
 1. **ADR format.** Across the sibling repos two divergent forms are in use:
    Format A (`# ADR-NNN: Title` + Date, Status, Context, Decision,
@@ -23,17 +20,11 @@ open:
 
 ## Decision
 
-**Adopt the Diátaxis split** used by the sibling repos: `docs/decisions/`
-(ADRs), `docs/plans/` (one-time procedures, retired when complete),
-`docs/runbooks/` (repeatable how-tos), `docs/reference/` (information-oriented
-lookup) — each with a `README.md` index kept current in the same commit as any
-change, and the two-PR plan retirement lifecycle.
+**Adopt the Diátaxis split** used by the sibling repos: `docs/decisions/` (ADRs), `docs/plans/` (one-time procedures, retired when complete), `docs/runbooks/` (repeatable how-tos), `docs/reference/` (information-oriented lookup) — each with a `README.md` index kept current in the same commit as any change, and the two-PR plan retirement lifecycle.
 
-**Standardize ADRs on the Nygard format (Format A).** Research confirmed Format
-A is essentially Michael Nygard's original — the industry-default lightest form
-that still records Status + Context + Decision + Consequences and supports
-supersession chains. Format B is the same format with Consequences dropped, so
-standardizing is mostly retiring Format B. Canonical shape:
+**Standardize ADRs on the Nygard format (Format A).** Research confirmed Format A is essentially Michael Nygard's original — the industry-default lightest form that still records Status + Context + Decision + Consequences and supports supersession chains.
+Format B is the same format with Consequences dropped, so standardizing is mostly retiring Format B.
+Canonical shape:
 
 ```
 # ADR-NNN: Title
@@ -46,18 +37,12 @@ standardizing is mostly retiring Format B. Canonical shape:
 ## Consequences
 ```
 
-Optional `### Positive` / `### Negative — trade-offs` subsections under
-Consequences are allowed but not required (so records aren't padded with empty
-sections). Supersession is recorded in the Status line plus a note on the newer
-ADR; ADRs are numbered sequentially and never deleted or renumbered.
+Optional `### Positive` / `### Negative — trade-offs` subsections under Consequences are allowed but not required (so records aren't padded with empty sections).
+Supersession is recorded in the Status line plus a note on the newer ADR; ADRs are numbered sequentially and never deleted or renumbered.
 
-**Self-encode the ADR + docs conventions** in the `docs-standards` plugin; do
-**not** depend on a third-party ADR plugin. The community ADR plugins are
-governance-heavy and none are first-party; depending would couple the
-marketplace to an external repo's release cadence and git-tag versioning for
-what amounts to a few lines of template. (`npryce/adr-tools` remains useful as a
-local CLI for scaffolding + supersession, but only as a tool, never as a plugin
-dependency.)
+**Self-encode the ADR + docs conventions** in the `docs-standards` plugin; do **not** depend on a third-party ADR plugin.
+The community ADR plugins are governance-heavy and none are first-party; depending would couple the marketplace to an external repo's release cadence and git-tag versioning for what amounts to a few lines of template.
+(`npryce/adr-tools` remains useful as a local CLI for scaffolding + supersession, but only as a tool, never as a plugin dependency.)
 
 ## Consequences
 
