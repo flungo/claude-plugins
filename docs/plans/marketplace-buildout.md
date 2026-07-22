@@ -63,12 +63,12 @@ and where they land:
 - [x] **1. Split the seed plugin** — `code-review-workflow` → `git-conventions`
   + `contributor-workflow` (dependency), update `marketplace.json` + `README`.
   *Merged: #1.*
-- [ ] **2. Bootstrap repo conventions** — this PR: `CLAUDE.md`, `docs/`
-  structure, ADR-001/002, this plan.
-- [ ] **3. Dogfood `git-conventions`** — once step 1 is on `main`, adopt it in
-  this repo via `.claude/settings.json` (project-scope `enabledPlugins` +
+- [ ] **2. Bootstrap repo conventions** — `CLAUDE.md`, `docs/` structure,
+  ADR-001/002, this plan. *In #2.*
+- [ ] **3. Dogfood `git-conventions`** — adopt it in this repo via
+  `.claude/settings.json` (project-scope `enabledPlugins` +
   `extraKnownMarketplaces` pointing at this repo), mirroring the
-  `terraform-grafana-cloud` pattern.
+  `terraform-grafana-cloud` pattern. *In #2.*
 - [ ] **4. `docs-standards` plugin** — the most-reused new authoring; encodes
   the Nygard ADR template and the docs model this repo now demonstrates. Adopt
   it in this repo once it lands.
