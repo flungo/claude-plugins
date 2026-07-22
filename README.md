@@ -14,6 +14,11 @@ this repo rather than by re-uploading files by hand.
   contributor/review workflow commands. Currently one command,
   `/ready-to-merge` (aliases "Ready to Merge?", "RTM?"); more expected over
   time. Depends on `git-conventions`.
+- **[docs-standards](plugins/docs-standards)** — repo-adopted documentation
+  conventions (project scope): the Diátaxis `docs/` split, Nygard ADRs, the
+  ephemeral-plan lifecycle, README-index and staleness discipline, the agent
+  and verify callouts, semantic line breaks, and a session-end
+  doc-maintenance checklist hook.
 
 ## Install in Claude Code
 
