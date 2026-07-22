@@ -74,7 +74,8 @@ mention a secret use its **name** and a placeholder, never its value.
 
 The authoritative git conventions are the `git-conventions` plugin
 (`plugins/git-conventions/skills/git-conventions/references/git-conventions.md`)
-— this repo dogfoods them. In brief:
+— this repo dogfoods them, enabling it at project scope via
+[`.claude/settings.json`](.claude/settings.json). In brief:
 
 - **Never commit to `main`.** Work on a feature branch; land via PR and let the
   user merge; delete the remote branch after merge.
