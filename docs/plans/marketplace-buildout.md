@@ -62,14 +62,18 @@ Conventions that appeared in only one repo but were judged worth extracting, and
   the Nygard ADR template and the docs model this repo now demonstrates. Adopt
   it in this repo once it lands. *Merged: #4.*
 - [ ] **5. `claude-code-web` plugin** — seed from the web-quirk corpus in the
-  sibling `CLAUDE.md`s; enable at user scope.
+  sibling `CLAUDE.md`s; enable at user scope. Fold in the Web-egress details
+  from the Stalwart adoption notes (see Notes).
 - [ ] **6. `upstream-research` plugin.**
 - [ ] **7. `terraform-standards` plugin.**
 - [ ] **8. `terraform-provider-standards` plugin.**
-- [ ] **9. `scaffolding` plugin** — references `flungo/github-workflows`.
+- [ ] **9. `scaffolding` plugin** — references `flungo/github-workflows`. Bake
+  the Stalwart markdown-validation adoption pitfalls (see Notes) into the
+  reusable workflow / scaffolding guidance so adopters don't re-hit them.
 - [ ] **10. Repo CI** — adopt the markdownlint + lychee reusable workflows from
   `github-workflows`, plus a `claude plugin validate` check on PRs so the
-  marketplace can't break; this is itself dogfooding steps 4 and 9.
+  marketplace can't break; this is itself dogfooding steps 4 and 9. Follow the
+  Stalwart markdown-validation adoption notes (see Notes).
 
 > **🤖 Agent** — author one plugin per PR (draft), validate with
 > `claude plugin validate` and a test-install before pushing, and confirm each
@@ -82,6 +86,17 @@ Conventions that appeared in only one repo but were judged worth extracting, and
   adopted at repo level so every contributor follows them; a third-party repo
   gets only his personal user-scope plugins. The `scaffolding` plugin encodes
   this distinction — to be formalized in an ADR when that plugin is designed.
+- **External input — Stalwart markdown-validation adoption notes**
+  ([flungo/stalwart.flungo.net#53](https://github.com/flungo/stalwart.flungo.net/pull/53),
+  recorded in that repo's `docs/plans/markdown-validation.md`): pitfalls from
+  adopting markdownlint + lychee CI from a Claude Code Web session. Informs
+  step 10 (pin markdownlint-cli2 `0.17.2` and preserve the pin in `CLAUDE.md`;
+  `cargo install lychee`; point npm/pip/cargo at the proxy CA bundle; provision
+  `LYCHEE_GITHUB_TOKEN` before curating `.lycheeignore`; verify Phase 3
+  pre-merge via `workflow_dispatch`), step 9 (the `github-workflows` reusable
+  workflow should bake these in so adopters don't re-hit them), and step 5 (its
+  Web-egress details enrich the `claude-code-web` corpus). Contribute any new
+  gaps back to that plan, per its adoption-note norm.
 - **claude.ai UI:** the "Add marketplace" flow threw a transient service
   disruption during initial setup; the CLI install path is verified working, so
   any recurrence is claude.ai-side, not a repo defect.
