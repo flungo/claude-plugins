@@ -1,9 +1,7 @@
 # CLAUDE.md — claude-plugins
 
-Fabrizio's personal Claude Code / claude.ai plugin marketplace,
-`flungo-plugins`. One repo of plugins usable from both Claude Code and
-claude.ai, kept in sync by pulling from this repo rather than by re-uploading
-files by hand.
+Fabrizio's personal Claude Code / claude.ai plugin marketplace, `flungo-plugins`.
+One repo of plugins usable from both Claude Code and claude.ai, kept in sync by pulling from this repo rather than by re-uploading files by hand.
 
 > **Status: build-out under way.** The marketplace holds the seed plugin plus
 > the plugins split out from it; the remaining plugins are authored one PR at a
@@ -14,24 +12,20 @@ files by hand.
 
 ## What this is
 
-A marketplace named for the owner (`flungo-plugins`), not for any one plugin,
-so it can grow to cover many topics without a rename. Its scope is **Fabrizio's
-personal conventions, packaged so they load automatically** — always-on for his
-account (user scope) or adopted by a repository (project scope) — rather than
-being restated per session. See [ADR-001](docs/decisions/001-marketplace-structure.md).
+A marketplace named for the owner (`flungo-plugins`), not for any one plugin, so it can grow to cover many topics without a rename.
+Its scope is **Fabrizio's personal conventions, packaged so they load automatically** — always-on for his account (user scope) or adopted by a repository (project scope) — rather than being restated per session.
+See [ADR-001](docs/decisions/001-marketplace-structure.md).
 
 ## Structure
 
-Plugins are split by **enablement boundary, not by topic** (ADR-001): a plugin
-is the unit enabled/disabled at a scope; a skill is the topic unit within it.
+Plugins are split by **enablement boundary, not by topic** (ADR-001): a plugin is the unit enabled/disabled at a scope; a skill is the topic unit within it.
 
 | Scope | Enabled how | Plugins |
 |---|---|---|
 | **Personal (user)** | Installed + enabled in the claude.ai account; always on | `git-conventions`, `contributor-workflow`, `claude-code-web`, `upstream-research`, `scaffolding` |
 | **Repo-adopted (project)** | Declared in a repo's `.claude/settings.json` | `docs-standards`, `terraform-standards`, `terraform-provider-standards` |
 
-Reusable CI (markdownlint, lychee, `terraform` plan/apply) is **not** a plugin —
-it lives in `flungo/github-workflows` and is referenced by `scaffolding`.
+Reusable CI (markdownlint, lychee, `terraform` plan/apply) is **not** a plugin — it lives in `flungo/github-workflows` and is referenced by `scaffolding`.
 
 Most of these do not exist yet; the plan tracks which have landed.
 
@@ -58,9 +52,8 @@ Most of these do not exist yet; the plan tracks which have landed.
 
 ## Sensitive information
 
-This repo is **public** and its plugin/skill/reference content is
-world-readable. Never commit tokens, keys, or secret values; skills that
-mention a secret use its **name** and a placeholder, never its value.
+This repo is **public** and its plugin/skill/reference content is world-readable.
+Never commit tokens, keys, or secret values; skills that mention a secret use its **name** and a placeholder, never its value.
 
 ## Working with this repo in Claude Code
 
@@ -72,10 +65,8 @@ mention a secret use its **name** and a placeholder, never its value.
 
 ## Branch management
 
-The authoritative git conventions are the `git-conventions` plugin
-(`plugins/git-conventions/skills/git-conventions/references/git-conventions.md`)
-— this repo dogfoods them, enabling it at project scope via
-[`.claude/settings.json`](.claude/settings.json). In brief:
+The authoritative git conventions are the `git-conventions` plugin (`plugins/git-conventions/skills/git-conventions/references/git-conventions.md`) — this repo dogfoods them, enabling it at project scope via [`.claude/settings.json`](.claude/settings.json).
+In brief:
 
 - **Never commit to `main`.** Work on a feature branch; land via PR and let the
   user merge; delete the remote branch after merge.
@@ -89,8 +80,7 @@ The authoritative git conventions are the `git-conventions` plugin
 
 ## Documentation standards
 
-This repo is the reference implementation of the future `docs-standards`
-plugin, so it follows that model (ADR-002):
+This repo is the reference implementation of the future `docs-standards` plugin, so it follows that model (ADR-002):
 
 - **Diátaxis split** — `docs/decisions/` (ADRs), `docs/plans/` (one-time,
   retired when done), and — when there is content — `docs/runbooks/`
@@ -112,7 +102,8 @@ plugin, so it follows that model (ADR-002):
 
 ## Key decisions
 
-See [`docs/decisions/README.md`](docs/decisions/README.md). In short:
+See [`docs/decisions/README.md`](docs/decisions/README.md).
+In short:
 
 - Split plugins by enablement scope (personal user-scope vs repo-adopted
   project-scope); compose via first-party dependencies; reusable CI lives in

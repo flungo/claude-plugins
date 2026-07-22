@@ -1,23 +1,15 @@
 # Plan: flungo-plugins marketplace build-out
 
-**Status:** In progress — structure decided (ADR-001, ADR-002); the first split
-has merged (#1); the remaining plugins are authored one PR at a time.
+**Status:** In progress — structure decided (ADR-001, ADR-002); the first split has merged (#1); the remaining plugins are authored one PR at a time.
 
-Turns the single seed plugin into the full personal marketplace: a set of
-always-on personal plugins plus a growing set of repo-adopted standards
-plugins, with this repo dogfooding the conventions it encodes. The structure
-and its rationale live in the ADRs; this plan tracks the sequencing and is
-**retired (deleted) when complete** — do not reference it from permanent docs.
+Turns the single seed plugin into the full personal marketplace: a set of always-on personal plugins plus a growing set of repo-adopted standards plugins, with this repo dogfooding the conventions it encodes.
+The structure and its rationale live in the ADRs; this plan tracks the sequencing and is **retired (deleted) when complete** — do not reference it from permanent docs.
 
 ## Target structure
 
-Derived from a read-only mining of the sibling repos (`terraform-github`,
-`terraform-grafana-cloud`, `authentik.flungo.net`, `stalwart.flungo.net`,
-`terraform-provider-stalwart`) — what recurs across ≥2 repos becomes a shared
-plugin; what's unique stays in that repo's `CLAUDE.md`.
+Derived from a read-only mining of the sibling repos (`terraform-github`, `terraform-grafana-cloud`, `authentik.flungo.net`, `stalwart.flungo.net`, `terraform-provider-stalwart`) — what recurs across ≥2 repos becomes a shared plugin; what's unique stays in that repo's `CLAUDE.md`.
 
-**Personal — user scope** (installed + enabled in the claude.ai account,
-always on):
+**Personal — user scope** (installed + enabled in the claude.ai account, always on):
 
 | Plugin | Holds |
 |---|---|
@@ -35,14 +27,11 @@ always on):
 | `terraform-standards` | HCL consumer conventions — one-`.tf`-per-concern, sensitive-as-variables + placeholders, `import {}` adoption, provider pinning + committed lock, resource-name-mirrors-object, durations-as-arithmetic (when writing raw seconds). |
 | `terraform-provider-standards` | Go provider conventions — Plugin Framework, `tfplugindocs` generated docs, GoReleaser dual-registry release, golangci-lint v2, coverage ratchet, container acceptance tests, MPL-2.0 + copyright headers. |
 
-**Not in the marketplace:** reusable CI (markdownlint, lychee, `terraform`
-plan/apply) lives in `flungo/github-workflows` and is referenced by
-`scaffolding` (ADR-001).
+**Not in the marketplace:** reusable CI (markdownlint, lychee, `terraform` plan/apply) lives in `flungo/github-workflows` and is referenced by `scaffolding` (ADR-001).
 
 ## Single-example dispositions (confirmed with Fabrizio)
 
-Conventions that appeared in only one repo but were judged worth extracting,
-and where they land:
+Conventions that appeared in only one repo but were judged worth extracting, and where they land:
 
 - `> **🤖 Agent**` callout → `docs-standards`. The distinct `> **Verify:**`
   callout (flagging uncertainty that can't be checked without live access) is
@@ -93,9 +82,6 @@ and where they land:
   adopted at repo level so every contributor follows them; a third-party repo
   gets only his personal user-scope plugins. The `scaffolding` plugin encodes
   this distinction — to be formalized in an ADR when that plugin is designed.
-- **Semantic line breaks:** the docs in this repo are not reflowed to one
-  sentence per line yet — apply that at `/ready-to-merge` to avoid diff churn
-  now (a sibling repo has a reflow script to reuse).
 - **claude.ai UI:** the "Add marketplace" flow threw a transient service
   disruption during initial setup; the CLI install path is verified working, so
   any recurrence is claude.ai-side, not a repo defect.
