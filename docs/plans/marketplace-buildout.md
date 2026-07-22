@@ -1,6 +1,6 @@
 # Plan: flungo-plugins marketplace build-out
 
-**Status:** In progress — structure decided (ADR-001, ADR-002); the first split has merged (#1); the remaining plugins are authored one PR at a time.
+**Status:** In progress — structure decided (ADR-001, ADR-002); the split (#1), the repo bootstrap + `git-conventions` dogfood (#2), and `docs-standards` (#4, step 4) have merged; the remaining plugins are authored one PR at a time.
 
 Turns the single seed plugin into the full personal marketplace: a set of always-on personal plugins plus a growing set of repo-adopted standards plugins, with this repo dogfooding the conventions it encodes.
 The structure and its rationale live in the ADRs; this plan tracks the sequencing and is **retired (deleted) when complete** — do not reference it from permanent docs.
@@ -52,15 +52,15 @@ Conventions that appeared in only one repo but were judged worth extracting, and
 - [x] **1. Split the seed plugin** — `code-review-workflow` → `git-conventions`
   + `contributor-workflow` (dependency), update `marketplace.json` + `README`.
   *Merged: #1.*
-- [ ] **2. Bootstrap repo conventions** — `CLAUDE.md`, `docs/` structure,
-  ADR-001/002, this plan. *In #2.*
-- [ ] **3. Dogfood `git-conventions`** — adopt it in this repo via
+- [x] **2. Bootstrap repo conventions** — `CLAUDE.md`, `docs/` structure,
+  ADR-001/002, this plan. *Merged: #2.*
+- [x] **3. Dogfood `git-conventions`** — adopt it in this repo via
   `.claude/settings.json` (project-scope `enabledPlugins` +
   `extraKnownMarketplaces` pointing at this repo), mirroring the
-  `terraform-grafana-cloud` pattern. *In #2.*
-- [ ] **4. `docs-standards` plugin** — the most-reused new authoring; encodes
+  `terraform-grafana-cloud` pattern. *Merged: #2.*
+- [x] **4. `docs-standards` plugin** — the most-reused new authoring; encodes
   the Nygard ADR template and the docs model this repo now demonstrates. Adopt
-  it in this repo once it lands.
+  it in this repo once it lands. *Merged: #4.*
 - [ ] **5. `claude-code-web` plugin** — seed from the web-quirk corpus in the
   sibling `CLAUDE.md`s; enable at user scope.
 - [ ] **6. `upstream-research` plugin.**
