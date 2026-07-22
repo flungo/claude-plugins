@@ -45,12 +45,22 @@ git-conventions. Review what changed upstream before continuing — if it
 affects work on this branch, fold the adjustment in now (fixup/amend, not a
 new commit).
 
-## 2. Title & description accuracy
+## 2. Accuracy — PR description and in-repo status trackers
 
 Compare the PR title and description against the actual diff. If either is
 stale, inaccurate, or missing something the PR now does, update it
 (`gh pr edit --title ... --body ...`). The description should reflect what
 the PR *actually does*, not what it originally set out to do.
+
+Then do the same for anything the repo tracks **in-doc** that this PR
+advances — plan step checkboxes and status rows, a `CLAUDE.md` "Active work"
+table, ADR statuses, a CHANGELOG. Update them to the state the repo will be in
+*once this PR merges*: the PR that completes a tracked step is the one that
+ticks it (`[ ]` → `[x]`) and flips its status, not a later follow-up. Fold each
+edit into the commit that does the corresponding work (per step 5's
+tracking-content rule and git-conventions "Rebase hygiene"). Don't lean on a
+session-end doc-checklist hook for this — that fires after merge, too late to
+land the update in the PR that earned it.
 
 ## 3. Unresolved review threads
 
@@ -206,6 +216,7 @@ Marking the PR ready is gated on **all** of the following:
 - No unresolved review threads remain (including ones explicitly flagged
   in step 3 as genuinely open — those block readiness too, they're not an
   exception).
+- In-repo status trackers reflect what this PR completes (step 2).
 - Commit history is clean (step 5 complete).
 
 If **all** of these hold and the PR is currently a draft, mark it ready
