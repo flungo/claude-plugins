@@ -5,4 +5,4 @@ The permanent record of what a plan produced lives in ADRs and the plugins thems
 
 | Plan | Status |
 |---|---|
-| [Marketplace build-out](marketplace-buildout.md) | In progress — structure decided (ADR-001, ADR-002); split merged (#1) |
+| [Marketplace build-out](marketplace-buildout.md) | In progress — structure decided (ADR-001, ADR-002); split (#1), bootstrap + git-conventions dogfood (#2), and `docs-standards` (#4) merged |

@@ -102,7 +102,7 @@ In brief:
 
 | Plan | Status |
 |---|---|
-| [Marketplace build-out](docs/plans/marketplace-buildout.md) | In progress — structure decided; split merged (#1) |
+| [Marketplace build-out](docs/plans/marketplace-buildout.md) | In progress — structure decided; split (#1), bootstrap + git-conventions dogfood (#2), and `docs-standards` plugin (#4) merged |
 
 ## Key decisions
 
