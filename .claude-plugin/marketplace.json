@@ -16,6 +16,12 @@
       "source": "./plugins/contributor-workflow",
       "description": "Personal contributor/review workflow commands (currently /ready-to-merge); depends on git-conventions.",
       "version": "0.1.0"
+    },
+    {
+      "name": "docs-standards",
+      "source": "./plugins/docs-standards",
+      "description": "Repo-adopted documentation conventions — Diátaxis docs, Nygard ADRs, ephemeral-plan lifecycle, README-index and staleness discipline, agent/verify callouts, semantic line breaks, and a session-end doc-maintenance checklist hook.",
+      "version": "0.1.0"
     }
   ]
 }
