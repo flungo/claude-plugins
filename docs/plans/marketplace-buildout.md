@@ -1,6 +1,6 @@
 # Plan: flungo-plugins marketplace build-out
 
-**Status:** In progress — structure decided (ADR-001, ADR-002); the split (#1), the repo bootstrap + `git-conventions` dogfood (#2), and `docs-standards` (#4, step 4) have merged; the remaining plugins are authored one PR at a time.
+**Status:** In progress — structure decided (ADR-001, ADR-002); the split (#1), the repo bootstrap + `git-conventions` dogfood (#2), `docs-standards` (#4, step 4), and `claude-code-web` (#5, step 5) have merged; the remaining plugins are authored one PR at a time.
 
 Turns the single seed plugin into the full personal marketplace: a set of always-on personal plugins plus a growing set of repo-adopted standards plugins, with this repo dogfooding the conventions it encodes.
 The structure and its rationale live in the ADRs; this plan tracks the sequencing and is **retired (deleted) when complete** — do not reference it from permanent docs.
@@ -61,9 +61,9 @@ Conventions that appeared in only one repo but were judged worth extracting, and
 - [x] **4. `docs-standards` plugin** — the most-reused new authoring; encodes
   the Nygard ADR template and the docs model this repo now demonstrates. Adopt
   it in this repo once it lands. *Merged: #4.*
-- [ ] **5. `claude-code-web` plugin** — seed from the web-quirk corpus in the
+- [x] **5. `claude-code-web` plugin** — seed from the web-quirk corpus in the
   sibling `CLAUDE.md`s; enable at user scope. Fold in the Web-egress details
-  from the Stalwart adoption notes (see Notes).
+  from the Stalwart adoption notes (see Notes). *Merged: #5.*
 - [ ] **6. `upstream-research` plugin.**
 - [ ] **7. `terraform-standards` plugin.**
 - [ ] **8. `terraform-provider-standards` plugin.**
