@@ -22,6 +22,12 @@
       "source": "./plugins/docs-standards",
       "description": "Repo-adopted documentation conventions — Diátaxis docs, Nygard ADRs, ephemeral-plan lifecycle, README-index and staleness discipline, agent/verify callouts, semantic line breaks, and a session-end doc-maintenance checklist hook.",
       "version": "0.1.0"
+    },
+    {
+      "name": "claude-code-web",
+      "source": "./plugins/claude-code-web",
+      "description": "Working preferences and hard constraints for Claude Code Web — the egress proxy and CA bundle, GitHub-via-MCP, ephemeral containers, repo scoping and add_repo, the multi-repo config caveat, and delegating unrunnable steps to CI.",
+      "version": "0.1.0"
     }
   ]
 }
