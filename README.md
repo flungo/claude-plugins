@@ -33,6 +33,11 @@ this repo rather than by re-uploading files by hand.
   concern, resource names that mirror the real object, sensitive values as
   variables, durations as arithmetic, pinned providers with a committed lock,
   and adopting existing resources via `import {}` blocks.
+- **[terraform-provider-standards](plugins/terraform-provider-standards)** —
+  repo-adopted conventions (project scope) for building a Terraform provider in
+  Go: the terraform-plugin-framework layout, `tfplugindocs`-generated docs,
+  MPL-2.0 per-file headers, and adopting the shared `flungo/github-workflows`
+  provider CI (golangci-lint v2, GoReleaser dual-registry release).
 
 ## Install in Claude Code
 
