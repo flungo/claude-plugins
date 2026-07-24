@@ -23,6 +23,11 @@ this repo rather than by re-uploading files by hand.
   preferences for Claude Code Web (user scope): the egress proxy and CA bundle,
   GitHub-via-MCP, ephemeral containers, repo scoping and `add_repo`, the
   multi-repo config caveat, and delegating unrunnable steps to CI.
+- **[upstream-research](plugins/upstream-research)** — personal, always-on
+  method (user scope) for verifying facts about third-party/upstream
+  components: go to the authoritative source (the project's own repo and docs),
+  distrust training data, web-search summaries, and generated docs, and record
+  provenance.
 
 ## Install in Claude Code
 

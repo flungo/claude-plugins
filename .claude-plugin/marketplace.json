@@ -28,6 +28,12 @@
       "source": "./plugins/claude-code-web",
       "description": "Working preferences and hard constraints for Claude Code Web — the egress proxy and CA bundle, GitHub-via-MCP, ephemeral containers, repo scoping and add_repo, the multi-repo config caveat, and delegating unrunnable steps to CI.",
       "version": "0.1.0"
+    },
+    {
+      "name": "upstream-research",
+      "source": "./plugins/upstream-research",
+      "description": "Researching and verifying facts about third-party/upstream components — go to the authoritative source (the project's own repo and docs), distrust training data, web-search summaries, and generated docs, and record provenance.",
+      "version": "0.1.0"
     }
   ]
 }
