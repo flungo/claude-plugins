@@ -1,6 +1,6 @@
 # Plan: flungo-plugins marketplace build-out
 
-**Status:** In progress — structure decided (ADR-001, ADR-002); the split (#1), the repo bootstrap + `git-conventions` dogfood (#2), `docs-standards` (#4, step 4), `claude-code-web` (#5, step 5), and `upstream-research` (#6, step 6) have merged; the remaining plugins are authored one PR at a time.
+**Status:** In progress — structure decided (ADR-001, ADR-002); the split (#1), the repo bootstrap + `git-conventions` dogfood (#2), `docs-standards` (#4, step 4), `claude-code-web` (#5, step 5), `upstream-research` (#6, step 6), and `terraform-standards` (#7, step 7) have merged; the remaining plugins are authored one PR at a time.
 
 Turns the single seed plugin into the full personal marketplace: a set of always-on personal plugins plus a growing set of repo-adopted standards plugins, with this repo dogfooding the conventions it encodes.
 The structure and its rationale live in the ADRs; this plan tracks the sequencing and is **retired (deleted) when complete** — do not reference it from permanent docs.
@@ -65,7 +65,7 @@ Conventions that appeared in only one repo but were judged worth extracting, and
   sibling `CLAUDE.md`s; enable at user scope. Fold in the Web-egress details
   from the Stalwart adoption notes (see Notes). *Merged: #5.*
 - [x] **6. `upstream-research` plugin.** *Merged: #6.*
-- [ ] **7. `terraform-standards` plugin.**
+- [x] **7. `terraform-standards` plugin.** *Merged: #7.*
 - [ ] **8. `terraform-provider-standards` plugin.**
 - [ ] **9. `scaffolding` plugin** — references `flungo/github-workflows`. Bake
   the Stalwart markdown-validation adoption pitfalls (see Notes) into the

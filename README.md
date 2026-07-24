@@ -28,6 +28,11 @@ this repo rather than by re-uploading files by hand.
   components: go to the authoritative source (the project's own repo and docs),
   distrust training data, web-search summaries, and generated docs, and record
   provenance.
+- **[terraform-standards](plugins/terraform-standards)** — repo-adopted
+  conventions (project scope) for a Terraform/HCL config repo: one `.tf` per
+  concern, resource names that mirror the real object, sensitive values as
+  variables, durations as arithmetic, pinned providers with a committed lock,
+  and adopting existing resources via `import {}` blocks.
 
 ## Install in Claude Code
 
