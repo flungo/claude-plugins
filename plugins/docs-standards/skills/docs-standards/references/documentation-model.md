@@ -46,19 +46,24 @@ ADRs look like the exception, but they use zero-padded monotonic numbers (`001`,
 These docs are read by both humans and AI agents.
 Two callout devices mark two different things; they are complementary, not substitutes for each other.
 
-**Agent-directed instruction** — an instruction to an *agent* following the doc, telling it what to *do* (as opposed to a fact everyone needs):
+**Agent-directed instruction** — an instruction to an *agent* following the doc, telling it what to *do* (as opposed to a fact everyone needs), on **every** use of the doc:
 
 > **🤖 Agent** — \<the single action the agent should take\>
 
 Reserve it for agent behaviour, and keep it to **one action per callout**.
 Shared facts and ordinary steps stay as normal prose — don't dress a fact up as an agent callout.
 
-**Uncertainty flag** — something that is probably stale or unverified and *can't be checked without live access* (a running server, a private dashboard, a value only the owner holds):
+**Uncertainty flag** — a statement that is probably stale or unverified and *can't be checked without live access* (a running server, a private dashboard, a value only the owner holds), left for someone with that access to confirm **once** and then close by baking the confirmed fact into the prose:
 
 > **Verify:** \<what is uncertain and why it couldn't be confirmed\>
 
 Use it instead of silently leaving a doubtful statement, or silently dropping it.
-A `> **Verify:**` says "a human with access should confirm this"; a `> **🤖 Agent**` says "an agent reading this should act".
+
+**The discriminator is the item's lifecycle — does it close, or recur?**
+
+A `> **Verify:**` is a *one-time* to-do: checked once, then removed, its answer written into the doc.
+A `> **🤖 Agent**` is a *standing* instruction: carried out on every use and never closed.
+So anything that inherently **drifts** — a pinned dependency version, a workflow's default, any value the doc can't state a stable answer for — is an agent instruction to *read the live value each time*, **not** a `Verify`, even though the word "check" tempts you toward `Verify`.
 Never collapse one into the other.
 
 ## Plan lifecycle — ephemeral, retired in two PRs
