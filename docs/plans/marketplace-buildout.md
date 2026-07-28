@@ -1,6 +1,6 @@
 # Plan: flungo-plugins marketplace build-out
 
-**Status:** In progress — structure decided (ADR-001, ADR-002); the split (#1), the repo bootstrap + `git-conventions` dogfood (#2), `docs-standards` (#4, step 4), `claude-code-web` (#5, step 5), `upstream-research` (#6, step 6), `terraform-standards` (#7, step 7), and `terraform-provider-standards` (#8, step 8) have merged; the remaining plugins are authored one PR at a time.
+**Status:** In progress — structure decided (ADR-001, ADR-002); the split (#1), the repo bootstrap + `git-conventions` dogfood (#2), `docs-standards` (#4, step 4), `claude-code-web` (#5, step 5), `upstream-research` (#6, step 6), `terraform-standards` (#7, step 7), `terraform-provider-standards` (#8, step 8), and `scaffolding` (#10, step 9) have merged; the remaining plugins are authored one PR at a time.
 
 Turns the single seed plugin into the full personal marketplace: a set of always-on personal plugins plus a growing set of repo-adopted standards plugins, with this repo dogfooding the conventions it encodes.
 The structure and its rationale live in the ADRs; this plan tracks the sequencing and is **retired (deleted) when complete** — do not reference it from permanent docs.
@@ -67,9 +67,12 @@ Conventions that appeared in only one repo but were judged worth extracting, and
 - [x] **6. `upstream-research` plugin.** *Merged: #6.*
 - [x] **7. `terraform-standards` plugin.** *Merged: #7.*
 - [x] **8. `terraform-provider-standards` plugin.** *Merged: #8.*
-- [ ] **9. `scaffolding` plugin** — references `flungo/github-workflows`. Bake
+- [x] **9. `scaffolding` plugin** — references `flungo/github-workflows`. Bake
   the Stalwart markdown-validation adoption pitfalls (see Notes) into the
   reusable workflow / scaffolding guidance so adopters don't re-hit them.
+  *Merged: #10.* The pitfalls already live in `github-workflows`'
+  `adopting-markdown-workflows.md`, which the plugin points at; owned-vs-third-party
+  formalised in ADR-003.
 - [ ] **10. Repo CI** — adopt the markdownlint + lychee reusable workflows from
   `github-workflows`, plus a `claude plugin validate` check on PRs so the
   marketplace can't break; this is itself dogfooding steps 4 and 9. Follow the
@@ -85,7 +88,7 @@ Conventions that appeared in only one repo but were judged worth extracting, and
   fork), `git-conventions` and the relevant project-scope standards plugins are
   adopted at repo level so every contributor follows them; a third-party repo
   gets only his personal user-scope plugins. The `scaffolding` plugin encodes
-  this distinction — to be formalized in an ADR when that plugin is designed.
+  this distinction — formalized in [ADR-003](../decisions/003-owned-vs-third-party-adoption.md) (#9).
 - **External input — Stalwart markdown-validation adoption notes**
   ([flungo/stalwart.flungo.net#53](https://github.com/flungo/stalwart.flungo.net/pull/53),
   recorded in that repo's `docs/plans/markdown-validation.md`): pitfalls from

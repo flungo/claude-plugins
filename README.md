@@ -38,6 +38,12 @@ this repo rather than by re-uploading files by hand.
   Go: the terraform-plugin-framework layout, `tfplugindocs`-generated docs,
   MPL-2.0 per-file headers, and adopting the shared `flungo/github-workflows`
   provider CI (golangci-lint v2, GoReleaser dual-registry release).
+- **[scaffolding](plugins/scaffolding)** — personal, always-on guide (user
+  scope) for setting up, building out, and extending repos across the fleet:
+  gated on verified ownership (an owned repo adopts the conventions and standards
+  plugins; a fork or third-party repo gets nothing without explicit consent),
+  routing to the shared CI and the helper repos (`github-workflows`,
+  `claude-plugins`, `terraform-github`) added as needed.
 
 ## Install in Claude Code
 
