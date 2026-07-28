@@ -5,4 +5,4 @@ The permanent record of what a plan produced lives in ADRs and the plugins thems
 
 | Plan | Status |
 |---|---|
-| [Marketplace build-out](marketplace-buildout.md) | In progress — structure decided (ADR-001, ADR-002); split (#1), bootstrap + git-conventions dogfood (#2), `docs-standards` (#4), `claude-code-web` (#5), `upstream-research` (#6), `terraform-standards` (#7), and `terraform-provider-standards` (#8) merged |
+| [Marketplace build-out](marketplace-buildout.md) | In progress — structure decided (ADR-001, ADR-002); split (#1), bootstrap + git-conventions dogfood (#2), `docs-standards` (#4), `claude-code-web` (#5), `upstream-research` (#6), `terraform-standards` (#7), `terraform-provider-standards` (#8), and `scaffolding` (#10) merged |

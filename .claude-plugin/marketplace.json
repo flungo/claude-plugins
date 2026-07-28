@@ -46,6 +46,12 @@
       "source": "./plugins/terraform-provider-standards",
       "description": "Conventions for building a Terraform provider in Go — the terraform-plugin-framework layout, tfplugindocs-generated docs, MPL-2.0 per-file license headers, and adopting the shared flungo/github-workflows provider CI (golangci-lint v2, GoReleaser dual-registry release).",
       "version": "0.1.0"
+    },
+    {
+      "name": "scaffolding",
+      "source": "./plugins/scaffolding",
+      "description": "Setting up, building out, and extending repos across the fleet — gated on verified ownership (an owned repo adopts the conventions and standards plugins; a fork or third-party repo gets nothing without explicit consent), routing to the shared CI and the helper repos (github-workflows, claude-plugins, terraform-github) added as needed.",
+      "version": "0.1.0"
     }
   ]
 }
