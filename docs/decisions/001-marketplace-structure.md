@@ -41,7 +41,7 @@ The `scaffolding` plugin *points* Claude to them when creating a repo or adoptin
 
 ## Consequences
 
-**Positive**
+### Positive
 
 - Each plugin is enabled at exactly the scope it belongs to; a repo can adopt
   `git-conventions` without pulling in personal review commands.
@@ -50,7 +50,7 @@ The `scaffolding` plugin *points* Claude to them when creating a repo or adoptin
 - The marketplace stays a catalogue of Claude-facing capability; CI machinery
   is kept in its own channel.
 
-**Negative — trade-offs**
+### Negative — trade-offs
 
 - More plugins to author and version than a single bundle.
 - Plugin names are install identifiers, so renames are breaking; names must be
