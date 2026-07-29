@@ -149,6 +149,7 @@ first and paste it into the subagent's prompt; instead, point the subagent
 at the branch/commit range (`origin/<base>..HEAD`) and have it pull the
 diff itself, so the full diff only ever lives in the subagent's context,
 not yours. Give the subagent:
+
 - The branch and base to diff (it fetches the diff itself, per above).
 - The PR title and description.
 - Any additional context you have on side work bundled into the PR that
@@ -214,6 +215,7 @@ current state once, at the end, after everything else above is done.
 ## 7. Mark ready — only if everything is actually green
 
 Marking the PR ready is gated on **all** of the following:
+
 - All CI checks passing (no pending, no failing).
 - Required approvals satisfied (`reviewDecision` is approved, not just
   "review required").
@@ -232,6 +234,7 @@ Never mark ready "provisionally" or because the remaining item seems minor.
 ## 8. Report
 
 Report back in chat (not as a PR comment) with:
+
 - **Verdict**: ready to merge (and marked as such), or not yet — and
   exactly what's blocking.
 - Description edits made, if any.
