@@ -27,7 +27,7 @@
       "name": "claude-code-web",
       "source": "./plugins/claude-code-web",
       "description": "Working preferences and hard constraints for Claude Code Web — the egress proxy and CA bundle, GitHub-via-MCP, ephemeral containers, repo scoping and add_repo, the multi-repo config caveat, and delegating unrunnable steps to CI.",
-      "version": "0.1.0"
+      "version": "0.2.0"
     },
     {
       "name": "upstream-research",
@@ -39,7 +39,7 @@
       "name": "terraform-standards",
       "source": "./plugins/terraform-standards",
       "description": "Conventions for a Terraform/HCL configuration repo — one .tf per concern, resource names that mirror the real object, sensitive values as variables, durations as arithmetic, pinned providers with a committed lock, and adopting existing resources via import blocks.",
-      "version": "0.1.0"
+      "version": "0.2.0"
     },
     {
       "name": "terraform-provider-standards",

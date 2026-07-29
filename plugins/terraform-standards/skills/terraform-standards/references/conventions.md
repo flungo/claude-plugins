@@ -39,3 +39,24 @@ This applies when the field takes raw seconds; a provider field that accepts a f
 ## Pin the provider, commit the lock
 
 Pin each provider in the `terraform` block (e.g. `version = "~> 6.0"`) and set `required_version`, and **commit `.terraform.lock.hcl`** so every run — local, CI, or another machine — resolves the same provider builds.
+A constraint alone is not a pin: without the lockfile every CI run silently takes the newest version that satisfies it, so a provider release can change a plan with no change to the config.
+
+The lockfile belongs to each **root module** — a repo with several (one per environment or owner) commits one in each.
+
+### Lock every platform in play
+
+A lockfile records a hash per provider *package*, so a platform with no recorded hash fails the next `init` with a checksum error rather than falling back.
+Generate it with the platforms that actually run the config — CI plus whatever the humans use — rather than letting whichever machine ran `init` first decide:
+
+```bash
+cd <root-module>
+terraform providers lock \
+  -platform=linux_amd64 -platform=linux_arm64 \
+  -platform=darwin_amd64 -platform=darwin_arm64
+```
+
+Bumping a provider is then a **deliberate, reviewable commit of its own**: regenerate the lock, and let the PR's plan show what the new version changes.
+CI must never update the lockfile — a run that quietly rewrites it defeats the point.
+
+> If the environment can't run `init` at all (no binary, a blocked registry), fix *that* first — an un-committed lockfile is usually a symptom of it, not a decision.
+> For Claude Code Web specifically, the `claude-code-web` plugin's `egress-and-tooling.md` has the working recipe.

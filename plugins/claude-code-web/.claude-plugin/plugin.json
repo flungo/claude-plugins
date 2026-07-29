@@ -1,7 +1,7 @@
 {
   "name": "claude-code-web",
   "description": "Fabrizio's working preferences and hard constraints for Claude Code Web — the browser/cloud sandbox — so a session works with its egress, tooling, repo-scoping, and CI-delegation realities instead of fighting them.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
     "name": "flungo"
   }
