@@ -27,7 +27,9 @@ Plugins are split by **enablement boundary, not by topic** (ADR-001): a plugin i
 
 Reusable CI (markdownlint, lychee, `terraform` plan/apply) is **not** a plugin — it lives in `flungo/github-workflows` and is referenced by `scaffolding`.
 
-Most of these do not exist yet; the plan tracks which have landed.
+All the plugins above have landed; the plan tracks the remaining build-out (this repo's own CI) before it retires.
+
+> **🤖 Agent** — `terraform-provider-standards` is deliberately scoped to conventions common to *any* provider; single-provider specifics (the coverage ratchet, container-based acceptance tests, and env-fallback provider config) stay in each provider's own `CLAUDE.md`. When a **second** Terraform provider exists, revisit extracting whatever the two genuinely share into the plugin.
 
 ## Plugin authoring conventions
 
