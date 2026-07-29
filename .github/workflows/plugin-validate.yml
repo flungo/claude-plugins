@@ -1,0 +1,40 @@
+# Repo-specific (not a reusable workflow — this marketplace is its only
+# consumer): validate the marketplace manifest and every plugin with the
+# claude CLI so a broken manifest can't merge.
+name: Plugin validate
+
+on:
+  pull_request:
+    paths:
+      - '.claude-plugin/**'
+      - 'plugins/**'
+      - '.github/workflows/plugin-validate.yml'
+  push:
+    branches: [main]
+    paths:
+      - '.claude-plugin/**'
+      - 'plugins/**'
+      - '.github/workflows/plugin-validate.yml'
+
+jobs:
+  validate:
+    name: claude plugin validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 'lts/*'
+      - name: Install Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code
+      - name: Validate marketplace manifest
+        run: claude plugin validate .
+      - name: Validate every plugin
+        run: |
+          status=0
+          for plugin in plugins/*/; do
+            echo "::group::${plugin}"
+            claude plugin validate "${plugin}" || status=1
+            echo "::endgroup::"
+          done
+          exit "${status}"
