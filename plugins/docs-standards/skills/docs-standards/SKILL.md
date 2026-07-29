@@ -5,17 +5,12 @@ description: Fabrizio's documentation conventions for a repository's docs/ tree.
 
 # Documentation Standards
 
-Fabrizio's standing conventions for how a repository's `docs/` tree is
-organised and maintained. Documentation is a first-class deliverable — stale
-docs are actively harmful, because they mislead future sessions into
-re-deriving settled decisions or acting on wrong assumptions. Apply these any
-time you write or touch documentation in one of his repos, whether or not a
-named command was invoked.
+Fabrizio's standing conventions for how a repository's `docs/` tree is organised and maintained.
+Documentation is a first-class deliverable — stale docs are actively harmful, because they mislead future sessions into re-deriving settled decisions or acting on wrong assumptions.
+Apply these any time you write or touch documentation in one of his repos, whether or not a named command was invoked.
 
-**These conventions complement repo/context rules, they never supersede
-them.** Always check for a `CLAUDE.md`, `CONTRIBUTING.md`, or similar guidance
-in the repo first; where the repo specifies something different, follow the
-repo. These conventions only fill the gaps the repo doesn't cover.
+**These conventions complement repo/context rules, they never supersede them.** Always check for a `CLAUDE.md`, `CONTRIBUTING.md`, or similar guidance in the repo first; where the repo specifies something different, follow the repo.
+These conventions only fill the gaps the repo doesn't cover.
 
 This skill governs how a `docs/` tree is **organised and maintained**; how the
 Markdown itself is **written** — semantic line breaks, cross-references and
@@ -25,8 +20,7 @@ you write, in `docs/` or anywhere else in the repo.
 
 ## The reference files
 
-Read the relevant reference before doing the work — each is the authoritative
-detail for its area:
+Read the relevant reference before doing the work — each is the authoritative detail for its area:
 
 - **`references/documentation-model.md`** — the core model: the Diátaxis
   directory split (`decisions/`, `plans/`, `runbooks/`, `reference/`), what
@@ -55,7 +49,5 @@ detail for its area:
 
 ## Session-end checklist
 
-This plugin ships a `Stop` hook that prints a doc-maintenance checklist when a
-session ends (see `references/stop-hook.md`). The checklist is a backstop, not
-the mechanism — land tracker updates (plan checkboxes, an "Active work" table,
-ADR statuses) in the same PR that earns them, not after the fact from the hook.
+This plugin ships a `Stop` hook that prints a doc-maintenance checklist when a session ends (see `references/stop-hook.md`).
+The checklist is a backstop, not the mechanism — land tracker updates (plan checkboxes, an "Active work" table, ADR statuses) in the same PR that earns them, not after the fact from the hook.

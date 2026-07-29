@@ -1,8 +1,7 @@
 # claude-plugins
 
-Personal Claude Code / Claude.ai plugin marketplace. One repo, plugins
-usable from both Claude Code and claude.ai, kept in sync by pulling from
-this repo rather than by re-uploading files by hand.
+Personal Claude Code / Claude.ai plugin marketplace.
+One repo, plugins usable from both Claude Code and claude.ai, kept in sync by pulling from this repo rather than by re-uploading files by hand.
 
 ## Plugins
 
@@ -58,8 +57,8 @@ this repo rather than by re-uploading files by hand.
 /plugin install contributor-workflow@flungo-plugins
 ```
 
-Installing `contributor-workflow` pulls in its `git-conventions` dependency
-automatically. To install just the standing conventions on their own:
+Installing `contributor-workflow` pulls in its `git-conventions` dependency automatically.
+To install just the standing conventions on their own:
 
 ```text
 /plugin install git-conventions@flungo-plugins
@@ -71,8 +70,7 @@ To pull in updates later:
 /plugin marketplace update flungo-plugins
 ```
 
-(Claude Code also refreshes marketplaces in the background periodically;
-`update` forces it immediately.)
+(Claude Code also refreshes marketplaces in the background periodically; `update` forces it immediately.)
 
 ## Install in claude.ai (web, desktop, Cowork)
 
@@ -84,8 +82,7 @@ To pull in updates later:
    install `contributor-workflow` (which brings in `git-conventions`), or
    `git-conventions` on its own.
 
-To pick up updates after pushing changes here, use the marketplace's
-"Update" action in the Plugins tab to pull the latest commit.
+To pick up updates after pushing changes here, use the marketplace's "Update" action in the Plugins tab to pull the latest commit.
 
 ## Repo layout
 
@@ -98,12 +95,8 @@ plugins/<plugin-name>/
   evals/                            — dev-time test fixtures (not loaded at runtime)
 ```
 
-Adding a new plugin later: create `plugins/<new-plugin>/` following the
-same shape, then add an entry to `.claude-plugin/marketplace.json`'s
-`plugins` array.
+Adding a new plugin later: create `plugins/<new-plugin>/` following the same shape, then add an entry to `.claude-plugin/marketplace.json`'s `plugins` array.
 
 ## Conventions
 
-Commits in this repo follow the same git conventions documented in
-`plugins/git-conventions/skills/git-conventions/references/git-conventions.md`
-— Conventional Commits, linear history, one logical change per commit.
+Commits in this repo follow the same git conventions documented in `plugins/git-conventions/skills/git-conventions/references/git-conventions.md` — Conventional Commits, linear history, one logical change per commit.
