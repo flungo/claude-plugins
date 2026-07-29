@@ -13,11 +13,13 @@ Verify.** What's reachable is set by the environment's network policy (see the S
 *Last verified 2026-07-24, in this environment; a different environment's policy may differ.*
 
 - **Docker works — but the daemon isn't running by default; you start it.** `docker`/`dockerd` are installed (Engine 29.x), but there's no daemon socket until you launch `dockerd` yourself (needs root; `sudo` is available). Start it with the agent proxy in its environment so image pulls route through the proxy — then pull and run work. Verified 2026-07-24 by pulling and running `alpine:3.20` (`echo` from inside the container, exit 0):
-  ```
+
+  ```sh
   sudo -n env HTTP_PROXY="$HTTPS_PROXY" HTTPS_PROXY="$HTTPS_PROXY" NO_PROXY=localhost,127.0.0.1 dockerd >/tmp/dockerd.log 2>&1 &
   until docker info >/dev/null 2>&1; do :; done   # wait for the socket (no sleep in the sandbox)
   docker run --rm alpine:3.20 echo ok
   ```
+
   So container-based work runs here once the daemon is up. A more restrictive environment policy could still block registry egress — if a pull fails after the daemon is up, that's the policy, not a universal rule.
 - **`api.github.com` returns `403`; `raw.githubusercontent.com` returns `200`.**
   Use the GitHub MCP for API work and `WebFetch` on `raw.githubusercontent.com` for public files (see `egress-and-tooling.md`).
@@ -26,7 +28,7 @@ Verify.** What's reachable is set by the environment's network policy (see the S
 
 Reproduce the network checks:
 
-```
+```sh
 curl -sS -m 20 -o /dev/null -w '%{http_code}\n' https://registry-1.docker.io/v2/   # 401 = reachable (needs auth)
 curl -sS -m 20 -o /dev/null -w '%{http_code}\n' https://api.github.com/            # 403 = blocked here
 ```

@@ -53,7 +53,7 @@ this repo rather than by re-uploading files by hand.
 
 ## Install in Claude Code
 
-```
+```text
 /plugin marketplace add flungo/claude-plugins
 /plugin install contributor-workflow@flungo-plugins
 ```
@@ -61,13 +61,13 @@ this repo rather than by re-uploading files by hand.
 Installing `contributor-workflow` pulls in its `git-conventions` dependency
 automatically. To install just the standing conventions on their own:
 
-```
+```text
 /plugin install git-conventions@flungo-plugins
 ```
 
 To pull in updates later:
 
-```
+```text
 /plugin marketplace update flungo-plugins
 ```
 
@@ -89,7 +89,7 @@ To pick up updates after pushing changes here, use the marketplace's
 
 ## Repo layout
 
-```
+```text
 .claude-plugin/marketplace.json     — marketplace catalog
 plugins/<plugin-name>/
   .claude-plugin/plugin.json        — plugin manifest

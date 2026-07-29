@@ -26,7 +26,7 @@ Two specifics were open:
 Format B is the same format with Consequences dropped, so standardizing is mostly retiring Format B.
 Canonical shape:
 
-```
+```markdown
 # ADR-NNN: Title
 
 - **Date:** YYYY-MM-DD
