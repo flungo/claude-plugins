@@ -45,7 +45,7 @@ All the plugins above have landed; the plan tracks the remaining build-out (this
   `scaffolding`, `claude-code-web`, and `upstream-research` are user-scope only and never repo-adopted ([ADR-003](docs/decisions/003-owned-vs-third-party-adoption.md)), so a repo-adopted plugin cannot declare one as a dependency — and pointing at it anyway leaves a reference that dangles wherever the plugin is enabled at project scope.
   Where both need the same rule, cite the **ADR** that records it (by full URL, since an installed plugin has no `docs/` tree beside it), or state the rule locally.
 - **`SKILL.md` frontmatter is YAML** — keep `name` and `description` on single
-  lines and **avoid a colon-space (`: `) inside an unquoted value** (it parses
+  lines and **avoid a colon followed by a space (`:` + space) inside an unquoted value** (it parses
   as a mapping and silently drops the frontmatter). The `description` is what
   drives skill triggering; write it for that.
 - **Validate before committing:** `claude plugin validate .` (marketplace) and
