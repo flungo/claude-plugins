@@ -56,6 +56,7 @@ own branches even where the repo hasn't stated a preference either way —
 it only yields when the repo explicitly asks for something different.
 
 **Squash vs rebase when landing:**
+
 - **Squash** when the branch is a single logical change, however many
   working commits it took (one DNS record, one doc fix, one ADR). The
   squashed message describes the change, not the journey.

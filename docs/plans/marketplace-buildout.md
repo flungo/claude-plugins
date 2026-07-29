@@ -51,8 +51,8 @@ Conventions that appeared in only one repo but were judged worth extracting, and
 
 ## Steps
 
-- [x] **1. Split the seed plugin** — `code-review-workflow` → `git-conventions`
-  + `contributor-workflow` (dependency), update `marketplace.json` + `README`.
+- [x] **1. Split the seed plugin** — `code-review-workflow` → `git-conventions` +
+  `contributor-workflow` (dependency), update `marketplace.json` + `README`.
   *Merged: #1.*
 - [x] **2. Bootstrap repo conventions** — `CLAUDE.md`, `docs/` structure,
   ADR-001/002, this plan. *Merged: #2.*
