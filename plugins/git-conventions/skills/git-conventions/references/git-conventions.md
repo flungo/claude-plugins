@@ -27,10 +27,12 @@ to the command you're running — not every command touches every section.
   whether to continue on it or start fresh, before proceeding.
 - Before finishing a task, fetch `origin main`. If it has moved, rebase the
   feature branch onto it:
-  ```
+
+  ```sh
   git fetch origin main
   git rebase origin/main   # only if fetch produced new commits
   ```
+
   Review what changed upstream (diff, updated docs/decision records) before
   continuing. If upstream changes affect work already on the branch, fold in
   the adjustment via amend/fixup (see "Rebase hygiene" below) rather than a

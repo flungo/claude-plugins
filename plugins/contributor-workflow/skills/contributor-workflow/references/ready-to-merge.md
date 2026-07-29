@@ -19,12 +19,15 @@ cleanup in step 5 depends on it.
 
 **Getting PR data:** try MCP GitHub tools first if available in this
 session. Fall back to the `gh` CLI otherwise:
-```
+
+```sh
 gh pr view <number> --json title,body,state,isDraft,headRefName,baseRefName,reviewDecision,statusCheckRollup
 gh pr diff <number>
 ```
+
 Unresolved review threads aren't exposed by `gh pr view`; use the GraphQL
 API (via MCP if it supports thread queries, otherwise `gh api graphql`):
+
 ```graphql
 query($owner:String!, $repo:String!, $number:Int!) {
   repository(owner:$owner, name:$repo) {
@@ -36,6 +39,7 @@ query($owner:String!, $repo:String!, $number:Int!) {
   }
 }
 ```
+
 Resolving a thread is the `resolveReviewThread(threadId: ...)` mutation.
 
 ## 1. Sync with base branch

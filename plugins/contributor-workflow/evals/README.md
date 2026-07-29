@@ -15,7 +15,7 @@ targeting specific rules in `references/ready-to-merge.md`:
 Each fixture directory has a `build_repo.sh`. Run it to materialize the
 repo:
 
-```
+```sh
 cd fixtures/messy-history-orbital-cafe
 ./build_repo.sh /tmp/orbital-cafe
 cd /tmp/orbital-cafe

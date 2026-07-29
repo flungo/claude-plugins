@@ -11,7 +11,7 @@ Any resource that already exists in the real system must be imported before Terr
 
 1. **Write the resource and its `import {}` block together**, in the same `.tf` file, in one PR:
 
-   ```
+   ```hcl
    import {
      to = github_repository.authentik_flungo_net
      id = "authentik.flungo.net"
@@ -28,7 +28,7 @@ Any resource that already exists in the real system must be imported before Terr
 
 When you rename a resource, move it into or out of a module, or otherwise change its address, use a `moved {}` block so Terraform updates state rather than destroying and recreating:
 
-```
+```hcl
 moved {
   from = github_repository.old_name
   to   = github_repository.new_name

@@ -29,7 +29,7 @@ Do the tracker updates as you go (per `references/documentation-model.md`); the 
 
 Claude Code plugins provide hooks from a `hooks/hooks.json` file at the plugin root, so the checklist ships **with the plugin** rather than being copied into each repo's settings:
 
-```
+```text
 plugins/docs-standards/
   hooks/hooks.json          # registers the Stop hook
   scripts/doc-checklist.sh  # prints the checklist JSON
