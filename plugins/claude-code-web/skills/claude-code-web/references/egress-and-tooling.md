@@ -25,14 +25,48 @@ Two things to weigh before asking:
 
 ## GitHub access
 
-*Last verified 2026-07-24: `api.github.com` → `403`, `raw.githubusercontent.com` → `200`, CA bundle present at the path above.*
+*Last verified 2026-07-24: `api.github.com` → `403`, `raw.githubusercontent.com` → `200`, CA bundle present at the path above.
+Re-probed 2026-07-29 for the download shapes: `/releases/download/…` → `200` (a real 9 MB asset), while `/archive/refs/tags/…` and `codeload.github.com` → `403`.*
 
 - **Use the GitHub MCP (`mcp__github__*`) for anything API-shaped** — PRs, issues, review threads, checks, workflow runs and dispatch.
   There is no `gh` CLI in web sessions, and `api.github.com` returns `403` through the proxy.
 - **`git` over `github.com` works** for repositories in the session's scope (clone, fetch, push).
 - **Read public files with `WebFetch` against `raw.githubusercontent.com`** (`https://raw.githubusercontent.com/<owner>/<repo>/<branch>/<path>`) — this works unauthenticated, even for repositories outside the session's scope.
-- **Don't `curl` a `github.com` release or download URL for an out-of-scope repo** — the proxy returns an "access not enabled" JSON body instead of the file.
-  Use the `raw.githubusercontent.com` + `WebFetch` path instead.
+- **Source archives for an out-of-scope repo are blocked; published release assets are not**.
+  `github.com/<owner>/<repo>/archive/…` and `codeload.github.com/…` return a `403` with an `"access not enabled"` JSON body, so repository *source* must come from `raw.githubusercontent.com` (or `add_repo` + clone).
+  A **release asset** under `github.com/<owner>/<repo>/releases/download/…` does download, which is how a published binary or a Terraform provider zip can be fetched directly.
+
+## Terraform
+
+*Last verified 2026-07-29: `releases.hashicorp.com` → `200`, `registry.terraform.io` → `200`, `checkpoint-api.hashicorp.com` → `403`; a full `terraform init` in a real repo installed a provider and wrote a lockfile.*
+
+There is no `terraform` binary in the image, but a web session can run `fmt`, `init`, and `validate` — worth doing before pushing, since it catches syntax and type errors without spending a CI round-trip.
+
+```bash
+S=<scratchpad>                    # a writable temp dir, never the repo
+# Subshell, so the zip and the binary land in $S and the cwd stays at the repo root —
+# `curl -O` and `unzip` both write to the *current* directory, not to $S.
+( cd "$S" \
+  && curl -sSLO https://releases.hashicorp.com/terraform/1.9.8/terraform_1.9.8_linux_amd64.zip \
+  && unzip -q -o terraform_1.9.8_linux_amd64.zip )
+
+export CHECKPOINT_DISABLE=1       # see below
+$S/terraform fmt -check -recursive
+cd <root-module>
+$S/terraform init -backend=false  # no backend credentials needed
+$S/terraform validate
+```
+
+- **`registry.terraform.io` is allow-listed**, so `init` resolves and installs providers normally.
+  It was added on 2026-07-29 at a session's request — a worked example of the allowlist section above: the benefit recurs across every Terraform repo in the fleet, which is what made it worth making permanent rather than working around.
+- **`checkpoint-api.hashicorp.com` is *not* allow-listed** and returns `403`.
+  It is only HashiCorp's optional version-check ping and nothing fails without it, so set `CHECKPOINT_DISABLE=1` to keep the error out of the output.
+- **`-backend=false` skips backend initialisation**, so `init` needs no state-backend token.
+  A *remote* backend's credentials are usually a CI secret the session doesn't hold.
+- **`plan` is generally not possible** — it needs both the backend credentials and the provider's own credentials.
+  Leave `plan` to CI and treat the PR-posted plan as the authority; see `ci-iteration.md`.
+- **Afterwards, delete `.terraform/`** (large, and gitignored by the standard Terraform `.gitignore`) but **keep `.terraform.lock.hcl`, which is committed** — if `init` changed it, that is a real change to review and commit, not an artifact to discard.
+  Generating that lockfile is a repo-level convention; see the `terraform-standards` plugin.
 
 ## `sleep` is blocked
 

@@ -32,8 +32,8 @@ When you hit a fresh, reusable gotcha about the web environment, record it where
 
 ## The reference files
 
-- **`references/egress-and-tooling.md`** — the egress proxy and its CA bundle, which registries and GitHub hosts work, why GitHub goes through the MCP rather than `gh`, and why `sleep` is blocked.
-  Read it before installing a tool, fetching a URL, or hitting the GitHub API.
+- **`references/egress-and-tooling.md`** — the egress proxy and its CA bundle, which registries and GitHub hosts work, why GitHub goes through the MCP rather than `gh`, how to run Terraform in a session, and why `sleep` is blocked.
+  Read it before installing a tool, fetching a URL, hitting the GitHub API, or running Terraform.
 - **`references/sessions.md`** — the session shape: ephemeral container, repo scoping and `add_repo`, the multi-repo config-loading caveat, and setting environment variables or secrets.
   Read it before adding a repo, relying on project config, or setting an env var.
 - **`references/ci-iteration.md`** — the pattern for anything the sandbox can't run: push the branch and iterate against CI, provision tokens first, and probe whether a restriction has lifted.
