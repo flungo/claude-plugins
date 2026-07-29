@@ -46,7 +46,7 @@ The community ADR plugins are governance-heavy and none are first-party; dependi
 
 ## Consequences
 
-**Positive**
+### Positive
 
 - One canonical ADR form across all repos; adopting it here is deleting
   Format B, not inventing anything new.
@@ -55,7 +55,7 @@ The community ADR plugins are governance-heavy and none are first-party; dependi
 - The repo's own `docs/` becomes the reference implementation of
   `docs-standards` before that plugin is authored.
 
-**Negative — trade-offs**
+### Negative — trade-offs
 
 - The sibling repos' existing Format-B ADRs are left as-is; converging them is
   out of scope here and would be follow-up work in those repos.
