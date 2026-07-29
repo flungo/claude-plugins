@@ -11,5 +11,9 @@
     // Decision / Consequences across ADRs); paired with the unique-heading
     // convention for anything cross-referenced.
     "MD024": { "siblings_only": true }
-  }
+  },
+  // Eval fixtures are dev-time artifacts reproduced verbatim (e.g. PR
+  // descriptions, deliberately messy inputs) — linting them would alter what
+  // they exist to preserve. Plugin docs outside fixtures/ are still linted.
+  "ignores": ["plugins/*/evals/fixtures/**"]
 }
