@@ -27,7 +27,7 @@ Plugins are split by **enablement boundary, not by topic** (ADR-001): a plugin i
 
 Reusable CI (markdownlint, lychee, `terraform` plan/apply) is **not** a plugin — it lives in `flungo/github-workflows` and is referenced by `scaffolding`.
 
-All the plugins above have landed; the plan tracks the remaining build-out (this repo's own CI) before it retires.
+This repo adopts those Markdown workflows and the version check itself (see § Markdown validation CI), plus a repo-specific plugin-validate workflow.
 
 > **🤖 Agent** — `terraform-provider-standards` is deliberately scoped to conventions common to *any* provider; single-provider specifics (the coverage ratchet, container-based acceptance tests, and env-fallback provider config) stay in each provider's own `CLAUDE.md`. When a **second** Terraform provider exists, revisit extracting whatever the two genuinely share into the plugin.
 
@@ -117,6 +117,19 @@ In brief:
   unique name, so an anchor can't silently redirect.
 - **Fix the link or its target, never suppress the check** — for markdownlint
   findings, link/anchor failures, and the external-URL sweep alike.
+
+## Markdown validation CI
+
+The checks those conventions pair with, adopted from [flungo/github-workflows](https://github.com/flungo/github-workflows) and pinned `@v1`: markdownlint (`.markdownlint-cli2.jsonc`), a blocking offline check of relative links and heading anchors on every PR, and a daily external-URL sweep that reports through a single auto-updated issue.
+A repo-specific `plugin-validate` workflow runs `claude plugin validate` on the marketplace and every plugin, so a broken manifest can't merge.
+The conventions themselves stay in `markdown-standards` (above); only repo-specific facts belong here:
+
+- **Tool-version pin:** CI's `DavidAnson/markdownlint-cli2-action@v19` ships
+  **markdownlint-cli2 0.17.2** (markdownlint 0.37.4). Match it locally
+  (`npm install markdownlint-cli2@0.17.2`) before chasing findings — a newer
+  local version carries rules CI doesn't run.
+- **`.lycheeignore`** is populated only from this repo's own token-enabled
+  `workflow_dispatch` runs, per the rules in its header.
 
 ## Active work
 
