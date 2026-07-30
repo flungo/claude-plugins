@@ -24,7 +24,7 @@ Derived from a read-only mining of the sibling repos (`terraform-github`, `terra
 
 | Plugin | Holds |
 |---|---|
-| `docs-standards` | Diátaxis docs model, Nygard ADRs, plan lifecycle, index maintenance, staleness discipline, the `> **🤖 Agent**` and `> **Verify:**` callouts, semantic line breaks, and the stop-hook doc checklist. (An `incidents/` doc kind and the "Hard constraints" device are deferred — see dispositions.) |
+| `docs-standards` | Diátaxis docs model, Nygard ADRs, plan lifecycle, index maintenance, staleness discipline, the `> **🤖 Agent**` and `> **Verify:**` callouts, and the stop-hook doc checklist. (Semantic line breaks moved to `markdown-standards` — ADR-004; an `incidents/` doc kind and the "Hard constraints" device are deferred — see dispositions.) |
 | `terraform-standards` | HCL consumer conventions — one-`.tf`-per-concern, sensitive-as-variables + placeholders, `import {}` adoption, provider pinning + committed lock, resource-name-mirrors-object, durations-as-arithmetic (when writing raw seconds). |
 | `markdown-standards` | Markdown authoring conventions paired with the `github-workflows` Markdown CI — the `## Cross-references` rules, semantic line breaks (`MD013`), unique cross-referenced headings (`MD024`), adjacent blockquotes (`MD028`), fix-the-target remediation, and the `/adopt-markdown-ci` onboarding command. Extracted from the `github-workflows` docs per [its issue #3](https://github.com/flungo/github-workflows/issues/3). Project scope only — enabling it is the opt-in. Added after the original mining — see ADR-004. |
 | `terraform-provider-standards` | Go provider conventions **common to any provider** — Plugin Framework, `tfplugindocs` generated docs, MPL-2.0 + copyright headers, and adopting the shared `flungo/github-workflows` provider CI (golangci-lint v2, GoReleaser dual-registry release). Single-provider specifics (backend, client, auth model, container acceptance harness, coverage ratchet) stay in that provider's own `CLAUDE.md` until a second provider proves them reusable. |
@@ -43,6 +43,7 @@ Conventions that appeared in only one repo but were judged worth extracting, and
   undecided and decoupled from this — not bundled into the `incidents/`
   decision.
 - Semantic line breaks (one sentence per line) → `docs-standards`.
+  *Superseded by ADR-004: they ship in `markdown-standards`, which `docs-standards` depends on.*
 - markdownlint override philosophy (minimum justified overrides; re-enable a
   rule by fixing findings one rule per commit) → `docs-standards` guidance; the
   config itself ships with the reusable workflow.
