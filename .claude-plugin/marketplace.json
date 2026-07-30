@@ -15,7 +15,7 @@
       "name": "contributor-workflow",
       "source": "./plugins/contributor-workflow",
       "description": "Personal contributor/review workflow commands (currently /ready-to-merge); depends on git-conventions.",
-      "version": "0.2.0"
+      "version": "0.3.0"
     },
     {
       "name": "docs-standards",

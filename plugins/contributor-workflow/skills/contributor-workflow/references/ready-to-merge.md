@@ -154,18 +154,37 @@ Force-push the feature branch when done (never `main`).
 Confirm CI status (`statusCheckRollup`) and review decision (`reviewDecision`).
 This skill doesn't wait on or retrigger CI — it checks current state once, at the end, after everything else above is done.
 
+**`reviewDecision` is the signal to gate on**, and it also tells you whether the repo requires approval at all.
+Its only values are `APPROVED`, `CHANGES_REQUESTED`, and `REVIEW_REQUIRED`; **null means the repo doesn't require approval** — the usual case on a solo repo.
+`COMMENTED` is *not* among them — that is a state of an individual review, so comment-only reviews leave the decision untouched however many of them there are.
+The GitHub MCP's `pull_request_read` doesn't return `reviewDecision`: read it with `gh pr view --json reviewDecision`, or infer it from `mergeable_state` being `clean` while unapproved together with the reviews list showing no `APPROVED`.
+
+**Then scan the individual review states for `PENDING`.**
+A pending review is one someone has started and not yet submitted — they are mid-review, so the PR is not yours to declare ready.
+The other `PullRequestReviewState` values need no separate handling: `APPROVED` and `CHANGES_REQUESTED` already move `reviewDecision`, and `COMMENTED`/`DISMISSED` carry no verdict.
+
 ## 7. Mark ready — only if everything is actually green
 
 Marking the PR ready is gated on **all** of the following:
 
 - All CI checks passing (no pending, no failing).
-- Required approvals satisfied (`reviewDecision` is approved, not just
-  "review required").
+- **`reviewDecision` is `APPROVED` or null** (step 6) — `REVIEW_REQUIRED` and `CHANGES_REQUESTED` both block.
+  Null means the repo permits merging without approval, and invoking `/ready-to-merge` *is* the review: the gate is satisfied and nothing is waiting on a reviewer.
+  Never treat a self-authored PR's missing approval as a blocker in a repo that doesn't require approval — the author cannot approve their own PR, so that reading makes this step unsatisfiable forever.
+- **No `PENDING` review is in flight** (step 6) — someone has a review open and unsubmitted; wait for it rather than declaring the PR ready underneath them.
 - No unresolved review threads remain (including ones explicitly flagged
   in step 3 as genuinely open — those block readiness too, they're not an
   exception).
 - In-repo status trackers reflect what this PR completes (step 2).
 - Commit history is clean (step 5 complete).
+
+**A bare invocation approves the sweep, not the substance.**
+It is not an answer to anything you parked for the user: a thread left open in step 3, or a "requires a decision" question from step 4, still blocks readiness.
+Don't read it as agreement with the resolution you proposed, or as permission to pick one.
+
+**"LGTM" (or equivalent) with the request is a review of the code** — a positive verdict on the repo in the **exact state it is in at that moment**, which settles the approval gate.
+It also carries the decisions that state embodies: where a thread proposed an option, or a step 4 question was awaiting confirmation, and the code as presented *is* the outcome, LGTM confirms it — resolve those threads, recording what was decided.
+It does not reach a question the code doesn't answer, and it does not extend to anything pushed afterwards; later work needs a fresh verdict.
 
 If **all** of these hold and the PR is currently a draft, mark it ready (`gh pr ready <number>`).
 If any of them don't hold, do **not** mark it ready — report what's blocking instead, even if it's something outside this skill's control (e.g. waiting on a specific reviewer, a flaky CI job).
