@@ -22,17 +22,18 @@ Exposing a plugin from `github-workflows` would give the fleet a second plugin s
 **Shape:** one skill plus one named command.
 
 - The **skill** carries the conventions and remediation guidance — `references/cross-references.md` (the former generic `CLAUDE.md` block, plus fix-the-target-never-suppress remediation) and `references/prose-conventions.md` (the three lint-paired conventions).
-- The adoption starter prompt becomes the **`/adopt-markdown-ci` command** (a named command in the skill, following the `contributor-workflow` pattern), gated on verified ownership per [ADR-003](003-owned-vs-third-party-adoption.md) and deferring to the `github-workflows` adoption runbook as the source of truth.
+- The adoption starter prompt becomes the **`/adopt-markdown-ci` command** (a named command in the skill, following the `contributor-workflow` pattern), deferring to the `github-workflows` adoption runbook as the source of truth.
 
-**Scope:** repo-adopted (project scope), like the other `*-standards` plugins — and, like `git-conventions`, also useful at user scope: Fabrizio enables it personally so the conventions and `/adopt-markdown-ci` are available in a repo *before* it adopts anything.
+**Scope:** repo-adopted (**project scope only**), like the other `*-standards` plugins — not user scope.
+Enabling it in a repo is itself the opt-in to these conventions, which is why `/adopt-markdown-ci` carries no ownership gate: a repo that has the plugin enabled has already chosen the standards, and a repo that has not will never invoke the command.
+A user-scope install would invert that, applying the conventions in repos that never opted in — including third-party ones, where [ADR-003](003-owned-vs-third-party-adoption.md) says adopt nothing.
 
 **A separate plugin from `docs-standards`, which depends on it.**
 The two overlap — `docs-standards` covered semantic line breaks — so the alternative was to fold the Markdown conventions into it.
 [ADR-001](001-marketplace-structure.md)'s test settles it: plugins split by **enablement boundary**, and these have different ones.
-`markdown-standards` is enablable at **user scope**, because Markdown authoring applies to every `.md` file Fabrizio touches — including in third-party repos where [ADR-003](003-owned-vs-third-party-adoption.md) forbids adopting anything *into* the repo.
-`docs-standards` is project-scope only: it governs a `docs/` tree a repo has agreed to structure, and it ships a `Stop` hook that would be pure noise if it fired in every unrelated repo.
-Folding them together would force that whole apparatus to travel wherever the Markdown rules are wanted.
-The applicability is asymmetric in the same direction: every repo has Markdown (a `README.md` at minimum), only some have a governed `docs/` tree.
+Both are project scope, so the boundary is not user-versus-project but **which repos enable which**: every repo has Markdown (a `README.md` at minimum), while only some have a `docs/` tree they have agreed to structure.
+A code repo with a README and a `CLAUDE.md` and no `docs/` tree wants the Markdown conventions and nothing else — and `docs-standards` ships a `Stop` hook that would be pure noise there.
+Folding them together would force that whole apparatus onto every repo that wanted the Markdown rules.
 
 So the dependency runs **`docs-standards` → `markdown-standards`** (bare-string, first-party, per ADR-001): every docs adopter necessarily writes Markdown, but not vice versa.
 `markdown-standards` becomes the single home of semantic line breaks — including the scope/exceptions and the render-gated migration *guidance* — and `docs-standards` keeps only the docs-specific *why* and points at it.
