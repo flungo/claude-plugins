@@ -1,6 +1,7 @@
 # Plan: flungo-plugins marketplace build-out
 
-**Status:** In progress — structure decided (ADR-001, ADR-002); the split (#1), the repo bootstrap + `git-conventions` dogfood (#2), `docs-standards` (#4, step 4), `claude-code-web` (#5, step 5), `upstream-research` (#6, step 6), `terraform-standards` (#7, step 7), `terraform-provider-standards` (#8, step 8), and `scaffolding` (#10, step 9) have merged; the remaining plugins are authored one PR at a time.
+**Status:** In progress — structure decided (ADR-001, ADR-002); the split (#1), the repo bootstrap + `git-conventions` dogfood (#2), `docs-standards` (#4, step 4), `claude-code-web` (#5, step 5), `upstream-research` (#6, step 6), `terraform-standards` (#7, step 7), `terraform-provider-standards` (#8, step 8), `scaffolding` (#10, step 9), and `markdown-standards` (#14, step 11) have merged.
+Every planned plugin has landed; only this repo's own CI (step 10) remains before the plan retires.
 
 Turns the single seed plugin into the full personal marketplace: a set of always-on personal plugins plus a growing set of repo-adopted standards plugins, with this repo dogfooding the conventions it encodes.
 The structure and its rationale live in the ADRs; this plan tracks the sequencing and is **retired (deleted) when complete** — do not reference it from permanent docs.
@@ -25,6 +26,7 @@ Derived from a read-only mining of the sibling repos (`terraform-github`, `terra
 |---|---|
 | `docs-standards` | Diátaxis docs model, Nygard ADRs, plan lifecycle, index maintenance, staleness discipline, the `> **🤖 Agent**` and `> **Verify:**` callouts, semantic line breaks, and the stop-hook doc checklist. (An `incidents/` doc kind and the "Hard constraints" device are deferred — see dispositions.) |
 | `terraform-standards` | HCL consumer conventions — one-`.tf`-per-concern, sensitive-as-variables + placeholders, `import {}` adoption, provider pinning + committed lock, resource-name-mirrors-object, durations-as-arithmetic (when writing raw seconds). |
+| `markdown-standards` | Markdown authoring conventions paired with the `github-workflows` Markdown CI — the `## Cross-references` rules, semantic line breaks (`MD013`), unique cross-referenced headings (`MD024`), adjacent blockquotes (`MD028`), fix-the-target remediation, and the `/adopt-markdown-ci` onboarding command. Extracted from the `github-workflows` docs per [its issue #3](https://github.com/flungo/github-workflows/issues/3); also enabled at user scope (like `git-conventions`) so it's available pre-adoption. Added after the original mining — see ADR-004. |
 | `terraform-provider-standards` | Go provider conventions **common to any provider** — Plugin Framework, `tfplugindocs` generated docs, MPL-2.0 + copyright headers, and adopting the shared `flungo/github-workflows` provider CI (golangci-lint v2, GoReleaser dual-registry release). Single-provider specifics (backend, client, auth model, container acceptance harness, coverage ratchet) stay in that provider's own `CLAUDE.md` until a second provider proves them reusable. |
 
 **Not in the marketplace:** reusable CI (markdownlint, lychee, `terraform` plan/apply) lives in `flungo/github-workflows` and is referenced by `scaffolding` (ADR-001).
@@ -76,7 +78,16 @@ Conventions that appeared in only one repo but were judged worth extracting, and
 - [ ] **10. Repo CI** — adopt the markdownlint + lychee reusable workflows from
   `github-workflows`, plus a `claude plugin validate` check on PRs so the
   marketplace can't break; this is itself dogfooding steps 4 and 9. Follow the
-  Stalwart markdown-validation adoption notes (see Notes).
+  Stalwart markdown-validation adoption notes (see Notes) — or, now that step 11
+  exists, run `/adopt-markdown-ci`.
+- [x] **11. `markdown-standards` plugin** — extract the Claude-facing
+  Markdown-validation conventions inlined in the `github-workflows` docs
+  ([its issue #3](https://github.com/flungo/github-workflows/issues/3)) into a
+  repo-adopted plugin (cross-references, lint-paired prose conventions,
+  `/adopt-markdown-ci`), per ADR-004; the paired
+  [github-workflows PR 19](https://github.com/flungo/github-workflows/pull/19)
+  makes its docs reference the plugin instead of inlining. Dogfooded here via
+  `.claude/settings.json`; `docs-standards` depends on it. *Merged: #14.*
 
 > **🤖 Agent** — author one plugin per PR (draft), validate with
 > `claude plugin validate` and a test-install before pushing, and confirm each

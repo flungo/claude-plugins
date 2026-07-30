@@ -23,7 +23,7 @@ Plugins are split by **enablement boundary, not by topic** (ADR-001): a plugin i
 | Scope | Enabled how | Plugins |
 |---|---|---|
 | **Personal (user)** | Installed + enabled in the claude.ai account; always on | `git-conventions`, `contributor-workflow`, `claude-code-web`, `upstream-research`, `scaffolding` |
-| **Repo-adopted (project)** | Declared in a repo's `.claude/settings.json` | `docs-standards`, `terraform-standards`, `terraform-provider-standards` |
+| **Repo-adopted (project)** | Declared in a repo's `.claude/settings.json` | `docs-standards`, `markdown-standards`, `terraform-standards`, `terraform-provider-standards` |
 
 Reusable CI (markdownlint, lychee, `terraform` plan/apply) is **not** a plugin — it lives in `flungo/github-workflows` and is referenced by `scaffolding`.
 
@@ -39,7 +39,11 @@ All the plugins above have landed; the plan tracks the remaining build-out (this
 - **Compose via first-party dependencies.** Where a plugin builds on another,
   list it in the plugin's `dependencies` array (bare string = latest in this
   marketplace). Installing the dependent auto-installs the dependency. Do not
-  depend on third-party marketplaces (ADR-001, ADR-002).
+  depend on third-party marketplaces ([ADR-001](docs/decisions/001-marketplace-structure.md),
+  [ADR-002](docs/decisions/002-documentation-and-adr-model.md)).
+- **Never reference a user-scope-only plugin from a project-scope one.**
+  `scaffolding`, `claude-code-web`, and `upstream-research` are user-scope only and never repo-adopted ([ADR-003](docs/decisions/003-owned-vs-third-party-adoption.md)), so a repo-adopted plugin cannot declare one as a dependency — and pointing at it anyway leaves a reference that dangles wherever the plugin is enabled at project scope.
+  Where both need the same rule, cite the **ADR** that records it (by full URL, since an installed plugin has no `docs/` tree beside it), or state the rule locally.
 - **`SKILL.md` frontmatter is YAML** — keep `name` and `description` on single
   lines and **avoid a colon-space (`: `) inside an unquoted value** (it parses
   as a mapping and silently drops the frontmatter). The `description` is what
@@ -100,11 +104,26 @@ In brief:
 - **Semantic line breaks** — top-level prose is written one sentence per line.
 - A session-end **doc-maintenance checklist** ships as the plugin's `Stop` hook.
 
+## Markdown standards
+
+The authoritative Markdown authoring conventions are the `markdown-standards` plugin (`plugins/markdown-standards/skills/markdown-standards/SKILL.md` and its `references/`) — this repo dogfoods them at project scope (ADR-004).
+They govern every Markdown file here, not only the ones under `docs/`.
+In brief:
+
+- **Semantic line breaks** — top-level prose is written one sentence per line;
+  there is no line-length limit (`MD013` is off).
+- **Cross-references** — never a bare identifier or "here" as link text;
+  same-repo context is implied, cross-repo is qualified and linked in full.
+- **Unique headings for link targets** — give any heading you cross-reference a
+  unique name, so an anchor can't silently redirect.
+- **Fix the link or its target, never suppress the check** — for markdownlint
+  findings, link/anchor failures, and the external-URL sweep alike.
+
 ## Active work
 
 | Plan | Status |
 |---|---|
-| [Marketplace build-out](docs/plans/marketplace-buildout.md) | In progress — structure decided; split (#1), bootstrap + git-conventions dogfood (#2), `docs-standards` plugin (#4), `claude-code-web` (#5), `upstream-research` (#6), `terraform-standards` (#7), `terraform-provider-standards` (#8), and `scaffolding` (#10) merged |
+| [Marketplace build-out](docs/plans/marketplace-buildout.md) | In progress — structure decided; split (#1), bootstrap + git-conventions dogfood (#2), `docs-standards` plugin (#4), `claude-code-web` (#5), `upstream-research` (#6), `terraform-standards` (#7), `terraform-provider-standards` (#8), `scaffolding` (#10), and `markdown-standards` (#14) merged; only this repo's own CI remains |
 
 ## Key decisions
 
@@ -116,3 +135,6 @@ In short:
   `github-workflows`, not the marketplace ([ADR-001](docs/decisions/001-marketplace-structure.md)).
 - Diátaxis docs, Nygard ADRs, self-encoded rather than depending on a
   third-party ADR plugin ([ADR-002](docs/decisions/002-documentation-and-adr-model.md)).
+- Markdown authoring conventions ship as the `markdown-standards` plugin here,
+  referenced from the `github-workflows` docs instead of being inlined there or
+  copied into consumer `CLAUDE.md`s ([ADR-004](docs/decisions/004-markdown-standards-plugin.md)).

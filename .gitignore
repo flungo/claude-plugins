@@ -1,0 +1,4 @@
+# Python bytecode, generated whenever the markdown-standards plugin's
+# scripts/reflow.py is run or imported.
+__pycache__/
+*.py[cod]
