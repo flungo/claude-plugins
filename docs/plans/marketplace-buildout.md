@@ -1,7 +1,7 @@
 # Plan: flungo-plugins marketplace build-out
 
-**Status:** In progress — structure decided (ADR-001, ADR-002); the split (#1), the repo bootstrap + `git-conventions` dogfood (#2), `docs-standards` (#4, step 4), `claude-code-web` (#5, step 5), `upstream-research` (#6, step 6), `terraform-standards` (#7, step 7), `terraform-provider-standards` (#8, step 8), `scaffolding` (#10, step 9), and `markdown-standards` (#14, step 11) have merged.
-Every planned plugin has landed; only this repo's own CI (step 10) remains before the plan retires.
+**Status:** Complete — structure decided (ADR-001, ADR-002); the split (#1), the repo bootstrap + `git-conventions` dogfood (#2), `docs-standards` (#4, step 4), `claude-code-web` (#5, step 5), `upstream-research` (#6, step 6), `terraform-standards` (#7, step 7), `terraform-provider-standards` (#8, step 8), `scaffolding` (#10, step 9), `markdown-standards` (#14, step 11), and this repo's own CI (#12, step 10) have merged.
+Every step is done; retirement (deleting this plan) follows in a second PR once every load-bearing fact is confirmed persisted.
 
 Turns the single seed plugin into the full personal marketplace: a set of always-on personal plugins plus a growing set of repo-adopted standards plugins, with this repo dogfooding the conventions it encodes.
 The structure and its rationale live in the ADRs; this plan tracks the sequencing and is **retired (deleted) when complete** — do not reference it from permanent docs.
@@ -75,11 +75,14 @@ Conventions that appeared in only one repo but were judged worth extracting, and
   *Merged: #10.* The pitfalls already live in `github-workflows`'
   `adopting-markdown-workflows.md`, which the plugin points at; owned-vs-third-party
   formalised in ADR-003.
-- [ ] **10. Repo CI** — adopt the markdownlint + lychee reusable workflows from
+- [x] **10. Repo CI** — adopt the markdownlint + lychee reusable workflows from
   `github-workflows`, plus a `claude plugin validate` check on PRs so the
   marketplace can't break; this is itself dogfooding steps 4 and 9. Follow the
   Stalwart markdown-validation adoption notes (see Notes) — or, now that step 11
-  exists, run `/adopt-markdown-ci`.
+  exists, run `/adopt-markdown-ci`. *Merged: #12.* Worked through by hand from
+  the `github-workflows` runbook before step 11 landed; the outcome matches
+  `/adopt-markdown-ci`'s checklist, with the conventions left to
+  `markdown-standards` rather than restated in `CLAUDE.md`.
 - [x] **11. `markdown-standards` plugin** — extract the Claude-facing
   Markdown-validation conventions inlined in the `github-workflows` docs
   ([its issue #3](https://github.com/flungo/github-workflows/issues/3)) into a
