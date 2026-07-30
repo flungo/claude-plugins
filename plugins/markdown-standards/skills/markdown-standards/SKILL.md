@@ -6,8 +6,7 @@ description: Fabrizio's Markdown authoring conventions. Consult this whenever wr
 # Markdown Standards
 
 Fabrizio's standing conventions for authoring Markdown — the **semantic** half of the Markdown validation standard.
-The **mechanical** half is CI:
-his repos adopt the reusable `markdown-lint.yml` (markdownlint-cli2) and `markdown-links.yml` (lychee internal link/anchor check + scheduled external-URL sweep) workflows from [`flungo/github-workflows`](https://github.com/flungo/github-workflows) — see its [`docs/reference/markdown-validation.md`](https://github.com/flungo/github-workflows/blob/main/docs/reference/markdown-validation.md).
+The **mechanical** half is CI: his repos adopt the reusable `markdown-lint.yml` (markdownlint-cli2) and `markdown-links.yml` (lychee internal link/anchor check + scheduled external-URL sweep) workflows from [`flungo/github-workflows`](https://github.com/flungo/github-workflows) — see its [`docs/reference/markdown-validation.md`](https://github.com/flungo/github-workflows/blob/main/docs/reference/markdown-validation.md).
 The tools verify that links resolve and style rules hold; this skill covers what they cannot — that references are unambiguous and correctly qualified, that prose follows the conventions the lint rules are configured around, and how to fix the failures the tools raise.
 
 Apply these in any repo of Fabrizio's whenever you touch Markdown, whether or not that repo has adopted the CI.
@@ -23,7 +22,7 @@ Read the relevant reference before doing the work:
   Read it before writing prose, structuring headings, or fixing a finding from one of those rules.
 - **`references/adopt-markdown-ci.md`** — the `/adopt-markdown-ci` command procedure, including the parts of adoption that are *opinion* rather than mechanism: the markdownlint rule defaults, the check-then-fix commit discipline, and the reflow pass.
 
-This plugin also ships **`scripts/reflow.py`** (`${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py`) — the render-gated one-time pass that migrates a repo's existing Markdown to semantic line breaks.
+This plugin also ships **`scripts/reflow.py`** (`${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py`) — the render-gated one-time pass that migrates a repo's existing Markdown to semantic line breaks, covering top-level paragraphs, list items and blockquotes.
 See `references/prose-conventions.md` for when and how to run it.
 
 ## Commands
