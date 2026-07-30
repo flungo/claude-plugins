@@ -21,7 +21,7 @@
       "name": "docs-standards",
       "source": "./plugins/docs-standards",
       "description": "Repo-adopted documentation conventions — Diátaxis docs, Nygard ADRs, ephemeral-plan lifecycle, README-index and staleness discipline, agent/verify callouts, and a session-end doc-maintenance checklist hook. Depends on markdown-standards.",
-      "version": "0.1.0"
+      "version": "0.2.0"
     },
     {
       "name": "claude-code-web",
@@ -51,7 +51,7 @@
       "name": "markdown-standards",
       "source": "./plugins/markdown-standards",
       "description": "Markdown authoring conventions — unambiguous cross-references and link hygiene, semantic line breaks, unique cross-referenced headings, adjacent-blockquote handling, fix-the-target-never-suppress remediation for markdownlint/link-check failures, and the /adopt-markdown-ci onboarding command.",
-      "version": "0.1.0"
+      "version": "0.2.0"
     },
     {
       "name": "scaffolding",
