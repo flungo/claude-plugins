@@ -6,11 +6,8 @@ Run it as the automated alternative to working through that repo's runbook by ha
 **Target repo:** an explicitly named repo always takes precedence; otherwise the repo of the current session.
 If neither is clear, ask.
 
-## Gate — owned repos only
-
-Adoption imposes house style, so it is only for repos **Fabrizio owns, verified — not a fork** (fork flag/parent on GitHub, contributor list, pre-existing adoption of his plugins or shared CI as precedent; when unsure, treat as third-party and adopt nothing).
-This is the fleet-wide owned-vs-third-party gate, not something specific to Markdown; it is recorded in [claude-plugins ADR 003](https://github.com/flungo/claude-plugins/blob/main/docs/decisions/003-owned-vs-third-party-adoption.md).
-The trap it exists for: forking a third-party project puts it in Fabrizio's namespace, so "is it in his namespace?" is necessary but not sufficient — check the fork flag/parent.
+There is no ownership gate: this plugin is repo-adopted, so a repo that has it enabled has already opted into these standards.
+If it is enabled, the conventions apply and the command applies them.
 
 ## Division of labour — what comes from where
 

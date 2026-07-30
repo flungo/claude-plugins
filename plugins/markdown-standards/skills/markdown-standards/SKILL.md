@@ -31,8 +31,7 @@ See `references/prose-conventions.md` for when and how to run it.
 ### `/adopt-markdown-ci` (aliases: "adopt markdown CI", "add markdown validation")
 
 Onboards a repo to the Markdown validation CI: adds the two caller workflows pinned to the current major, the per-repo config (`.markdownlint-cli2.jsonc`, `.lycheeignore`, `LYCHEE_GITHUB_TOKEN`), works through the checks in check-then-fix commit order, runs the render-gated semantic-line-break reflow, and adopts this plugin at project scope so the conventions travel with the repo.
-Only for repos Fabrizio owns — verified his, **and not a fork**: he forks third-party projects into his own namespace to contribute upstream, so the namespace alone does not settle it, and when unsure the answer is third-party (adopt nothing).
-That is the fleet-wide owned-vs-third-party gate, recorded in [claude-plugins ADR 003](https://github.com/flungo/claude-plugins/blob/main/docs/decisions/003-owned-vs-third-party-adoption.md); `references/adopt-markdown-ci.md` states the full test.
+Enabling this plugin in a repo *is* the opt-in, so the command has no further gate: run it wherever the plugin is enabled.
 
 Full procedure: `references/adopt-markdown-ci.md`.
 
