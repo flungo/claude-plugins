@@ -48,6 +48,15 @@ This repo adopts those Markdown workflows and the version check itself (see § M
 - **Validate before committing:** `claude plugin validate .` (marketplace) and
   `claude plugin validate plugins/<name>` (each plugin). Test-install from the
   local path and confirm the skill loads and any dependency resolves.
+- **Bump the version when a plugin's behaviour or footprint changes.** These are
+  content plugins pulled from this repo, not immutable releases, so the version is
+  a human signal rather than a resolver input — keep it cheap. **Minor** for
+  anything a consumer would notice: a skill or command added or removed, a new
+  dependency or hook, a shipped script, or a convention change that alters what an
+  agent does. **Patch** for wording that clarifies without changing a rule.
+  **Major** for a break — a rename, a removed command, or a reversal that
+  invalidates a repo's existing `.claude/settings.json`. Update the matching
+  `marketplace.json` entry in the same commit.
 - **Name for the domain, not the initial slice** — plugin names are install
   identifiers, so a rename is breaking.
 - **Evals** live under a plugin's `evals/` (dev-time fixtures, not loaded at
