@@ -17,8 +17,10 @@ See `references/owned-vs-third-party.md`.
 
 ## In an owned repo
 
-- **Building out a fresh repo** → bring it to standard *from the start* (core plugins, initial `CLAUDE.md`, Diátaxis docs + a build-out plan, content stubbed together with the plugin that governs it). See `references/building-out-a-repo.md`.
-- **Extending an existing repo** → spot conventions it hasn't adopted (or restates locally) and *suggest* them as a non-blocking prerequisite or follow-up, without derailing the current task. See `references/extending-a-repo.md`.
+- **Building out a fresh repo** → bring it to standard *from the start* (core plugins, initial `CLAUDE.md`, Diátaxis docs + a build-out plan, content stubbed together with the plugin that governs it).
+  See `references/building-out-a-repo.md`.
+- **Extending an existing repo** → spot conventions it hasn't adopted (or restates locally) and *suggest* them as a non-blocking prerequisite or follow-up, without derailing the current task.
+  See `references/extending-a-repo.md`.
 
 ## The helper repos
 

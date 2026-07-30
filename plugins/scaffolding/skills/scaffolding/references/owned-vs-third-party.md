@@ -7,7 +7,9 @@
 A repo is *owned* only if it is Fabrizio's **and not a fork**.
 Being in his namespace is necessary but not sufficient: **to contribute to a third-party project he forks it into his own namespace**, so a fork sits there too.
 
-> **🤖 Agent** — verify ownership before treating a repo as owned: check its **fork status** on GitHub (the `fork` flag / `parent`, via the GitHub MCP), and/or use the **contributor list** as a heuristic (sole/primary author → his; active upstream and other maintainers → third-party). Pre-existing adoption of his plugins or shared workflows in the repo is itself strong precedent that it's owned. When unsure, treat it as third-party.
+> **🤖 Agent** — verify ownership before treating a repo as owned: check its **fork status** on GitHub (the `fork` flag / `parent`, via the GitHub MCP), and/or use the **contributor list** as a heuristic (sole/primary author → his; active upstream and other maintainers → third-party).
+> Pre-existing adoption of his plugins or shared workflows in the repo is itself strong precedent that it's owned.
+> When unsure, treat it as third-party.
 
 ## Owned repo — adopt what's relevant, at repo level
 

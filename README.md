@@ -5,50 +5,19 @@ One repo, plugins usable from both Claude Code and claude.ai, kept in sync by pu
 
 ## Plugins
 
-- **[git-conventions](plugins/git-conventions)** — standing git/PR hygiene
-  conventions (branch management, Conventional Commits, linear history,
-  squash-vs-rebase, no fixup commits, force-push policy). Applies to all git
-  work, not just a named command.
-- **[contributor-workflow](plugins/contributor-workflow)** — personal
-  contributor/review workflow commands. Currently one command,
-  `/ready-to-merge` (aliases "Ready to Merge?", "RTM?"); more expected over
-  time. Depends on `git-conventions`.
-- **[docs-standards](plugins/docs-standards)** — repo-adopted documentation
-  conventions (project scope): the Diátaxis `docs/` split, Nygard ADRs, the
-  ephemeral-plan lifecycle, README-index and staleness discipline, the agent
-  and verify callouts, and a session-end doc-maintenance checklist hook.
+- **[git-conventions](plugins/git-conventions)** — standing git/PR hygiene conventions (branch management, Conventional Commits, linear history, squash-vs-rebase, no fixup commits, force-push policy).
+  Applies to all git work, not just a named command.
+- **[contributor-workflow](plugins/contributor-workflow)** — personal contributor/review workflow commands.
+  Currently one command, `/ready-to-merge` (aliases "Ready to Merge?", "RTM?"); more expected over time.
+  Depends on `git-conventions`.
+- **[docs-standards](plugins/docs-standards)** — repo-adopted documentation conventions (project scope): the Diátaxis `docs/` split, Nygard ADRs, the ephemeral-plan lifecycle, README-index and staleness discipline, the agent and verify callouts, and a session-end doc-maintenance checklist hook.
   Depends on `markdown-standards`.
-- **[claude-code-web](plugins/claude-code-web)** — personal, always-on working
-  preferences for Claude Code Web (user scope): the egress proxy and CA bundle,
-  GitHub-via-MCP, ephemeral containers, repo scoping and `add_repo`, the
-  multi-repo config caveat, and delegating unrunnable steps to CI.
-- **[upstream-research](plugins/upstream-research)** — personal, always-on
-  method (user scope) for verifying facts about third-party/upstream
-  components: go to the authoritative source (the project's own repo and docs),
-  distrust training data, web-search summaries, and generated docs, and record
-  provenance.
-- **[terraform-standards](plugins/terraform-standards)** — repo-adopted
-  conventions (project scope) for a Terraform/HCL config repo: one `.tf` per
-  concern, resource names that mirror the real object, sensitive values as
-  variables, durations as arithmetic, pinned providers with a committed lock,
-  and adopting existing resources via `import {}` blocks.
-- **[terraform-provider-standards](plugins/terraform-provider-standards)** —
-  repo-adopted conventions (project scope) for building a Terraform provider in
-  Go: the terraform-plugin-framework layout, `tfplugindocs`-generated docs,
-  MPL-2.0 per-file headers, and adopting the shared `flungo/github-workflows`
-  provider CI (golangci-lint v2, GoReleaser dual-registry release).
-- **[markdown-standards](plugins/markdown-standards)** — repo-adopted Markdown
-  authoring conventions (project scope): unambiguous cross-references and link
-  hygiene, semantic line breaks, unique cross-referenced headings,
-  adjacent-blockquote handling, fixing markdownlint and link/anchor CI failures
-  (fix the target, never suppress), and `/adopt-markdown-ci` for onboarding a
-  repo to the reusable Markdown CI from `flungo/github-workflows`.
-- **[scaffolding](plugins/scaffolding)** — personal, always-on guide (user
-  scope) for setting up, building out, and extending repos across the fleet:
-  gated on verified ownership (an owned repo adopts the conventions and standards
-  plugins; a fork or third-party repo gets nothing without explicit consent),
-  routing to the shared CI and the helper repos (`github-workflows`,
-  `claude-plugins`, `terraform-github`) added as needed.
+- **[claude-code-web](plugins/claude-code-web)** — personal, always-on working preferences for Claude Code Web (user scope): the egress proxy and CA bundle, GitHub-via-MCP, ephemeral containers, repo scoping and `add_repo`, the multi-repo config caveat, and delegating unrunnable steps to CI.
+- **[upstream-research](plugins/upstream-research)** — personal, always-on method (user scope) for verifying facts about third-party/upstream components: go to the authoritative source (the project's own repo and docs), distrust training data, web-search summaries, and generated docs, and record provenance.
+- **[terraform-standards](plugins/terraform-standards)** — repo-adopted conventions (project scope) for a Terraform/HCL config repo: one `.tf` per concern, resource names that mirror the real object, sensitive values as variables, durations as arithmetic, pinned providers with a committed lock, and adopting existing resources via `import {}` blocks.
+- **[terraform-provider-standards](plugins/terraform-provider-standards)** — repo-adopted conventions (project scope) for building a Terraform provider in Go: the terraform-plugin-framework layout, `tfplugindocs`-generated docs, MPL-2.0 per-file headers, and adopting the shared `flungo/github-workflows` provider CI (golangci-lint v2, GoReleaser dual-registry release).
+- **[markdown-standards](plugins/markdown-standards)** — repo-adopted Markdown authoring conventions (project scope): unambiguous cross-references and link hygiene, semantic line breaks, unique cross-referenced headings, adjacent-blockquote handling, fixing markdownlint and link/anchor CI failures (fix the target, never suppress), and `/adopt-markdown-ci` for onboarding a repo to the reusable Markdown CI from `flungo/github-workflows`.
+- **[scaffolding](plugins/scaffolding)** — personal, always-on guide (user scope) for setting up, building out, and extending repos across the fleet: gated on verified ownership (an owned repo adopts the conventions and standards plugins; a fork or third-party repo gets nothing without explicit consent), routing to the shared CI and the helper repos (`github-workflows`, `claude-plugins`, `terraform-github`) added as needed.
 
 ## Install in Claude Code
 
@@ -76,11 +45,8 @@ To pull in updates later:
 
 1. Open **Customize** in the left sidebar → **Plugins** tab.
 2. Under **Personal plugins**, click "+" → **Add marketplace**.
-3. Choose **Add from a repository** and paste this repo's URL:
-   `https://github.com/flungo/claude-plugins`
-4. Claude parses `.claude-plugin/marketplace.json` and lists the plugins —
-   install `contributor-workflow` (which brings in `git-conventions`), or
-   `git-conventions` on its own.
+3. Choose **Add from a repository** and paste this repo's URL: `https://github.com/flungo/claude-plugins`
+4. Claude parses `.claude-plugin/marketplace.json` and lists the plugins — install `contributor-workflow` (which brings in `git-conventions`), or `git-conventions` on its own.
 
 To pick up updates after pushing changes here, use the marketplace's "Update" action in the Plugins tab to pull the latest commit.
 

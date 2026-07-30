@@ -17,12 +17,9 @@ That yields four directories under `docs/`, each with a `README.md` index:
 
 The distinction that most often trips people:
 
-- A doc with **steps to follow that will be run more than once** is a
-  **runbook**, not a reference.
-- A doc with **no steps, that exists to be looked up**, is a **reference**, not
-  a runbook.
-- A doc with **steps that are followed exactly once and then done** is a
-  **plan**, not a runbook.
+- A doc with **steps to follow that will be run more than once** is a **runbook**, not a reference.
+- A doc with **no steps, that exists to be looked up**, is a **reference**, not a runbook.
+- A doc with **steps that are followed exactly once and then done** is a **plan**, not a runbook.
 
 Only create a directory when it has content — an empty `runbooks/` or `reference/` is noise until the first doc lands.
 
@@ -38,7 +35,8 @@ Each index does two jobs: it lists the directory's contents, and it documents th
 The decisions index carries the ADR template (see `references/adr-template.md`) and one summary row per ADR; the plans index describes a plan's shape (a status row plus numbered checkbox steps) and carries one status row per plan; a runbooks or reference index likewise states what a runbook or reference doc should contain.
 Don't update a doc without also updating its parent README row.
 
-**Ordering.** Unless a doc type has a clear chronology, order pages — and their index rows — alphabetically.
+**Ordering.**
+Unless a doc type has a clear chronology, order pages — and their index rows — alphabetically.
 ADRs look like the exception, but they use zero-padded monotonic numbers (`001`, `002`, …) precisely so that alphabetical order *is* chronological order — so ADRs sort alphabetically too.
 
 ## Callouts — two distinct devices, kept separate
@@ -76,21 +74,18 @@ A plan has numbered checkbox steps (`- [ ]` / `- [x]`) and a status row in `docs
 2. **In progress** — execution has started; the README row reads "In progress".
    Mark steps `[x]` as they complete.
    The PR that completes a tracked step is the one that ticks it and flips its status — not a later follow-up.
-3. **Complete** — when every step is done, set the README row to
-   `Complete (YYYY-MM-DD)`, update the "Active work" section of `CLAUDE.md`, and
-   open a PR.
-4. **Retired** — once the completion PR is merged **and the user confirms**,
-   open a *second* PR that deletes the plan file and removes its README row.
+3. **Complete** — when every step is done, set the README row to `Complete (YYYY-MM-DD)`, update the "Active work" section of `CLAUDE.md`, and open a PR.
+4. **Retired** — once the completion PR is merged **and the user confirms**, open a *second* PR that deletes the plan file and removes its README row.
    Git history preserves it; nothing is lost.
 
 The two-PR split exists to give the user a review gate before anything is deleted.
 Before retiring, an **independent verification** — a pass distinct from whoever executed the plan, e.g. a subagent or a second reviewer — confirms that every load-bearing fact the plan produced has been persisted to its permanent home: decisions to ADRs, information to reference docs, repeatable procedures to runbooks, and final architecture to the README or architecture doc.
 A plan is safe to delete only once nothing load-bearing lives in it alone.
 
-> **🤖 Agent** — never delete a plan in the same PR that marks it complete;
-> retirement is always a separate, user-confirmed PR.
+> **🤖 Agent** — never delete a plan in the same PR that marks it complete; retirement is always a separate, user-confirmed PR.
 
-**Plans are ephemeral — never reference them from permanent docs or code.** Architecture, decisions, and repeatable procedures belong in their permanent home (README, ADRs, runbooks, code comments), expressed as *outcomes* — what the thing is, what was decided, when — not as a link to the plan that produced it.
+**Plans are ephemeral — never reference them from permanent docs or code.**
+Architecture, decisions, and repeatable procedures belong in their permanent home (README, ADRs, runbooks, code comments), expressed as *outcomes* — what the thing is, what was decided, when — not as a link to the plan that produced it.
 The one exception is the "Active work" section of `CLAUDE.md`, which may link a plan **while it is in progress**; remove the link when the plan is retired.
 
 ## Staleness discipline
@@ -99,29 +94,19 @@ Stale docs mislead, so maintenance is not optional — it happens after every ch
 
 **After a change:**
 
-- Recording or revising a decision → write or update the ADR and its index row
-  (`references/adr-template.md`).
-- Introducing a new resource, feature, or component → update the repo `README`
-  ("what this manages" / equivalent) and any affected reference doc.
-- Advancing a plan → tick its steps and update both the plans README and
-  "Active work".
-- Touching anything under `docs/` → refresh that directory's README index in
-  the same commit.
+- Recording or revising a decision → write or update the ADR and its index row (`references/adr-template.md`).
+- Introducing a new resource, feature, or component → update the repo `README` ("what this manages" / equivalent) and any affected reference doc.
+- Advancing a plan → tick its steps and update both the plans README and "Active work".
+- Touching anything under `docs/` → refresh that directory's README index in the same commit.
 
 **End-of-session staleness scan** — before finishing, search for anything that may have drifted:
 
-- Values that change over time — versions, hostnames, IPs, owner/workspace/
-  provider/module/secret names — and correct any that moved.
-- Open decisions (marked `[ ]` or "OPEN DECISION") that were resolved this
-  session — close them in the docs.
-- Whether `CLAUDE.md` "Active work" (and any "current blocker") still reflects
-  reality.
-- Every README row whose underlying document was touched — audit the whole row,
-  description and status, against the document's current state.
+- Values that change over time — versions, hostnames, IPs, owner/workspace/ provider/module/secret names — and correct any that moved.
+- Open decisions (marked `[ ]` or "OPEN DECISION") that were resolved this session — close them in the docs.
+- Whether `CLAUDE.md` "Active work" (and any "current blocker") still reflects reality.
+- Every README row whose underlying document was touched — audit the whole row, description and status, against the document's current state.
 
-> **🤖 Agent** — if something is probably stale but you can't verify it without
-> live access, add a `> **Verify:** …` callout rather than leaving silent
-> uncertainty or guessing.
+> **🤖 Agent** — if something is probably stale but you can't verify it without live access, add a `> **Verify:** …` callout rather than leaving silent uncertainty or guessing.
 
 The session-end doc-maintenance checklist (`references/stop-hook.md`) is a backstop for this scan, not a replacement — and it fires *after* the turn, too late to land a tracker update in the PR that earned it, so do the tracker updates as you go.
 
