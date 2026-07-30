@@ -7,6 +7,9 @@ Don't ask permission for routine steps in this procedure; do ask if you hit a ge
 
 Read `references/git-conventions.md` before starting — commit history cleanup in step 5 depends on it.
 
+**Subagent model:** the research and commit-triage subagents dispatched below (steps 4 and 5) default to the `sonnet` model regardless of what model is orchestrating this skill — the work handed off is well-scoped enough not to need a larger one, and defaulting smaller keeps the skill cheaper and faster to run.
+Use judgment to escalate a given dispatch if that specific case looks unusually large or hard (e.g. an enormous or deeply entangled diff for step 5); don't escalate by default.
+
 ## 0. Identify the target PR
 
 - If the user gave an explicit PR (number, URL, or branch name), use that —
@@ -87,8 +90,9 @@ Triage it the same way:
 
 - **Discoverable** (the answer exists somewhere — current library behavior,
   what another part of the codebase already does, what a linked issue/doc
-  says, correct terminology, etc.): dispatch a research subagent to find the
-  answer rather than guessing or leaving it. Apply the fix once resolved.
+  says, correct terminology, etc.): dispatch a research subagent (default
+  model per the note above) to find the answer rather than guessing or
+  leaving it. Apply the fix once resolved.
   Report: what was ambiguous, what the research found, and the fix applied.
 - **Requires a decision** (a genuine judgment call, a design tradeoff, or
   something only the user can decide — no amount of research resolves it):
@@ -114,7 +118,7 @@ A new standalone document is normally its own commit; a doc that specifically ex
 Convention/config changes (e.g. a `CLAUDE.md` update) are normally bundled with the change that made the convention relevant, not left as a separate catch-all.
 When you're not sure whether two things are "the same change" or two changes that happen to touch the same file, default to splitting them — over-splitting is far easier for the user to squash back together than an under-split history is to untangle.
 
-**Delegate the analysis to a subagent.** Don't do this triage yourself from memory of the diff — dispatch a subagent whose only job is to work out the target commit structure.
+**Delegate the analysis to a subagent.** Don't do this triage yourself from memory of the diff — dispatch a subagent (default model per the note above) whose only job is to work out the target commit structure.
 Don't read the full diff into your own context first and paste it into the subagent's prompt; instead, point the subagent at the branch/commit range (`origin/<base>..HEAD`) and have it pull the diff itself, so the full diff only ever lives in the subagent's context, not yours.
 Give the subagent:
 

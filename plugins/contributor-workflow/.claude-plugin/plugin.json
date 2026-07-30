@@ -1,7 +1,7 @@
 {
   "name": "contributor-workflow",
   "description": "Fabrizio's personal contributor/review workflow commands — currently /ready-to-merge, a final pre-merge sweep of a PR.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
     "name": "flungo"
   },
