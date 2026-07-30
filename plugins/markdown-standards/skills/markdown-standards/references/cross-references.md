@@ -3,8 +3,12 @@
 Keep links and references accurate and unambiguous.
 These rules apply to **any** cross-reference — between docs, to an ADR, to source code, or to another repo.
 
-The Markdown validation CI (where adopted) enforces the **mechanical** half: the link/anchor check fails a PR when a relative link doesn't resolve to a file or an anchor doesn't match a heading; markdownlint flags link *style* (bare URLs, empty links, same-file fragment validity); and the daily external-URL sweep raises an issue for dead external links.
-The rules below cover both how to fix those failures — always fix the link or its target, never suppress the check — and the **semantic** hygiene the tools can't verify: that link text is unambiguous and correctly qualified.
+The Markdown validation CI (where adopted) enforces the **mechanical** half:
+the link/anchor check fails a PR when a relative link doesn't resolve to a file or an anchor doesn't match a heading;
+markdownlint flags link *style* (bare URLs, empty links, same-file fragment validity);
+and the daily external-URL sweep raises an issue for dead external links.
+The rules below cover both how to fix those failures — always fix the link or its target, never suppress the check — and the **semantic** hygiene the tools can't verify:
+that link text is unambiguous and correctly qualified.
 
 ## General rules — apply to every reference
 
