@@ -127,25 +127,9 @@ The session-end doc-maintenance checklist (`references/stop-hook.md`) is a backs
 
 ## Semantic line breaks
 
-Write top-level prose **one sentence per line** (semantic line breaks / [sembr](https://sembr.org/)).
+Prose in a `docs/` tree — like all Markdown — is written **one sentence per source line** (semantic line breaks / [sembr](https://sembr.org/)).
 Source diffs then show which *sentence* changed instead of reflowing a whole paragraph, and review comments land on the right line.
+That matters most here, because docs are the prose-heaviest part of a repo: sentence-scoped diffs are what keep an ADR or runbook edit reviewable.
 
-This also means **no maximum line length**: a sentence lives on a single line however long it runs, so any line-length lint (markdownlint's `MD013`) is disabled rather than left to fight the convention.
-A hard wrap column and one-sentence-per-line are mutually exclusive, and the sentence is the meaningful unit — so the wrap limit goes.
-This is the same intent behind the reflow tooling and the Markdown-validation workflows in the sibling `stalwart.flungo.net` repo (`reflow.py` and its `markdown-validation` plan).
-
-Scope and exceptions:
-
-- Applies to **top-level prose paragraphs**. Leave lists, tables, headings,
-  code blocks, and metadata lines (e.g. a `**Date:**` line) alone — they are
-  not reflowed.
-- It changes only **source whitespace**, never rendered output — a sentence per
-  line renders identically to a hard-wrapped paragraph.
-- Preserve hard-break blocks (lines ending in two spaces or a backslash);
-  reflowing them would change the render.
-
-Because it is render-neutral, a migration can be **gated on render-equivalence**: reflow the source, render both versions to normalised HTML, and keep the change only where the HTML is byte-identical, leaving any file that would render differently untouched.
-A reference implementation of exactly this render-gated approach — paragraph-level reflow with a CommonMark render gate and abbreviation-aware sentence splitting — lives in the sibling `stalwart.flungo.net` repo at `docs/plans/markdown-validation/reflow.py`; it is a one-time best-effort migration tool, not repo CI.
-
-> **🤖 Agent** — write new prose one sentence per line from the start; don't
-> hard-wrap a paragraph and rely on a later reflow pass.
+The convention itself — its scope and exceptions, the paired `MD013` lint setting, and the render-gated migration tooling — belongs to the **`markdown-standards`** skill, a declared dependency of this plugin.
+Read its `references/prose-conventions.md` for the rules; they apply to every Markdown file in the repo, not only the ones under `docs/`.

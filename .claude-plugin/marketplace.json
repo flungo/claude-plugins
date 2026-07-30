@@ -20,7 +20,7 @@
     {
       "name": "docs-standards",
       "source": "./plugins/docs-standards",
-      "description": "Repo-adopted documentation conventions — Diátaxis docs, Nygard ADRs, ephemeral-plan lifecycle, README-index and staleness discipline, agent/verify callouts, semantic line breaks, and a session-end doc-maintenance checklist hook.",
+      "description": "Repo-adopted documentation conventions — Diátaxis docs, Nygard ADRs, ephemeral-plan lifecycle, README-index and staleness discipline, agent/verify callouts, and a session-end doc-maintenance checklist hook. Depends on markdown-standards.",
       "version": "0.1.0"
     },
     {

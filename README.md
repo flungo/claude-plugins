@@ -17,8 +17,8 @@ this repo rather than by re-uploading files by hand.
 - **[docs-standards](plugins/docs-standards)** — repo-adopted documentation
   conventions (project scope): the Diátaxis `docs/` split, Nygard ADRs, the
   ephemeral-plan lifecycle, README-index and staleness discipline, the agent
-  and verify callouts, semantic line breaks, and a session-end
-  doc-maintenance checklist hook.
+  and verify callouts, and a session-end doc-maintenance checklist hook.
+  Depends on `markdown-standards`.
 - **[claude-code-web](plugins/claude-code-web)** — personal, always-on working
   preferences for Claude Code Web (user scope): the egress proxy and CA bundle,
   GitHub-via-MCP, ephemeral containers, repo scoping and `add_repo`, the

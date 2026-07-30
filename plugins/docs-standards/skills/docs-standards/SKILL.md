@@ -1,6 +1,6 @@
 ---
 name: docs-standards
-description: Fabrizio's documentation conventions for a repository's docs/ tree. Consult this whenever writing or maintaining docs in one of his repos — adding or changing an ADR, plan, runbook, or reference doc; updating a README index; recording an architectural decision; retiring a completed plan; or scanning for stale docs at session end. Covers the Diátaxis directory split (decisions, plans, runbooks, reference), the Nygard ADR format, the ephemeral two-PR plan lifecycle, keeping every README index current in the same commit, the agent-directed and verify callouts, semantic line breaks, and a session-end doc-maintenance checklist. Complements the repo's own CLAUDE.md rather than overriding it.
+description: Fabrizio's documentation conventions for a repository's docs/ tree. Consult this whenever writing or maintaining docs in one of his repos — adding or changing an ADR, plan, runbook, or reference doc; updating a README index; recording an architectural decision; retiring a completed plan; or scanning for stale docs at session end. Covers the Diátaxis directory split (decisions, plans, runbooks, reference), the Nygard ADR format, the ephemeral two-PR plan lifecycle, keeping every README index current in the same commit, the agent-directed and verify callouts, and a session-end doc-maintenance checklist. Relies on the markdown-standards skill for how the Markdown itself is written. Complements the repo's own CLAUDE.md rather than overriding it.
 ---
 
 # Documentation Standards
@@ -17,6 +17,12 @@ them.** Always check for a `CLAUDE.md`, `CONTRIBUTING.md`, or similar guidance
 in the repo first; where the repo specifies something different, follow the
 repo. These conventions only fill the gaps the repo doesn't cover.
 
+This skill governs how a `docs/` tree is **organised and maintained**; how the
+Markdown itself is **written** — semantic line breaks, cross-references and
+link hygiene, heading uniqueness — belongs to the **`markdown-standards`**
+skill, a declared dependency of this plugin. Read it for any prose or link
+you write, in `docs/` or anywhere else in the repo.
+
 ## The reference files
 
 Read the relevant reference before doing the work — each is the authoritative
@@ -25,9 +31,9 @@ detail for its area:
 - **`references/documentation-model.md`** — the core model: the Diátaxis
   directory split (`decisions/`, `plans/`, `runbooks/`, `reference/`), what
   belongs in each, keeping every `README.md` index current in the same commit,
-  the ephemeral two-PR plan lifecycle, the end-of-session staleness scan, the
-  two callout devices, and semantic line breaks. Read it before adding or
-  moving any doc, or at session end.
+  the ephemeral two-PR plan lifecycle, the end-of-session staleness scan, and
+  the two callout devices. Read it before adding or moving any doc, or at
+  session end.
 - **`references/adr-template.md`** — the canonical Nygard ADR format (the exact
   heading shape, the `Date` and `Status` metadata, the `Context` / `Decision`
   / `Consequences` sections), sequential numbering, and supersession. Read it
