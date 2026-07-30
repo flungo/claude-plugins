@@ -17,11 +17,12 @@ A repo he owns adopts the conventions **relevant to it** at repo level, so every
 
 | Repo kind | Enable |
 |---|---|
-| Any repo | `git-conventions`, `docs-standards` |
+| Any repo | `git-conventions`, `markdown-standards`, `docs-standards` |
 | Terraform config repo | + `terraform-standards` |
 | Terraform provider repo | + `terraform-provider-standards` |
 
 Relevance is the rule — a Terraform *config* repo takes `terraform-standards`, not `terraform-provider-standards`.
+`docs-standards` depends on `markdown-standards`, so it arrives either way; list it explicitly all the same, and take it **alone** in a repo that has Markdown but no `docs/` tree to govern.
 `git-conventions` is personal (user-scope) but is applied at repo level too, so every contributor follows it.
 The **purely personal** plugins — `scaffolding`, `claude-code-web`, `upstream-research` — are **user-scope only and never adopted at repo level**; `scaffolding` in particular assumes full autonomy over an owned repo, which only Fabrizio has.
 

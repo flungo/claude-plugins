@@ -32,6 +32,9 @@ uses: flungo/github-workflows/.github/workflows/<workflow>.yml@v1
 **Follow the runbook — it is the source of truth** for each caller's inputs, secrets, required `permissions:` block, and gotchas.
 Don't paraphrase it here; open it (`add_repo` `github-workflows` if needed).
 
+The Markdown family has a shortcut: with `markdown-standards` enabled, **`/adopt-markdown-ci`** performs that whole adoption — callers, per-repo config, token, working through the checks, and the plugin's own conventions — following the runbook for the mechanics.
+Prefer it over doing the steps by hand in a repo that is taking the conventions anyway.
+
 > **🤖 Agent** — read the current major to pin (`@v1` today) from `github-workflows` itself; a future breaking change cuts a new major and freezes the old, so don't assume `v1` is still current.
 
 ### Don't over-share — repo-specific stays in the repo
