@@ -57,7 +57,7 @@
       "name": "scaffolding",
       "source": "./plugins/scaffolding",
       "description": "Setting up, building out, and extending repos across the fleet — gated on verified ownership (an owned repo adopts the conventions and standards plugins; a fork or third-party repo gets nothing without explicit consent), routing to the shared CI and the helper repos (github-workflows, claude-plugins, terraform-github) added as needed.",
-      "version": "0.1.0"
+      "version": "0.2.0"
     }
   ]
 }
