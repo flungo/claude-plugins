@@ -101,12 +101,11 @@ In brief:
 - **Two callouts, kept distinct** — `> **🤖 Agent** — …` for an instruction to
   an agent (one action per callout), and `> **Verify:** …` for uncertainty that
   can't be checked without live access.
-- **Semantic line breaks** — top-level prose is written one sentence per line.
 - A session-end **doc-maintenance checklist** ships as the plugin's `Stop` hook.
 
 ## Markdown standards
 
-The authoritative Markdown authoring conventions are the `markdown-standards` plugin (`plugins/markdown-standards/skills/markdown-standards/SKILL.md` and its `references/`) — this repo dogfoods them at project scope (ADR-004).
+The authoritative Markdown authoring conventions are the `markdown-standards` plugin (`plugins/markdown-standards/skills/markdown-standards/SKILL.md` and its `references/`) — this repo dogfoods them at project scope, and `docs-standards` declares it as a dependency (ADR-004).
 They govern every Markdown file here, not only the ones under `docs/`.
 In brief:
 
