@@ -135,9 +135,7 @@ The conventions themselves stay in `markdown-standards` (above); only repo-speci
 
 ## Active work
 
-| Plan | Status |
-|---|---|
-| [Marketplace build-out](docs/plans/marketplace-buildout.md) | Complete (2026-07-30) — every step merged: split (#1), bootstrap + git-conventions dogfood (#2), `docs-standards` (#4), `claude-code-web` (#5), `upstream-research` (#6), `terraform-standards` (#7), `terraform-provider-standards` (#8), `scaffolding` (#10), `markdown-standards` (#14), and this repo's own CI (#12); plan retirement follows in a second PR |
+No plans are currently active.
 
 ## Key decisions
 
