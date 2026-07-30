@@ -26,12 +26,16 @@ rather than forfeiting the file.
 
 Usage:
     pip install markdown-it-py
-    python3 reflow.py            # dry-run: sample diffs + per-file result
-    python3 reflow.py --apply    # write the render-verified reflow in place
+    python3 reflow.py                          # dry-run: sample diffs + per-file result
+    python3 reflow.py --apply                  # write the render-verified reflow in place
+    python3 reflow.py --exclude 'evals/**'     # hold files out (repeatable)
 
-Run from the repo root (globs '**/*.md', excluding node_modules).
+Run from the repo root (globs '**/*.md', excluding node_modules). Pass
+--exclude for anything the repo exempts from its Markdown conventions — eval
+fixtures, vendored docs, generated output — mirroring whatever the repo's
+.markdownlint-cli2.jsonc already ignores.
 """
-import sys, re, glob, difflib
+import sys, re, glob, difflib, fnmatch
 from markdown_it import MarkdownIt
 
 md = MarkdownIt("commonmark").enable("table")
@@ -155,9 +159,39 @@ def reflow_text(src):
     return "\n".join(lines), changed, rejected
 
 
+def select_files(paths, excludes):
+    """Filter discovered paths by the --exclude patterns.
+
+    Patterns are glob-style and matched against the whole repo-relative path,
+    with "*" crossing directory separators — so 'plugins/*/evals/*' reaches any
+    depth under any plugin's evals directory.
+    """
+    return sorted(
+        p for p in paths
+        if "node_modules" not in p.split("/")             # nested *and* top-level
+        and not any(fnmatch.fnmatch(p, pat) for pat in excludes)
+    )
+
+
+def parse_args(argv):
+    apply_changes = False
+    excludes = []
+    it = iter(argv)
+    for arg in it:
+        if arg == "--apply":
+            apply_changes = True
+        elif arg == "--exclude":
+            excludes.append(next(it, ""))
+        elif arg.startswith("--exclude="):
+            excludes.append(arg.split("=", 1)[1])
+        else:
+            sys.exit(f"unknown argument: {arg}\n{__doc__}")
+    return apply_changes, excludes
+
+
 def main():
-    apply_changes = "--apply" in sys.argv
-    files = sorted(f for f in glob.glob("**/*.md", recursive=True) if "/node_modules/" not in f)
+    apply_changes, excludes = parse_args(sys.argv[1:])
+    files = select_files(glob.glob("**/*.md", recursive=True), excludes)
     reflowed, unchanged, partial = [], [], []
     shown = 0
     for f in files:
@@ -183,6 +217,8 @@ def main():
     print(f"reflowed (render-verified): {len(reflowed)}")
     print(f"unchanged: {len(unchanged)}")
     print(f"partially reflowed (gate kept the rest): {len(partial)} -> {partial}")
+    if excludes:
+        print(f"excluded by pattern: {excludes}")
 
 
 if __name__ == "__main__":

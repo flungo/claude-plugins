@@ -42,6 +42,15 @@ It is a one-time best-effort migration pass, not repo CI.
 The gate is applied **per block against the whole file**: a paragraph's reflow is kept only if the entire file still renders identically with it changed, so an awkward paragraph costs only itself rather than forfeiting the file.
 Anything it reports as left behind is deliberate — reflow those by hand or leave them.
 
+Pass `--exclude GLOB` (repeatable) for anything the repo exempts from its Markdown conventions — eval fixtures, vendored docs, generated output.
+Mirror whatever the repo's `.markdownlint-cli2.jsonc` already ignores, so the two agree on what counts as the repo's own prose.
+Patterns match the whole repo-relative path with `*` crossing directory separators, so `--exclude 'plugins/*/evals/*'` reaches any depth.
+
+**It is a migration tool, not the rule.** The rule is the convention above; the script only automates the mechanical majority of a first pass.
+It breaks on sentence boundaries alone, because that is what can be done safely without judgement.
+A human or an agent writing prose applies the convention with judgement — see [sembr.org](https://sembr.org/) — and may legitimately break where the script would not.
+Do not treat the script's output as the target shape, and do not reach for it when writing new prose.
+
 > **🤖 Agent** — write new prose one sentence per line from the start, in list items and blockquotes as well as top-level paragraphs; don't hard-wrap and leave it for a later reflow pass.
 
 ## Unique cross-referenced headings (`MD024` `siblings_only`)

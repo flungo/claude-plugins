@@ -178,6 +178,48 @@ class TestRenderGate(ReflowTestCase):
         self.assertEqual((changed, rejected), (1, 1))
 
 
+class TestFileSelection(unittest.TestCase):
+    PATHS = [
+        "README.md",
+        "docs/decisions/001-x.md",
+        "node_modules/pkg/README.md",
+        "plugins/a/evals/fixtures/case/notes.md",
+        "plugins/a/skills/a/SKILL.md",
+    ]
+
+    def test_node_modules_is_always_dropped(self):
+        self.assertEqual(
+            reflow.select_files(self.PATHS, []),
+            ["README.md", "docs/decisions/001-x.md",
+             "plugins/a/evals/fixtures/case/notes.md", "plugins/a/skills/a/SKILL.md"],
+        )
+
+    def test_pattern_crosses_directory_separators(self):
+        self.assertEqual(
+            reflow.select_files(self.PATHS, ["plugins/*/evals/*"]),
+            ["README.md", "docs/decisions/001-x.md", "plugins/a/skills/a/SKILL.md"],
+        )
+
+    def test_patterns_accumulate(self):
+        self.assertEqual(
+            reflow.select_files(self.PATHS, ["plugins/*", "docs/*"]),
+            ["README.md"],
+        )
+
+    def test_parses_both_exclude_spellings(self):
+        self.assertEqual(
+            reflow.parse_args(["--exclude", "a/*", "--apply", "--exclude=b/*"]),
+            (True, ["a/*", "b/*"]),
+        )
+
+    def test_defaults_to_a_dry_run_with_no_excludes(self):
+        self.assertEqual(reflow.parse_args([]), (False, []))
+
+    def test_unknown_argument_is_fatal(self):
+        with self.assertRaises(SystemExit):
+            reflow.parse_args(["--write"])
+
+
 class TestIdempotence(ReflowTestCase):
     def test_second_pass_is_a_no_op(self):
         src = (
