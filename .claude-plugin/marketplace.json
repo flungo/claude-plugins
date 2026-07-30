@@ -48,6 +48,12 @@
       "version": "0.1.0"
     },
     {
+      "name": "markdown-standards",
+      "source": "./plugins/markdown-standards",
+      "description": "Markdown authoring conventions — unambiguous cross-references and link hygiene, semantic line breaks, unique cross-referenced headings, adjacent-blockquote handling, fix-the-target-never-suppress remediation for markdownlint/link-check failures, and the /adopt-markdown-ci onboarding command.",
+      "version": "0.1.0"
+    },
+    {
       "name": "scaffolding",
       "source": "./plugins/scaffolding",
       "description": "Setting up, building out, and extending repos across the fleet — gated on verified ownership (an owned repo adopts the conventions and standards plugins; a fork or third-party repo gets nothing without explicit consent), routing to the shared CI and the helper repos (github-workflows, claude-plugins, terraform-github) added as needed.",

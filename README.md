@@ -38,6 +38,12 @@ this repo rather than by re-uploading files by hand.
   Go: the terraform-plugin-framework layout, `tfplugindocs`-generated docs,
   MPL-2.0 per-file headers, and adopting the shared `flungo/github-workflows`
   provider CI (golangci-lint v2, GoReleaser dual-registry release).
+- **[markdown-standards](plugins/markdown-standards)** — repo-adopted Markdown
+  authoring conventions (project scope): unambiguous cross-references and link
+  hygiene, semantic line breaks, unique cross-referenced headings,
+  adjacent-blockquote handling, fixing markdownlint and link/anchor CI failures
+  (fix the target, never suppress), and `/adopt-markdown-ci` for onboarding a
+  repo to the reusable Markdown CI from `flungo/github-workflows`.
 - **[scaffolding](plugins/scaffolding)** — personal, always-on guide (user
   scope) for setting up, building out, and extending repos across the fleet:
   gated on verified ownership (an owned repo adopts the conventions and standards

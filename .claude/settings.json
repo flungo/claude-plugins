@@ -9,6 +9,7 @@
   },
   "enabledPlugins": {
     "git-conventions@flungo-plugins": true,
-    "docs-standards@flungo-plugins": true
+    "docs-standards@flungo-plugins": true,
+    "markdown-standards@flungo-plugins": true
   }
 }
