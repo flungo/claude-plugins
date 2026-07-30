@@ -16,7 +16,8 @@ Markdown renders consecutive lines as one paragraph, so this is a pure source-le
 - Nothing enforces one-sentence-per-line mechanically (Prettier declined it — cross-language sentence detection is too hard; markdownlint has no reflow rule) — it is convention, applied when writing and editing.
 - ("Semantic line breaks" / "ventilated prose" — see <https://sembr.org/> — has no universal consensus; adopted for the diff and review benefits.)
 
-**Scope — apply it wherever the rendered output is unchanged.** That is the whole test, and it reaches further than top-level paragraphs:
+**Scope — apply it wherever the rendered output is unchanged.**
+That is the whole test, and it reaches further than top-level paragraphs:
 
 - **Top-level prose paragraphs** — always.
 - **List items and blockquote paragraphs** — yes.
@@ -27,7 +28,8 @@ Markdown renders consecutive lines as one paragraph, so this is a pure source-le
 - **Hard-break blocks** — preserve them.
   Lines ending in two spaces or a backslash (e.g. a `**Date:**` / `**Status:**` metadata block) render a `<br>` that carries meaning, so reflowing them *would* change the output.
 
-**Migrating an existing repo.** Because the convention is render-neutral, a migration can be **gated on render-equivalence**: reflow the source, render both versions to normalised HTML, and keep the change only where the HTML is byte-identical.
+**Migrating an existing repo.**
+Because the convention is render-neutral, a migration can be **gated on render-equivalence**: reflow the source, render both versions to normalised HTML, and keep the change only where the HTML is byte-identical.
 This plugin ships [`reflow.py`](../../../scripts/reflow.py), which implements exactly that — never do a blind unwrap instead.
 It covers everything the rule covers: top-level paragraphs, list items at any nesting level and marker width, and blockquotes including nested ones, carrying each continuation line's indent or `>` prefix, and leaving hard-break blocks alone.
 At runtime the script is at `${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py`; run it from the target repo's root:
@@ -41,6 +43,16 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py" --apply    # write the render-
 It is a one-time best-effort migration pass, not repo CI.
 The gate is applied **per block against the whole file**: a paragraph's reflow is kept only if the entire file still renders identically with it changed, so an awkward paragraph costs only itself rather than forfeiting the file.
 Anything it reports as left behind is deliberate — reflow those by hand or leave them.
+
+Pass `--exclude GLOB` (repeatable) for anything the repo exempts from its Markdown conventions — eval fixtures, vendored docs, generated output.
+Mirror whatever the repo's `.markdownlint-cli2.jsonc` already ignores, so the two agree on what counts as the repo's own prose.
+Patterns match the whole repo-relative path with `*` crossing directory separators, so `--exclude 'plugins/*/evals/*'` reaches any depth.
+
+**It is a migration tool, not the rule.**
+The rule is the convention above; the script only automates the mechanical majority of a first pass.
+It breaks on sentence boundaries alone, because that is what can be done safely without judgement.
+A human or an agent writing prose applies the convention with judgement — see [sembr.org](https://sembr.org/) — and may legitimately break where the script would not.
+Do not treat the script's output as the target shape, and do not reach for it when writing new prose.
 
 > **🤖 Agent** — write new prose one sentence per line from the start, in list items and blockquotes as well as top-level paragraphs; don't hard-wrap and leave it for a later reflow pass.
 

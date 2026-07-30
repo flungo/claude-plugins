@@ -12,18 +12,23 @@ that link text is unambiguous and correctly qualified.
 
 ## General rules — apply to every reference
 
-- **Never reference a bare identifier.** `002` alone is ambiguous — write `ADR 002`.
+- **Never reference a bare identifier.**
+  `002` alone is ambiguous — write `ADR 002`.
   The same holds for any target: name what it is (a section, a file like `compose.yml`, a function) so the link text stands on its own.
   Never use "here" or "this" as link text.
-- **Keep a prefix label in the link text for a single reference; factor it out for a list.** One reference keeps the label inside — `[ADR 002](…)`, `[compose.yml](…)`.
+- **Keep a prefix label in the link text for a single reference; factor it out for a list.**
+  One reference keeps the label inside — `[ADR 002](…)`, `[compose.yml](…)`.
   For a list, where the label can't sit inside each link, write it once and link the identifiers: `ADR [002](…), [005](…), and [007](…)`.
-- **Same-repo context is implied; cross-repo must be explicit.** A plain reference means this repo.
+- **Same-repo context is implied; cross-repo must be explicit.**
+  A plain reference means this repo.
   Anything elsewhere is qualified with its project/repo name and linked to its full URL — e.g. `[<Project> ADR 009](https://github.com/<owner>/<repo>/blob/main/docs/decisions/009-….md)`.
 - **Anchors:** put enough context in the link text to disambiguate — if the heading name alone is ambiguous in the sentence, include the page too (e.g. `architecture.md § Naming conventions`).
-- **Give any heading you cross-reference a unique name.** Identical heading text produces order-dependent GitHub anchors (`#symptom`, `#symptom-1`), so a link to a duplicated heading is ambiguous and silently points to the wrong one if a same-named heading is later added before it.
+- **Give any heading you cross-reference a unique name.**
+  Identical heading text produces order-dependent GitHub anchors (`#symptom`, `#symptom-1`), so a link to a duplicated heading is ambiguous and silently points to the wrong one if a same-named heading is later added before it.
   `MD024: siblings_only` allows repeated subsection names under different parents, and lychee resolves the `-1`/`-2` suffixes, but the anchor check cannot flag that silent redirect — so link targets must be unique.
   (Detail: `prose-conventions.md § Unique cross-referenced headings`.)
-- **Prefer relative links within the repo; full GitHub URLs for other repos.** When linking to source that can move, name the file/symbol (and pin to a tag or commit where it matters) so the reference survives churn.
+- **Prefer relative links within the repo; full GitHub URLs for other repos.**
+  When linking to source that can move, name the file/symbol (and pin to a tag or commit where it matters) so the reference survives churn.
 - **When you rename or remove a file, heading/anchor, or symbol, search the repo for references and update them** so links don't break — this is what keeps the link/anchor check green.
   Verify links resolve before committing.
 

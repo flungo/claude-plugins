@@ -51,7 +51,7 @@
       "name": "markdown-standards",
       "source": "./plugins/markdown-standards",
       "description": "Markdown authoring conventions — unambiguous cross-references and link hygiene, semantic line breaks, unique cross-referenced headings, adjacent-blockquote handling, fix-the-target-never-suppress remediation for markdownlint/link-check failures, and the /adopt-markdown-ci onboarding command.",
-      "version": "0.3.0"
+      "version": "0.4.0"
     },
     {
       "name": "scaffolding",

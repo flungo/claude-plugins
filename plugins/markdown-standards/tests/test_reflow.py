@@ -128,6 +128,25 @@ class TestSentenceSplitting(ReflowTestCase):
             ["Wait... then continue here."],
         )
 
+    def test_bold_lead_in_ends_a_sentence(self):
+        """The repo's "**Lead-in.** Rationale." shape must not collapse to one line."""
+        self.assertEqual(
+            reflow.split_sentences("**Ship it.** Here is why."),
+            ["**Ship it.**", "Here is why."],
+        )
+
+    def test_closing_bracket_and_quote_end_a_sentence(self):
+        self.assertEqual(
+            reflow.split_sentences('(An aside.) He said "no." Then left.'),
+            ["(An aside.)", 'He said "no."', "Then left."],
+        )
+
+    def test_terminator_with_no_following_space_does_not_split(self):
+        self.assertEqual(
+            reflow.split_sentences("Version 1.2.3 is out."),
+            ["Version 1.2.3 is out."],
+        )
+
     def test_question_and_exclamation_split(self):
         self.assertEqual(
             reflow.split_sentences("Really? Yes! Fine."),
@@ -176,6 +195,48 @@ class TestRenderGate(ReflowTestCase):
             "Good one.\nGood two.\n",                    # accepted
         )
         self.assertEqual((changed, rejected), (1, 1))
+
+
+class TestFileSelection(unittest.TestCase):
+    PATHS = [
+        "README.md",
+        "docs/decisions/001-x.md",
+        "node_modules/pkg/README.md",
+        "plugins/a/evals/fixtures/case/notes.md",
+        "plugins/a/skills/a/SKILL.md",
+    ]
+
+    def test_node_modules_is_always_dropped(self):
+        self.assertEqual(
+            reflow.select_files(self.PATHS, []),
+            ["README.md", "docs/decisions/001-x.md",
+             "plugins/a/evals/fixtures/case/notes.md", "plugins/a/skills/a/SKILL.md"],
+        )
+
+    def test_pattern_crosses_directory_separators(self):
+        self.assertEqual(
+            reflow.select_files(self.PATHS, ["plugins/*/evals/*"]),
+            ["README.md", "docs/decisions/001-x.md", "plugins/a/skills/a/SKILL.md"],
+        )
+
+    def test_patterns_accumulate(self):
+        self.assertEqual(
+            reflow.select_files(self.PATHS, ["plugins/*", "docs/*"]),
+            ["README.md"],
+        )
+
+    def test_parses_both_exclude_spellings(self):
+        self.assertEqual(
+            reflow.parse_args(["--exclude", "a/*", "--apply", "--exclude=b/*"]),
+            (True, ["a/*", "b/*"]),
+        )
+
+    def test_defaults_to_a_dry_run_with_no_excludes(self):
+        self.assertEqual(reflow.parse_args([]), (False, []))
+
+    def test_unknown_argument_is_fatal(self):
+        with self.assertRaises(SystemExit):
+            reflow.parse_args(["--write"])
 
 
 class TestIdempotence(ReflowTestCase):

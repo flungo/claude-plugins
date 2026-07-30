@@ -11,5 +11,6 @@ Apply these any time you're doing git operations in one of his repos, whether or
 Read `references/git-conventions.md` any time you're about to commit, branch, rebase, force-push, or open/land a PR.
 It's the standing set of rules (never commit to `main`, Conventional Commits, linear history, squash-vs-rebase, no fixup commits left on a branch, force-push policy) that governs his day-to-day git usage.
 
-**These conventions complement repo/context rules, they never supersede them.** Always check for a `CLAUDE.md`, `CONTRIBUTING.md`, `.github/`, or similar contributing guidance in the repo first; where the repo specifies something different, follow the repo.
+**These conventions complement repo/context rules, they never supersede them.**
+Always check for a `CLAUDE.md`, `CONTRIBUTING.md`, `.github/`, or similar contributing guidance in the repo first; where the repo specifies something different, follow the repo.
 These conventions only fill gaps the repo doesn't cover.

@@ -7,22 +7,16 @@ This plugin ships that nudge as a `Stop` hook so an adopting repo gets it for fr
 
 When a session ends, the hook prints a short checklist (via a `systemMessage`) covering the maintenance the conventions require:
 
-1. **Decisions** — a structural decision made or revised gets its ADR and its
-   `docs/decisions/README` row, in the same commit.
-2. **Plans** — completed steps ticked `[x]`; plan checkboxes, the
-   `docs/plans/README` status, and `CLAUDE.md` "Active work" reflect merged
-   work (the PR that completes a step is the one that ticks it).
-3. **Indexes** — every `docs/` directory README index is current for anything
-   touched, in the same commit.
-4. **Staleness** — versions, hostnames, and owner/workspace/provider/module/
-   secret names still accurate; resolved open decisions closed; "Active work"
-   reflects reality.
-5. **Callouts** — agent-directed instructions use `> **🤖 Agent**`;
-   live-unverifiable uncertainty uses `> **Verify:**`.
+1. **Decisions** — a structural decision made or revised gets its ADR and its `docs/decisions/README` row, in the same commit.
+2. **Plans** — completed steps ticked `[x]`; plan checkboxes, the `docs/plans/README` status, and `CLAUDE.md` "Active work" reflect merged work (the PR that completes a step is the one that ticks it).
+3. **Indexes** — every `docs/` directory README index is current for anything touched, in the same commit.
+4. **Staleness** — versions, hostnames, and owner/workspace/provider/module/ secret names still accurate; resolved open decisions closed; "Active work" reflects reality.
+5. **Callouts** — agent-directed instructions use `> **🤖 Agent**`; live-unverifiable uncertainty uses `> **Verify:**`.
 
 Item 2 deliberately restates the "plan checkboxes / Active work reflect merged work" rule, so this hook backstops the in-repo status-tracker reconciliation that the `/ready-to-merge` command performs.
 
-**It is a backstop, not the mechanism.** The hook fires *after* the turn, which is too late to land a tracker update in the PR that earned it.
+**It is a backstop, not the mechanism.**
+The hook fires *after* the turn, which is too late to land a tracker update in the PR that earned it.
 Do the tracker updates as you go (per `references/documentation-model.md`); the checklist only catches what slipped.
 
 ## How it's shipped (plugin-native)
@@ -54,10 +48,7 @@ plugins/docs-standards/
 The script emits `{"systemMessage": "…"}` on stdout; Claude Code surfaces the message at session end.
 Because it is plugin-native, any repo that enables `docs-standards` at project scope inherits the checklist automatically — the preferred distribution.
 
-> **🤖 Agent** — if you change the checklist, edit `scripts/doc-checklist.sh`,
-> keep its stdout valid JSON with a single `systemMessage` field, and keep the
-> script executable (`chmod +x`); hooks that aren't executable silently don't
-> fire.
+> **🤖 Agent** — if you change the checklist, edit `scripts/doc-checklist.sh`, keep its stdout valid JSON with a single `systemMessage` field, and keep the script executable (`chmod +x`); hooks that aren't executable silently don't fire.
 
 ## Fallback — settings.json snippet (no plugin adoption)
 
