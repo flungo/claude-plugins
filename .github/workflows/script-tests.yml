@@ -1,0 +1,40 @@
+# Repo-specific (not a reusable workflow — this marketplace is its only
+# consumer): run the unit tests for scripts shipped inside plugins, so a
+# regression in one can't merge. Currently markdown-standards' reflow.py.
+name: Script tests
+
+on:
+  pull_request:
+    paths:
+      - 'plugins/*/scripts/**'
+      - 'plugins/*/tests/**'
+      - '.github/workflows/script-tests.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'plugins/*/scripts/**'
+      - 'plugins/*/tests/**'
+      - '.github/workflows/script-tests.yml'
+
+jobs:
+  unittest:
+    name: python unittest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+      - name: Install script dependencies
+        run: pip install markdown-it-py
+      - name: Run every plugin's test suite
+        run: |
+          status=0
+          shopt -s nullglob
+          for tests in plugins/*/tests/; do
+            plugin="$(dirname "${tests}")"
+            echo "::group::${plugin}"
+            (cd "${plugin}" && python3 -m unittest discover -s tests -v) || status=1
+            echo "::endgroup::"
+          done
+          exit "${status}"
