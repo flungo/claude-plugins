@@ -47,6 +47,10 @@ ABBR = re.compile(
     re.I,
 )
 
+# Closing markup that may sit between a sentence terminator and the space after
+# it. Backtick is deliberately absent: it would fight the code-span toggle.
+CLOSERS = "*_)]}\"'’”»"
+
 HARD_BREAK = re.compile(r"(  +|\\)$")
 BLOCKQUOTE = re.compile(r"^((?:\s*>)+\s?)")
 LIST_MARKER = re.compile(r"^(\s*)([-*+]|\d+[.)])(\s+)")
@@ -61,7 +65,15 @@ def split_sentences(text):
             in_code = not in_code
             i += 1
             continue
-        if not in_code and c in ".?!" and i + 1 < n and text[i + 1] == " ":
+        if not in_code and c in ".?!":
+            # A terminator may be followed by closing markup before the space —
+            # "**Lead-in.** Next" and "(aside.) Next" both end a sentence.
+            end = i + 1
+            while end < n and text[end] in CLOSERS:
+                end += 1
+            if end >= n or text[end] != " ":
+                i += 1
+                continue
             if c == "." and i >= 1 and text[i - 1] == ".":       # ellipsis
                 i += 1
                 continue
@@ -69,10 +81,10 @@ def split_sentences(text):
             if c == "." and ABBR.search(prefix):                 # abbreviation
                 i += 1
                 continue
-            sent = prefix.strip()
+            sent = text[start:end].strip()
             if sent:
                 sents.append(sent)
-            start = i + 2
+            start = end + 1
             i = start
             continue
         i += 1

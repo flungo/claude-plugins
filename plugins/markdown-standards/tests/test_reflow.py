@@ -128,6 +128,25 @@ class TestSentenceSplitting(ReflowTestCase):
             ["Wait... then continue here."],
         )
 
+    def test_bold_lead_in_ends_a_sentence(self):
+        """The repo's "**Lead-in.** Rationale." shape must not collapse to one line."""
+        self.assertEqual(
+            reflow.split_sentences("**Ship it.** Here is why."),
+            ["**Ship it.**", "Here is why."],
+        )
+
+    def test_closing_bracket_and_quote_end_a_sentence(self):
+        self.assertEqual(
+            reflow.split_sentences('(An aside.) He said "no." Then left.'),
+            ["(An aside.)", 'He said "no."', "Then left."],
+        )
+
+    def test_terminator_with_no_following_space_does_not_split(self):
+        self.assertEqual(
+            reflow.split_sentences("Version 1.2.3 is out."),
+            ["Version 1.2.3 is out."],
+        )
+
     def test_question_and_exclamation_split(self):
         self.assertEqual(
             reflow.split_sentences("Really? Yes! Fine."),
