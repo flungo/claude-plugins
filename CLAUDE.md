@@ -41,6 +41,18 @@ This repo adopts those Markdown workflows and the version check itself (see § M
 - **Never reference a user-scope-only plugin from a project-scope one.**
   `scaffolding`, `claude-code-web`, and `upstream-research` are user-scope only and never repo-adopted ([ADR-003](docs/decisions/003-owned-vs-third-party-adoption.md)), so a repo-adopted plugin cannot declare one as a dependency — and pointing at it anyway leaves a reference that dangles wherever the plugin is enabled at project scope.
   Where both need the same rule, cite the **ADR** that records it (by full URL, since an installed plugin has no `docs/` tree beside it), or state the rule locally.
+- **A skill's `name` must not contain `claude`.** claude.ai's marketplace
+  ingestion rejects it outright — `plugin_upload_skill_upload_name_reserved_words`,
+  *"Skill name in SKILL.md cannot contain the reserved word 'claude'"* — so the
+  skill silently never loads on that surface. Nothing local catches this:
+  `claude plugin validate` passes, and Claude Code loads the skill normally, so
+  the only signal is the marketplace's `sync_errors` after a sync.
+  The restriction appears to bind **skills only** — the `claude-code-web`
+  *plugin* synced under that name while its skill was rejected — which is why
+  that skill is `cloud-sessions` while the plugin keeps its name. Prefer a
+  skill name that describes the domain without naming the product.
+  Every other plugin here names its skill after itself, so `claude-code-web` is
+  the one mismatch — deliberate, and not an inconsistency to tidy away.
 - **`SKILL.md` frontmatter is YAML** — keep `name` and `description` on single
   lines and **avoid a colon followed by a space (`:` + space) inside an unquoted value** (it parses
   as a mapping and silently drops the frontmatter). The `description` is what
