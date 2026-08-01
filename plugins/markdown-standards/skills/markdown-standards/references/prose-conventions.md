@@ -56,7 +56,7 @@ lychee replicates that suffixing and flags a dangling fragment, but it is existe
 No tool flags that redirect:
 
 | Case | Link outcome | Caught by |
-|---|---|---|
+| --- | --- | --- |
 | New duplicate is a **sibling** (same parent) | — | `MD024` `siblings_only` blocks it |
 | Non-sibling, added **after** the linked heading | still correct | no breakage |
 | Non-sibling, added **before** the linked heading | silently redirects to the new heading | **neither** — only the unique-name convention |

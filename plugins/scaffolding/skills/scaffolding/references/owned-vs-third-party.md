@@ -16,7 +16,7 @@ A repo he owns adopts the conventions **relevant to it** at repo level, so every
 **Standards plugins** — enable, in the repo's `.claude/settings.json` (`extraKnownMarketplaces` → `flungo/claude-plugins`, `enabledPlugins` listing them), the ones relevant to the repo type:
 
 | Repo kind | Enable |
-|---|---|
+| --- | --- |
 | Any repo | `git-conventions`, `markdown-standards`, `docs-standards` |
 | Terraform config repo | + `terraform-standards` |
 | Terraform provider repo | + `terraform-provider-standards` |

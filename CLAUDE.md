@@ -18,7 +18,7 @@ See [ADR-001](docs/decisions/001-marketplace-structure.md).
 Plugins are split by **enablement boundary, not by topic** (ADR-001): a plugin is the unit enabled/disabled at a scope; a skill is the topic unit within it.
 
 | Scope | Enabled how | Plugins |
-|---|---|---|
+| --- | --- | --- |
 | **Personal (user)** | Installed + enabled in the claude.ai account; always on | `git-conventions`, `contributor-workflow`, `claude-code-web`, `upstream-research`, `scaffolding` |
 | **Repo-adopted (project)** | Declared in a repo's `.claude/settings.json` | `docs-standards`, `markdown-standards`, `terraform-standards`, `terraform-provider-standards` |
 

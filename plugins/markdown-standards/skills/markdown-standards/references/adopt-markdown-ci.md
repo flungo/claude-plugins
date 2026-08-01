@@ -15,7 +15,7 @@ The workflows and these conventions are **separable**: a repo can adopt the CI w
 Keep the split straight when reading the two sources:
 
 | Source | Owns |
-|---|---|
+| --- | --- |
 | [`adopting-markdown-workflows.md`](https://github.com/flungo/github-workflows/blob/main/docs/runbooks/adopting-markdown-workflows.md) in `github-workflows` | The **mechanical contract**, true for any adopter — caller snippets, the required `permissions:` block, what each per-repo config file is for, `LYCHEE_GITHUB_TOKEN` provisioning and the `token:`-not-`env:` trap, and the tool-version/sandbox pitfalls. |
 | **This plugin** | The **opinions** — the lint rule defaults below, the check-then-fix commit discipline, the semantic-line-break reflow, and the authoring conventions in the sibling references. |
 

@@ -9,7 +9,7 @@ The authoritative contract, inputs, and secrets live there (`docs/reference/terr
 Three reusable workflows cover the scaffold; the consumer keeps its own acceptance-test job:
 
 | Concern | Where it lives |
-|---|---|
+| --- | --- |
 | build + vet, gofmt + golangci-lint, unit tests, docs-in-sync check | `terraform-provider-test.yml@v1` |
 | regenerate + commit Registry docs on a branch | `terraform-provider-docs.yml@v1` |
 | GoReleaser signed publish on a `v*` tag | `terraform-provider-release.yml@v1` |
