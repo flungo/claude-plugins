@@ -1,5 +1,5 @@
 ---
-name: claude-code-web
+name: cloud-sessions
 description: Fabrizio's working preferences and hard constraints for Claude Code Web (the browser and cloud environment at claude.ai/code, as opposed to the local CLI). Consult this whenever a session runs in that environment and something behaves differently from local — outbound network going through the egress proxy, GitHub access, installing tools, adding or scoping repositories, setting environment variables or secrets, or a command that can't run in the sandbox and should be delegated to CI. Personal, always-on preferences; they complement a repo's own CLAUDE.md rather than overriding it.
 ---
 
