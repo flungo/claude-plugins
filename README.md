@@ -7,8 +7,9 @@ One repo, plugins usable from both Claude Code and claude.ai, kept in sync by pu
 
 - **[git-conventions](plugins/git-conventions)** — standing git/PR hygiene
   conventions (branch management, Conventional Commits, linear history,
-  squash-vs-rebase, no fixup commits, force-push policy). Applies to all git
-  work, not just a named command.
+  squash-vs-rebase, no fixup commits, force-push policy, and which commit
+  signature warnings to ignore). Applies to all git work, not just a named
+  command.
 - **[contributor-workflow](plugins/contributor-workflow)** — personal
   contributor/review workflow commands. Currently one command,
   `/ready-to-merge` (aliases "Ready to Merge?", "RTM?"); more expected over
