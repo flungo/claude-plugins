@@ -50,8 +50,8 @@
     {
       "name": "markdown-standards",
       "source": "./plugins/markdown-standards",
-      "description": "Markdown authoring conventions — unambiguous cross-references and link hygiene, semantic line breaks, unique cross-referenced headings, adjacent-blockquote handling, padded table delimiter rows, fix-the-target-never-suppress remediation for markdownlint/link-check failures, and the /adopt-markdown-ci onboarding command.",
-      "version": "0.4.0"
+      "description": "Markdown authoring conventions — unambiguous cross-references and link hygiene, semantic line breaks, unique cross-referenced headings, adjacent-blockquote handling, padded table delimiter rows, handling lint rules a linter bump introduces, fix-the-target-never-suppress remediation for markdownlint/link-check failures, and the /adopt-markdown-ci onboarding command.",
+      "version": "0.5.0"
     },
     {
       "name": "scaffolding",

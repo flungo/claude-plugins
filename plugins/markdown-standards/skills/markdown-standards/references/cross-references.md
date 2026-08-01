@@ -42,6 +42,7 @@ The remediation rule for every check is the same: **fix the link or its target �
   A `Cannot find fragment` failure usually means a heading was renamed — update the links, don't delete them.
 - **markdownlint finding:** fix the content.
   Add a rule override to `.markdownlint-cli2.jsonc` only when the rule is genuinely wrong for the repo, with an inline justification comment; overrides are per-repo decisions, kept to a justified minimum.
+  One case is not the repo's call: a rule firing on content that was already there and previously passed means a linter bump introduced it, so follow [`new-lint-rules.md`](new-lint-rules.md) before overriding anything.
 - **External-sweep issue (the auto-updated `markdown-links` issue):** verify each flagged URL.
   If the resource moved, update the link (prefer a stable or pinned URL); if it's genuinely gone, remove or replace it.
   Add a URL to `.lycheeignore` only when it legitimately 403/404s while unauthenticated (a 404 can be an existence-hiding response) — never to silence a truly dead link.
