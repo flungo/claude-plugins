@@ -1,6 +1,6 @@
 ---
 name: markdown-standards
-description: Fabrizio's Markdown authoring conventions. Consult this whenever writing or editing Markdown in one of his repos — adding or changing a link, cross-reference, or heading; fixing a markdownlint finding; fixing a failed link/anchor check (lychee) or a markdown-links external-sweep issue; deciding how to reference an ADR, file, or another repo; or onboarding a repo to the Markdown validation CI via /adopt-markdown-ci. Covers unambiguous cross-reference and link-text rules, semantic line breaks, unique cross-referenced headings, adjacent-blockquote handling, and fix-the-target-never-suppress remediation. Complements the repo's own CLAUDE.md rather than overriding it.
+description: Fabrizio's Markdown authoring conventions. Consult this whenever writing or editing Markdown in one of his repos — adding or changing a link, cross-reference, or heading; fixing a markdownlint finding; fixing a failed link/anchor check (lychee) or a markdown-links external-sweep issue; deciding how to reference an ADR, file, or another repo; or onboarding a repo to the Markdown validation CI via /adopt-markdown-ci. Covers unambiguous cross-reference and link-text rules, semantic line breaks, unique cross-referenced headings, adjacent-blockquote handling, padded table delimiter rows, and fix-the-target-never-suppress remediation. Complements the repo's own CLAUDE.md rather than overriding it.
 ---
 
 # Markdown Standards
