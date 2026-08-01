@@ -9,7 +9,7 @@ Docs are either **task-oriented** (how-to) or **information-oriented** (referenc
 That yields four directories under `docs/`, each with a `README.md` index:
 
 | Directory | Kind | Holds | Lifecycle |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `docs/decisions/` | Decision | ADRs — the *why* behind a structural choice | Permanent; numbered, never deleted or renumbered |
 | `docs/plans/` | Task (one-time) | A single build/onboarding procedure tracked to completion | Ephemeral — retired (deleted) once done |
 | `docs/runbooks/` | Task (repeatable) | A how-to run indefinitely (rotation, onboarding, importing) | Permanent; no completion checkboxes |

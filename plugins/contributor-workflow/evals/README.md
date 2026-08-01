@@ -3,7 +3,7 @@
 Four scenarios, each a real (buildable) git repo plus a mock PR context, targeting specific rules in `references/ready-to-merge.md`:
 
 | eval_name | fixture | what it checks |
-|---|---|---|
+| --- | --- | --- |
 | `messy-history-needs-splitting` | `fixtures/messy-history-orbital-cafe` | Under-splitting: bundled features, a deferred docs-index update, a stray fixup commit. This is the general shape of the original bug. |
 | `clean-history-no-unnecessary-rewrite` | `fixtures/clean-history-starlight-planner` | Over-eagerness: an already-clean history shouldn't get rewritten for its own sake. |
 | `review-thread-triage` | `fixtures/thread-triage-tidepool-notes` | The three-way thread split (already addressed / trivial fix now / requires a decision), including the framing-research rule for decision-required threads. |

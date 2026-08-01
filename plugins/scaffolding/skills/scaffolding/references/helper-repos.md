@@ -4,7 +4,7 @@ Some of Fabrizio's work is achieved by pulling in a **helper repo** — a shared
 (`add_repo` mechanics and the "added for as long as required" discipline live in `claude-code-web`; this file is about *which* helper repos exist and *what* each is for.)
 
 | Helper repo | For |
-|---|---|
+| --- | --- |
 | [`flungo/github-workflows`](https://github.com/flungo/github-workflows) | The shared reusable CI. Adopt a workflow family into a repo, or create/extend a shared workflow. |
 | [`flungo/claude-plugins`](https://github.com/flungo/claude-plugins) | These plugins. PR here to fix or extend a convention when a plugin rule is wrong (see `extending-a-repo.md`). |
 | [`flungo/terraform-github`](https://github.com/flungo/terraform-github) | Creates new repos and manages existing repos' settings as Terraform. `add_repo`, open a PR, remove once merged. |
@@ -23,7 +23,7 @@ uses: flungo/github-workflows/.github/workflows/<workflow>.yml@v1
 `@v1` is a moving *branch* (not a tag) that fast-forwards on every merge there, so fixes reach the fleet automatically.
 
 | Repo type | Workflow(s) — `flungo/github-workflows/.github/workflows/…@v1` | Adoption runbook (`docs/runbooks/`) |
-|---|---|---|
+| --- | --- | --- |
 | Terraform **config** repo | `terraform.yml`, opt-in `terraform-drift.yml` | `adopting-terraform-workflows.md` |
 | Terraform **provider** repo | `terraform-provider-test.yml`, `terraform-provider-docs.yml`, `terraform-provider-release.yml` | `adopting-terraform-provider-workflows.md` |
 | **Any** repo with Markdown | `markdown-lint.yml`, `markdown-links.yml` | `adopting-markdown-workflows.md` |
