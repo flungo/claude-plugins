@@ -1,6 +1,6 @@
 # Prose conventions paired with the markdownlint defaults
 
-The standard `.markdownlint-cli2.jsonc` in every adopting repo sets `MD013: false` and `MD024: { siblings_only: true }`, and keeps `MD028` and `MD060` at their defaults (enabled).
+The standard `.markdownlint-cli2.jsonc` in every adopting repo sets `MD013: false`, `MD024: { siblings_only: true }` and `MD060: { style: "compact" }`, and keeps `MD028` at its default (enabled).
 Each of those rule choices is half of a pair: the machine-checkable rule, plus a human convention the tool can't enforce.
 This file is the human half.
 Apply these conventions in any of Fabrizio's repos, whether or not the repo has adopted the lint CI.
@@ -67,16 +67,23 @@ No tool flags that redirect:
 | Non-sibling, added **before** the linked heading | silently redirects to the new heading | **neither** — only the unique-name convention |
 | Heading renamed / removed / typo'd | dangles | lychee (`Cannot find fragment`) |
 
-## Table delimiter rows are padded (`MD060` enabled)
+## Tables are compact, delimiter rows included (`MD060: { style: "compact" }`)
 
-**Pad the delimiter row like every other row — `| --- | --- |`, not `|---|---|`.**
+**One space each side of every pipe — `| --- | --- |`, not `|---|---|` and not columns padded out to a common width.**
 
 Header and body rows get padded naturally; the delimiter row is the one that gets compressed out of habit, leaving the table inconsistent with itself.
 `markdownlint-cli2 --fix` rewrites it, so this is worth knowing rather than hand-applying.
 
-**Pin the style in the config: `"MD060": { "style": "compact" }`.**
-The default `"consistent"` infers per table, and a table no row disambiguates — cells all different widths — infers `"aligned"` instead, which wants every cell padded out to column width.
-`--fix` will not produce that, so an inferred-aligned table is a hand-editing job for a style nothing here writes.
+**Pin `compact` rather than leaving the default `"consistent"`, which is ambiguous.**
+It infers the style per table, and a table no row disambiguates — cells all different widths — infers `"aligned"` instead.
+
+Compact is the choice for the same reason `MD013` is off: **a diff should be the size of the change.**
+Under `aligned`, cell width is shared state — every cell is padded to its column's widest, so editing one cell reflows the whitespace of every row in the table and a one-word change arrives as a whole-table diff.
+One long cell also taxes every other row with padding forever.
+Compact has no such coupling: a cell's source is its own content, so the diff names the row that changed.
+That is the table-shaped version of one sentence per line.
+
+Two lesser points fall out the same way: `--fix` produces compact but will not pad to alignment, so an inferred-aligned table becomes hand editing; and aligned tables are unreadable in source once one cell is long, which is most of them here.
 
 ## Adjacent blockquotes (`MD028` enabled)
 
