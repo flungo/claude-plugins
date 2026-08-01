@@ -1,6 +1,6 @@
 ---
 name: markdown-standards
-description: Fabrizio's Markdown authoring conventions. Consult this whenever writing or editing Markdown in one of his repos — adding or changing a link, cross-reference, or heading; fixing a markdownlint finding; fixing a failed link/anchor check (lychee) or a markdown-links external-sweep issue; deciding how to reference an ADR, file, or another repo; or onboarding a repo to the Markdown validation CI via /adopt-markdown-ci. Covers unambiguous cross-reference and link-text rules, semantic line breaks, unique cross-referenced headings, adjacent-blockquote handling, padded table delimiter rows, and fix-the-target-never-suppress remediation. Complements the repo's own CLAUDE.md rather than overriding it.
+description: Fabrizio's Markdown authoring conventions. Consult this whenever writing or editing Markdown in one of his repos — adding or changing a link, cross-reference, or heading; fixing a markdownlint finding; fixing a failed link/anchor check (lychee) or a markdown-links external-sweep issue; deciding how to reference an ADR, file, or another repo; or onboarding a repo to the Markdown validation CI via /adopt-markdown-ci. Also consult it when a lint rule fires on content that was already there and previously passed, which a linter version bump can cause across every repo at once. Covers unambiguous cross-reference and link-text rules, semantic line breaks, unique cross-referenced headings, adjacent-blockquote handling, padded table delimiter rows, handling lint rules a linter bump introduces, and fix-the-target-never-suppress remediation. Complements the repo's own CLAUDE.md rather than overriding it.
 ---
 
 # Markdown Standards
@@ -19,7 +19,12 @@ Read the relevant reference before doing the work:
 - **`references/cross-references.md`** — the cross-reference rules: unambiguous link text (never a bare identifier, never "here"), prefix labels, same-repo-implied vs cross-repo-explicit qualification, anchor disambiguation, relative-vs-full links, updating references on rename, and how to fix internal link/anchor failures and external-sweep findings (always fix the link or its target, never suppress the check).
   Read it before adding or fixing any link or cross-reference.
 - **`references/prose-conventions.md`** — the prose conventions paired with the markdownlint rule defaults: semantic line breaks (`MD013` disabled), unique names for cross-referenced headings (`MD024` `siblings_only` and the anchor-ambiguity gap it leaves), adjacent-blockquote handling (`MD028`), and padded table delimiter rows (`MD060`).
+  Also the **register of positions taken** — the rules the fleet has had to decide on, not a list of every enabled rule.
   Read it before writing prose, structuring headings, or fixing a finding from one of those rules.
+- **`references/new-lint-rules.md`** — what to do when a linter version bump introduces a rule nobody chose.
+  The CI tracks the linter by major tag, so a Dependabot bump can enable new rules across every repo at once, firing on files the failing pull request never touched.
+  Covers establishing that it is not the surfacing pull request's fault, then adopting it (the fleet already accepted it), disabling it with a justification (already rejected), or **asking first** and recording the position here (no position yet).
+  Read it when a rule fires on content that was already there and previously passed — not for an ordinary finding on prose you just wrote, which is a `cross-references.md` fix.
 - **`references/adopt-markdown-ci.md`** — the `/adopt-markdown-ci` command procedure, including the parts of adoption that are *opinion* rather than mechanism: the markdownlint rule defaults, the check-then-fix commit discipline, and the reflow pass.
 
 This plugin also ships **`scripts/reflow.py`** (`${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py`) — the render-gated one-time pass that migrates a repo's existing Markdown to semantic line breaks, covering top-level paragraphs, list items and blockquotes.

@@ -5,6 +5,11 @@ Each of those rule choices is half of a pair: the machine-checkable rule, plus a
 This file is the human half.
 Apply these conventions in any of Fabrizio's repos, whether or not the repo has adopted the lint CI.
 
+This file is also the **register of positions taken**: a rule with an entry here has been considered and either accepted or rejected.
+It is not a list of every enabled rule — most of markdownlint's defaults need no position, and no entry means none was ever needed.
+When a linter bump enables a rule nobody chose and it fires on unchanged content, see [`new-lint-rules.md`](new-lint-rules.md).
+Keep each entry to the convention itself; why it was adopted belongs in the commit that adopted it.
+
 ## Semantic line breaks (`MD013` disabled)
 
 Write prose **one sentence per source line**.
