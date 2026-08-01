@@ -74,6 +74,10 @@ No tool flags that redirect:
 Header and body rows get padded naturally; the delimiter row is the one that gets compressed out of habit, leaving the table inconsistent with itself.
 `markdownlint-cli2 --fix` rewrites it, so this is worth knowing rather than hand-applying.
 
+**Pin the style in the config: `"MD060": { "style": "compact" }`.**
+The default `"consistent"` infers per table, and a table no row disambiguates — cells all different widths — infers `"aligned"` instead, which wants every cell padded out to column width.
+`--fix` will not produce that, so an inferred-aligned table is a hand-editing job for a style nothing here writes.
+
 ## Adjacent blockquotes (`MD028` enabled)
 
 Two blockquotes separated by only a blank line are two *separate* blockquotes in CommonMark/GFM (the blank line ends the first), but the split is parser-ambiguous, so `MD028` flags it.
