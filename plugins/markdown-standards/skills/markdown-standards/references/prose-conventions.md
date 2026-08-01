@@ -1,6 +1,6 @@
 # Prose conventions paired with the markdownlint defaults
 
-The standard `.markdownlint-cli2.jsonc` in every adopting repo sets `MD013: false` and `MD024: { siblings_only: true }`, and keeps `MD028` at its default (enabled).
+The standard `.markdownlint-cli2.jsonc` in every adopting repo sets `MD013: false` and `MD024: { siblings_only: true }`, and keeps `MD028` and `MD060` at their defaults (enabled).
 Each of those rule choices is half of a pair: the machine-checkable rule, plus a human convention the tool can't enforce.
 This file is the human half.
 Apply these conventions in any of Fabrizio's repos, whether or not the repo has adopted the lint CI.
@@ -61,6 +61,13 @@ No tool flags that redirect:
 | Non-sibling, added **after** the linked heading | still correct | no breakage |
 | Non-sibling, added **before** the linked heading | silently redirects to the new heading | **neither** — only the unique-name convention |
 | Heading renamed / removed / typo'd | dangles | lychee (`Cannot find fragment`) |
+
+## Table delimiter rows are padded (`MD060` enabled)
+
+**Pad the delimiter row like every other row — `| --- | --- |`, not `|---|---|`.**
+
+Header and body rows get padded naturally; the delimiter row is the one that gets compressed out of habit, leaving the table inconsistent with itself.
+`markdownlint-cli2 --fix` rewrites it, so this is worth knowing rather than hand-applying.
 
 ## Adjacent blockquotes (`MD028` enabled)
 

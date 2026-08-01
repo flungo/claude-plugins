@@ -18,7 +18,7 @@ Read the relevant reference before doing the work:
 
 - **`references/cross-references.md`** — the cross-reference rules: unambiguous link text (never a bare identifier, never "here"), prefix labels, same-repo-implied vs cross-repo-explicit qualification, anchor disambiguation, relative-vs-full links, updating references on rename, and how to fix internal link/anchor failures and external-sweep findings (always fix the link or its target, never suppress the check).
   Read it before adding or fixing any link or cross-reference.
-- **`references/prose-conventions.md`** — the three prose conventions paired with the markdownlint rule defaults: semantic line breaks (`MD013` disabled), unique names for cross-referenced headings (`MD024` `siblings_only` and the anchor-ambiguity gap it leaves), and adjacent-blockquote handling (`MD028`).
+- **`references/prose-conventions.md`** — the prose conventions paired with the markdownlint rule defaults: semantic line breaks (`MD013` disabled), unique names for cross-referenced headings (`MD024` `siblings_only` and the anchor-ambiguity gap it leaves), adjacent-blockquote handling (`MD028`), and padded table delimiter rows (`MD060`).
   Read it before writing prose, structuring headings, or fixing a finding from one of those rules.
 - **`references/adopt-markdown-ci.md`** — the `/adopt-markdown-ci` command procedure, including the parts of adoption that are *opinion* rather than mechanism: the markdownlint rule defaults, the check-then-fix commit discipline, and the reflow pass.
 
