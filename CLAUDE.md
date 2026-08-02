@@ -19,7 +19,7 @@ Plugins are split by **enablement boundary, not by topic** (ADR-001): a plugin i
 
 | Scope | Enabled how | Plugins |
 | --- | --- | --- |
-| **Personal (user)** | Installed + enabled in the claude.ai account; always on | `git-conventions`, `contributor-workflow`, `claude-code-web`, `personal-cloud-environment`, `upstream-research`, `scaffolding` |
+| **Personal (user)** | Installed + enabled in the claude.ai account; always on | `personal-defaults` (bundle) → `git-conventions`, `contributor-workflow`, `upstream-research`, `scaffolding`; plus `personal-cloud-environment` → `claude-code-web` |
 | **Repo-adopted (project)** | Declared in a repo's `.claude/settings.json` | `docs-standards`, `markdown-standards`, `terraform-standards`, `terraform-provider-standards` |
 
 Reusable CI (markdownlint, lychee, `terraform` plan/apply) is **not** a plugin — it lives in `flungo/github-workflows` and is referenced by `scaffolding`.
@@ -38,6 +38,11 @@ This repo adopts those Markdown workflows and the version check itself (see § M
   marketplace). Installing the dependent auto-installs the dependency. Do not
   depend on third-party marketplaces ([ADR-001](docs/decisions/001-marketplace-structure.md),
   [ADR-002](docs/decisions/002-documentation-and-adr-model.md)).
+- **A new user-scope plugin must be reachable from a bundle.** `personal-defaults`
+  carries the surface-independent set and `personal-cloud-environment` carries
+  what a cloud session needs; between them they are the only things anything
+  installs by name. A plugin in neither is one nobody installs, and nothing
+  fails to say so.
 - **Never reference a user-scope-only plugin from a project-scope one.**
   `scaffolding`, `claude-code-web`, and `upstream-research` are user-scope only and never repo-adopted ([ADR-003](docs/decisions/003-owned-vs-third-party-adoption.md)), so a repo-adopted plugin cannot declare one as a dependency — and pointing at it anyway leaves a reference that dangles wherever the plugin is enabled at project scope.
   Where both need the same rule, cite the **ADR** that records it (by full URL, since an installed plugin has no `docs/` tree beside it), or state the rule locally.
