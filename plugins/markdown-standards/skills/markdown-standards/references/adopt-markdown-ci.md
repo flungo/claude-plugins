@@ -73,12 +73,15 @@ Land it as its own commit; it is best-effort, and any file it reports as gate-fa
 ## Checklist
 
 0. **Read the runbook's § Adoption pitfalls and sandbox constraints first** — each one costs a session to rediscover.
-   Pin the local `markdownlint-cli2` to the version `markdownlint-cli2-action` ships, or you chase findings CI never reports; in a locked-down sandbox install `lychee` with `cargo install --locked` rather than the release tarball; and never curate `.lycheeignore` from a tokenless dispatch, whose cross-repo 404s are token artifacts rather than dead links.
+   Match the local `markdownlint-cli2` to the version CI is *currently* running and install `lychee` with `cargo install --locked` — both in `validating-locally.md`, which also explains why that version must be read from a CI run rather than copied from a note.
+   And never curate `.lycheeignore` from a tokenless dispatch, whose cross-repo 404s are token artifacts rather than dead links.
 1. **Add the caller workflows**, pinned to the current major: `markdown-lint.yml`, and `markdown-links.yml` with the `permissions:` block its external job needs.
    Also add the (highly recommended) `flungo-workflows.yml` caller if the repo lacks it.
 2. **Add repo-specific config — regenerate, never copy another repo's:** `.markdownlint-cli2.jsonc` from the defaults above, and a seeded `.lycheeignore` populated from this repo's own token-enabled runs.
 3. **Provision `LYCHEE_GITHUB_TOKEN`** per the runbook, **before** curating `.lycheeignore`.
 4. **Work through the checks** in the commit discipline and order above, including the reflow pass.
 5. **Adopt this plugin at project scope** instead of pasting conventions into `CLAUDE.md`: in the repo's `.claude/settings.json`, add the `flungo-plugins` marketplace to `extraKnownMarketplaces` and enable `markdown-standards@flungo-plugins` in `enabledPlugins`.
-   Keep only repo-specific facts in `CLAUDE.md` (e.g. the pinned local markdownlint-cli2 version); if the repo carries an inlined `## Cross-references` block or paired-convention sections from an earlier adoption, remove them in favour of the plugin.
+   Keep only repo-specific facts in `CLAUDE.md` — the repo's own rule overrides and their justifications, not how to run the checks, which is `validating-locally.md`.
+   In particular **do not record a markdownlint version to pin to**: it floats with the action's major tag, so the note goes stale silently and yields a false local pass.
+   If the repo carries an inlined `## Cross-references` block or paired-convention sections from an earlier adoption, remove them in favour of the plugin.
 6. **Feature branch, never `main`; land via PR** — follow `git-conventions` and the repo's own `CLAUDE.md`/`CONTRIBUTING.md` where they differ.

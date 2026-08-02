@@ -2,6 +2,7 @@
 
 The reusable `markdown-lint.yml` in [`flungo/github-workflows`](https://github.com/flungo/github-workflows/blob/main/.github/workflows/markdown-lint.yml) tracks `markdownlint-cli2-action` by **major tag**, so a routine Dependabot bump can pull in a markdownlint release that adds rules.
 A new rule is enabled by default, applies to every adopting repo at once, and turns long-standing prose into errors without anyone having decided anything.
+The same floating version is why a local run must take its version from CI — see `validating-locally.md`.
 
 That is the failure this procedure exists for: **a linter default is not a decision until it is written down.**
 
