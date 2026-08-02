@@ -24,10 +24,20 @@ A variable added mid-session was visible to a later turn of that session, but th
 | Network access | Custom |
 | Default allowed domains included | Yes |
 | Extra allowed domains | Listed below |
-| Setup script | None |
+| Setup script | Installs the user-scope plugins — see below |
 
 "Custom" network access with the [default allowed domains](https://code.claude.com/docs/en/claude-code-on-the-web#default-allowed-domains) still included means the common package-manager hosts work as documented, **plus** the extras below — it is an extension of the default policy, not a replacement for it.
 Background on the policy and on what each level permits is in Anthropic's [network access documentation](https://code.claude.com/docs/en/claude-code-on-the-web#network-access) and its [access levels](https://code.claude.com/docs/en/claude-code-on-the-web#access-levels) section.
+
+### Setup script
+
+The script installs Fabrizio's always-on plugins into every cloud session, because plugins enabled at user scope on the account do not reach one — the environment's setup script is the only channel that does.
+It is a single install: `personal-cloud-environment` carries `claude-code-web` and the `personal-defaults` bundle through its dependencies, so adding a plugin to the marketplace needs no change here.
+
+The authoritative copy of the script lives in [the `flungo/claude-plugins` README](https://github.com/flungo/claude-plugins#install-in-claude-code-web-and-other-cloud-sessions); this file records only that the environment runs it.
+Two consequences worth knowing in a session: the installed versions come from a filesystem snapshot and can lag the repo by up to about a week, and a plugin newly added to the marketplace does not arrive until the script is edited or the cache expires.
+
+> **🤖 Agent** — if a user-scope plugin is missing or stale, tell Fabrizio to edit the setup script, which forces the snapshot to rebuild; installing into the container by hand fixes only the session you are in.
 
 ### Extra allowed domains
 
