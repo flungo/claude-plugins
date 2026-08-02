@@ -53,6 +53,16 @@ For each thread found in step 1:
   show it was checked.
 - **Finishable now** — small enough to complete before closing the session.
   Flag it as a candidate; don't finish it without saying so first (step 4).
+- **Better handed off** — sits between the two either side of it, and needs
+  **all three** of these to be true:
+  - it wants doing with some urgency, so parking it in an issue undersells it;
+  - it doesn't need this session's context, so it can be picked up cold;
+  - it's big enough that finishing it here would drag this session out.
+
+  Offer a `/handoff` for it (step 4). If any one of the three fails, it isn't
+  this: work needing the session's context is *finishable now* or *needs
+  durable capture*, and work that isn't urgent is just *needs durable
+  capture*.
 - **Needs durable capture** — real, unresolved, and worth recording. Needs a
   destination (step 3).
 - **Handed off** — a `/handoff` was produced for this thread during the
@@ -94,6 +104,10 @@ Before touching anything, present the user a list:
 
 - **Verdict up front**: clean and safe to delete, or not yet.
 - **Finishable now**: what it is, and that you'd finish it now if they want.
+- **Better handed off**: what it is, why it meets all three tests, and that
+  you'd produce a scoped `/handoff` for it. Say plainly that they can decline
+  and have it finished in-session or captured durably instead — a handoff is a
+  proposal about how to move work, not a verdict on it.
 - **Needs durable capture**: the fact, decision, or task; the proposed
   destination (which `CLAUDE.md`, or which repo's issue tracker); and a draft
   of what you'd actually write — not just "I'll note this somewhere".
@@ -111,6 +125,9 @@ A general go-ahead on the whole list is enough — don't demand a separate confi
   MCP's search, or `gh issue list --search …` — before filing a new one.
 - **Anything the user chose to finish now** instead of deferring: do that
   work, then re-check it against step 0 before including it in the verdict.
+- **A handoff they accepted**: produce it in scoped mode — the thread only,
+  not the session — and then treat it as *handed off, unconfirmed* for the
+  rest of this session. It becomes confirmed only when they say it landed.
 
 ## 6. Final report
 
