@@ -1,7 +1,7 @@
 {
   "name": "personal-cloud-environment",
   "description": "The record of Fabrizio's own Claude Code Web environment — its network allowlist, environment variables, and setup — as manually applied on top of the platform defaults, plus the round-trip rule that keeps that record and the live environment in step. Installing it also brings in what that environment carries: claude-code-web and the personal-defaults bundle.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": {
     "name": "flungo"
   },
