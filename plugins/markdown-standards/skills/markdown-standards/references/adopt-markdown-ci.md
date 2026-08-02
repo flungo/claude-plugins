@@ -19,7 +19,7 @@ Keep the split straight when reading the two sources:
 | [`adopting-markdown-workflows.md`](https://github.com/flungo/github-workflows/blob/main/docs/runbooks/adopting-markdown-workflows.md) in `github-workflows` | The **mechanical contract**, true for any adopter — caller snippets, the required `permissions:` block, what each per-repo config file is for, `LYCHEE_GITHUB_TOKEN` provisioning and the `token:`-not-`env:` trap, and the tool-version/sandbox pitfalls. |
 | **This plugin** | The **opinions** — the lint rule defaults below, the check-then-fix commit discipline, the semantic-line-break reflow, and the authoring conventions in the sibling references. |
 
-Open the runbook for anything in its column rather than working from memory of it, and don't assume the major to pin is still `@v1` — read the current major from `github-workflows` itself.
+Open the runbook for anything in its column rather than working from memory of it, and don't assume the major to pin is still `@v2` — read the current major from `github-workflows` itself.
 `add_repo` it if it isn't in the session.
 
 ## The lint defaults we choose
@@ -75,7 +75,7 @@ Land it as its own commit; it is best-effort, and any file it reports as gate-fa
 0. **Read the runbook's § Adoption pitfalls and sandbox constraints first** — each one costs a session to rediscover.
    Pin the local `markdownlint-cli2` to the version `markdownlint-cli2-action` ships, or you chase findings CI never reports; in a locked-down sandbox install `lychee` with `cargo install --locked` rather than the release tarball; and never curate `.lycheeignore` from a tokenless dispatch, whose cross-repo 404s are token artifacts rather than dead links.
 1. **Add the caller workflows**, pinned to the current major: `markdown-lint.yml`, and `markdown-links.yml` with the `permissions:` block its external job needs.
-   Also add the (highly recommended) `version-check.yml` caller if the repo lacks it.
+   Also add the (highly recommended) `flungo-workflows.yml` caller if the repo lacks it.
 2. **Add repo-specific config — regenerate, never copy another repo's:** `.markdownlint-cli2.jsonc` from the defaults above, and a seeded `.lycheeignore` populated from this repo's own token-enabled runs.
 3. **Provision `LYCHEE_GITHUB_TOKEN`** per the runbook, **before** curating `.lycheeignore`.
 4. **Work through the checks** in the commit discipline and order above, including the reflow pass.

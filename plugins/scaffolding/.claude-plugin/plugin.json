@@ -1,7 +1,7 @@
 {
   "name": "scaffolding",
   "description": "Fabrizio's guide for setting up, building out, and extending repos across his fleet — gated on verified ownership (a repo he owns adopts his conventions and standards plugins; a fork or third-party repo gets nothing adopted without explicit consent), routing to the shared CI and the helper repos (github-workflows, claude-plugins, terraform-github) added as needed.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": {
     "name": "flungo"
   }
