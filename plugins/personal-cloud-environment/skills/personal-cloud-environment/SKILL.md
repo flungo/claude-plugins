@@ -63,11 +63,15 @@ A **secret** value is never worth writing down, in this table or anywhere else i
 ## Repository scope
 
 Not part of the environment form, and **not fixed to `flungo/*`**.
-Fabrizio installs the Claude GitHub integration **per organisation**, so what a session can reach follows the organisations he has installed it in, plus the repositories chosen when the session was created — `flungo/*` is the common case, not a boundary.
+Fabrizio installs the Claude GitHub integration **per organisation**, so a session can be started with repositories from any of them, in any combination — including two owners at once.
 
-The working model, not yet confirmed: the token a session receives is scoped to the organisation owning the repositories it started with, which would explain why `add_repo` rejects a cross-owner add once a session already holds repositories from another owner (see `sessions.md` in `cloud-sessions` for that error and what to do instead).
+*Verified 2026-08-02 across four sessions; the mechanics are in `sessions.md` in `cloud-sessions`, and only what is specific to him is repeated here.*
 
-> **Verify:** what a session started with repositories from *two* organisations gets — one token per organisation, one spanning both, or a failure at creation — is untested. Scenarios to settle it were drafted 2026-08-02 and are awaiting results; until then, don't assume a cross-organisation session behaves like a single-organisation one.
+- **`flungo` is a user account, not the boundary.** The integration is also installed in the organisations `flungo-ansible`, `flungo-avr`, `flungo-docker`, `flungo-maven`, `flungo-soton`, `flungo-theaigames`, `flungo-vibe`, `bashrc-io`, `plugcraft`, `SystemDocker` and `WorldCretornica` — as seen in `list_repos` that day, and not necessarily exhaustive or current.
+- **One credential covers them all.** Every session resolved to the single account `flungo`, and reached both owners' repositories in a session started with two.
+- **Mixing owners is a decision at session creation.** `add_repo` will not introduce an owner the session lacks, so if work spans two of these, they have to be picked up front — the fix afterwards is a new session, which is Fabrizio's to start.
+
+> **Verify:** `WorldCretornica` appeared in `list_repos` but was not spotted in the session-creation picker, so it may be listable without being startable. Worth checking before planning work that depends on starting a session there.
 
 ## Keeping this record in step
 

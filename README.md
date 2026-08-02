@@ -21,9 +21,10 @@ One repo, plugins usable from both Claude Code and claude.ai, kept in sync by pu
   Depends on `markdown-standards`.
 - **[claude-code-web](plugins/claude-code-web)** — always-on working
   preferences for Claude Code Web (user scope): the egress proxy and CA bundle,
-  GitHub-via-MCP, ephemeral containers, repo scoping and `add_repo`, the
-  multi-repo config caveat, and delegating unrunnable steps to CI. Written to
-  hold for any Claude Code Web user, in any environment.
+  GitHub-via-MCP, containers replaced across idle periods, repo scoping and
+  `add_repo`'s cross-owner rule, project config in a multi-repo session, and
+  delegating unrunnable steps to CI. Written to hold for any Claude Code Web
+  user, in any environment.
 - **[personal-cloud-environment](plugins/personal-cloud-environment)** — the
   record of Fabrizio's own Claude Code Web environment (user scope): the
   domains, environment variables, and setup he has applied on top of the

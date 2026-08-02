@@ -7,7 +7,7 @@
 
 `claude-code-web` began as one plugin covering everything about working in Claude Code Web, and its content came from two different places.
 
-Most of it is **true for anyone** using the web environment — the egress proxy and its CA bundle, GitHub reached through the MCP rather than `gh`, the ephemeral container, repo scoping and `add_repo`, the multi-repo config-loading caveat, delegating unrunnable steps to CI.
+Most of it is **true for anyone** using the web environment — the egress proxy and its CA bundle, GitHub reached through the MCP rather than `gh`, the ephemeral container, repo scoping and `add_repo`, project config in a multi-repo session, delegating unrunnable steps to CI.
 A smaller part is **true only of Fabrizio's environment** — which hosts he added to its network allowlist, which environment variables it sets, whether it has a setup script.
 The two had begun to interleave: the Terraform section asserted that `registry.terraform.io` "is allow-listed", which is a fact about his allowlist stated as if it were a platform guarantee.
 
