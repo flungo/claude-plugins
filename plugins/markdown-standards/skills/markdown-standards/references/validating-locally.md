@@ -7,6 +7,10 @@ npx markdownlint-cli2@<version> '**/*.md'                      # style; must be 
 lychee --offline --include-fragments --no-progress '**/*.md'   # internal links + anchors
 ```
 
+If a local run reports findings in files you do not recognise — vendored dependencies, a provider's own `README.md` — check the repo's `ignores`.
+markdownlint does not read `.gitignore`, so a gitignored build or provider directory is still linted locally even though CI never sees it.
+A Terraform repo needs `**/.terraform/**` ignored for exactly this reason; see `adopt-markdown-ci.md`.
+
 ## Get the linter version from a CI run, never from a note
 
 `<version>` above is not a constant, and **no repo should record one as if it were**.

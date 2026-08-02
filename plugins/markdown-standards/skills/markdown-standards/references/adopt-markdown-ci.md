@@ -35,13 +35,29 @@ Start the repo's `.markdownlint-cli2.jsonc` from these, then add further overrid
     // Allow repeated subsection names under different parents (e.g. Context /
     // Decision / Consequences across ADRs); paired with the unique-heading
     // convention for anything cross-referenced.
-    "MD024": { "siblings_only": true }
+    "MD024": { "siblings_only": true },
+    // Compact tables, one space each side of every pipe. Pinned rather than
+    // left to MD060's ambiguous default ("consistent" infers per table, and
+    // picks "aligned" where no row disambiguates). Same reasoning as MD013:
+    // under "aligned" a cell's width is shared state, so one long value
+    // reflows every row and a diff stops being the size of the change.
+    "MD060": { "style": "compact" }
   }
 }
 ```
 
 `MD028` stays at its default (enabled).
-Each of these three is half of a pair whose human half is in `prose-conventions.md` — read it before applying them, and record neither half in the repo's `CLAUDE.md`: the plugin is what carries them (step 5).
+Each of these four is half of a pair whose human half is in `prose-conventions.md` — read it before applying them, and record neither half in the repo's `CLAUDE.md`: the plugin is what carries them (step 5).
+
+### In a repo that holds Terraform config, also ignore `.terraform/`
+
+```jsonc
+  "ignores": ["**/.terraform/**"]
+```
+
+A local `terraform init` writes provider source there and some providers ship a `README.md`.
+The directory is gitignored, but **markdownlint does not read `.gitignore`** — so a local run reports findings in vendored files that CI, a fresh checkout that never runs `init`, cannot see.
+A local check that fails where CI passes is the wrong way round for a check whose whole point is catching things before CI does.
 
 ## Check-then-fix commit discipline
 
