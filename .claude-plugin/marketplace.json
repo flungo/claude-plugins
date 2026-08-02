@@ -32,8 +32,8 @@
     {
       "name": "claude-code-web",
       "source": "./plugins/claude-code-web",
-      "description": "Working preferences and hard constraints for Claude Code Web — the egress proxy and CA bundle, GitHub-via-MCP, containers replaced across idle periods, repo scoping and add_repo's cross-owner rule, project config in a multi-repo session, and delegating unrunnable steps to CI. Environment-agnostic.",
-      "version": "0.4.0"
+      "description": "Working preferences and hard constraints for Claude Code Web — the egress proxy and CA bundle, GitHub-via-MCP, containers replaced across idle periods, repo scoping and add_repo's cross-owner rule, project config in a multi-repo session, why repo-adopted plugins never load and how user-scope ones arrive, and delegating unrunnable steps to CI. Environment-agnostic.",
+      "version": "0.5.0"
     },
     {
       "name": "personal-cloud-environment",
