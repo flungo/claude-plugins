@@ -154,10 +154,17 @@ The checks those conventions pair with, adopted from [flungo/github-workflows](h
 A repo-specific `plugin-validate` workflow runs `claude plugin validate` on the marketplace and every plugin, so a broken manifest can't merge.
 The conventions themselves stay in `markdown-standards` (above); only repo-specific facts belong here:
 
-- **Tool-version pin:** CI's `DavidAnson/markdownlint-cli2-action@v19` ships
-  **markdownlint-cli2 0.17.2** (markdownlint 0.37.4). Match it locally
-  (`npm install markdownlint-cli2@0.17.2`) before chasing findings — a newer
-  local version carries rules CI doesn't run.
+- **Tool version — read it from a CI run, don't trust this note.** The shared
+  workflow tracks the action's major tag, so the linter version *floats*: it
+  moved from `markdownlint-cli2-action@v19` (markdownlint-cli2 0.17.2 /
+  markdownlint 0.37.4) to `@v24` (0.23.1 / 0.41.1) without any change here, and
+  the new major added `MD060` — which failed CI on tables that had been clean
+  for months (PR #31). Take the version from the first line of the
+  markdownlint job's log and match it locally
+  (`npx markdownlint-cli2@<version> "**/*.md" "!node_modules/**"`) before
+  chasing findings; matching a *stale* pin gives a false pass, which is the
+  failure mode this note exists to prevent. Last seen: **0.23.1**
+  (markdownlint 0.41.1), 2026-08-01.
 - **`.lycheeignore`** is populated only from this repo's own token-enabled
   `workflow_dispatch` runs, per the rules in its header.
 
