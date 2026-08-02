@@ -43,6 +43,10 @@ When a step genuinely can't run here, or is heavy enough to be worth offloading:
   Trigger a run through the GitHub MCP (`actions_run_trigger`); `workflow_dispatch` with an explicit `ref` works on a feature branch *before* the workflow exists on the default branch.
 - **Provision required tokens/secrets before a verification run**, or its findings are noise.
   (A tokenless lychee dispatch, for instance, floods the auto-issue with false `404`s on private cross-repo links — token artifacts, not dead links; see `flungo/stalwart.flungo.net#53`.)
+- **Watch the run through the GitHub MCP, not a Monitor script.**
+  The Monitor tool's polling examples all shell out to a `gh` CLI that a web session doesn't have, and `api.github.com` is blocked through the proxy, so a watch script can't observe check status at all — it will sit silent rather than fail loudly.
+  Instead background a timer and re-check `pull_request_read` with `get_check_runs` on a later turn.
+  Foreground `sleep` is blocked, so the timer itself has to be a backgrounded loop (see `egress-and-tooling.md`).
 
 ## Probe, don't assume
 
