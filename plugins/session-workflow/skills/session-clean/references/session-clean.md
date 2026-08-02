@@ -18,6 +18,9 @@ A session is clean when every thread it opened is in one of these states:
   comment, an ADR, a commit message, or a GitHub issue. A decision that only
   lives in this conversation doesn't count, however clearly it was stated at
   the time.
+- **Handed off, confirmed** — the user has said a `/handoff` for that thread
+  landed in a new session. It has an owner and that session applies the same
+  hygiene, so whatever must outlive it gets recorded there rather than here.
 
 Not everything from the session needs a durable record.
 One-off housekeeping — "which flag do I pass for X", already answered and acted on — doesn't need to survive the session ending.
@@ -52,9 +55,22 @@ For each thread found in step 1:
   Flag it as a candidate; don't finish it without saying so first (step 4).
 - **Needs durable capture** — real, unresolved, and worth recording. Needs a
   destination (step 3).
+- **Handed off** — a `/handoff` was produced for this thread during the
+  session. Which of two states it is in decides everything:
+  - **Confirmed** (the user said it landed in a new session): it has an owner.
+    Report it as handed off and nothing more — not as outstanding, not as done.
+    Neither is yours to assert.
+  - **Unconfirmed** (a document was produced and nothing was said afterwards):
+    **ask whether it was ever handed off.** A handoff block that was never
+    pasted leaves no new session, no issue, and no record, so the work has
+    quietly evaporated rather than moved. If the answer is no, it drops back to
+    *needs durable capture* and takes a destination like anything else.
 - **Fine to drop** — resolved in a way that genuinely doesn't need a record
   (see step 0). Leave it out of the report entirely; don't pad the report with
   confirmations of things that didn't need doing.
+
+Never fold a handed-off thread into *needs durable capture* without asking first, and never leave an unconfirmed one out of the report on the grounds that a handoff was offered.
+Those are the two ways this thread goes missing: counted twice, or not at all.
 
 ## 3. Pick a destination for anything needing durable capture
 
@@ -101,5 +117,7 @@ A general go-ahead on the whole list is enough — don't demand a separate confi
 - **Verdict**: clean and safe to delete, or what's still open and why.
 - What was actually written and where — `CLAUDE.md` file and section, or issue
   number and link — for anything the user confirmed.
+- Anything handed off during the session, named as handed off and left at that.
+  Don't describe it as complete or incomplete; this session no longer knows.
 - Anything left open because the user didn't confirm it or wanted to handle it
   themselves.

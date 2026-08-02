@@ -7,6 +7,16 @@ description: Fabrizio's "/handoff" command — produces a session handoff docume
 
 Produce a concise, structured handoff document that lets a fresh session continue the current work without re-reading the whole conversation.
 
+## Two modes
+
+**Whole-session** is the default: this session is ending, and everything in it carries forward.
+
+**Scoped** applies when the request names a subset — "hand off the API layer work", "handoff for the follow-up task that just came up".
+One thread leaves; this session continues without it.
+The rest of the conversation is not summarised, mentioned, or carried.
+
+The two differ in more than emphasis, so decide which one you're in before writing anything.
+
 ## Output
 
 Emit the document as a **single fenced markdown block** in the reply, with nothing else inside the fence.
@@ -66,8 +76,13 @@ Where content already exists in an artifact or a file, name and describe it rath
 That artifact is the source of truth; a copy in the handoff is a second one that can drift.
 
 **Tailor to the next focus.**
-If the user says what the next session will work on — "handoff, next I'm doing the API layer" — emphasise the state and next steps relevant to that, and suggest skills accordingly.
+In whole-session mode, a stated focus shifts emphasis without narrowing what the document covers — "handoff, next I'm doing the API layer" foregrounds that work but still carries the session.
 With no focus given, cover the picture evenly.
+
+**In scoped mode, filter by relevance — not by provenance.**
+Include only what the receiving session needs to do its work, and leave every other thread out entirely rather than summarising it briefly.
+But relevant does not mean "arose while discussing this thread": a constraint discovered elsewhere that *bounds* the scoped work belongs in the document, while a finished thread that merely happened nearby does not.
+Judge each item by whether the receiving session would make a worse decision without it.
 
 **Omit empty sections silently.**
 A section with nothing meaningful to say is left out entirely: no placeholder, no explanation of its absence.
@@ -78,8 +93,28 @@ The user may just say "handoff" with no further context.
 That's fine — build the document from the whole conversation.
 A focus given with the request shapes emphasis and the suggested skills; it doesn't narrow what the document covers.
 
+## After a scoped handoff
+
+The thread is no longer this session's to carry, and the way you talk about it changes accordingly.
+
+**Say it was handed off. Never say more than that in either direction.**
+Not "still outstanding", not "done" — neither is yours to assert, and both are wrong in a way the user can't easily catch.
+This binds every later turn, not just the one that produced the document: end-of-session summaries, wrap-ups, PR descriptions, and `/session-clean` reports all inherit it.
+
+**Until the user confirms, the handoff is only *offered*.**
+A fenced block that is never pasted leaves nothing behind — no new session, no issue, no record.
+So treat the work as transferred once the user says it landed, and as still in the air until then.
+Confirmation is worth asking for explicitly, in one line, when the handoff covers something that matters: it is the difference between a thread that has an owner and a thread that has quietly evaporated.
+
+**A confirmed handoff needs no further capture from you.**
+The receiving session follows the same hygiene, so whatever must outlive it will be recorded there.
+
 ## Relationship to `/session-clean`
 
 These are the two halves of ending a session.
 `/handoff` carries unfinished work into a fresh conversation; [`/session-clean`](../session-clean/SKILL.md) checks whether closing this one would lose anything that ought to be recorded durably instead.
-Work that should outlive any session — a decision, a constraint, a follow-up task — belongs in a `CLAUDE.md` or an issue via `/session-clean`, not only in a handoff document that one future session reads once.
+
+The division that matters: **a handoff transfers work to a session that is about to start, while durable capture makes work survive whether that session ever happens.**
+A handoff document is not durable capture — it exists only in a chat reply until someone pastes it.
+So work that must not be lost wants both: a handoff to carry it now, and an issue or a `CLAUDE.md` entry so it still exists if the handoff is never used.
+Neither command is sufficient alone for that case.
