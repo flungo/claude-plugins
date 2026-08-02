@@ -21,7 +21,8 @@ Markdown renders consecutive lines as one paragraph, so this is a pure source-le
 - Nothing enforces one-sentence-per-line mechanically (Prettier declined it — cross-language sentence detection is too hard; markdownlint has no reflow rule) — it is convention, applied when writing and editing.
 - ("Semantic line breaks" / "ventilated prose" — see <https://sembr.org/> — has no universal consensus; adopted for the diff and review benefits.)
 
-**Scope — apply it wherever the rendered output is unchanged.** That is the whole test, and it reaches further than top-level paragraphs:
+**Scope — apply it wherever the rendered output is unchanged.**
+That is the whole test, and it reaches further than top-level paragraphs:
 
 - **Top-level prose paragraphs** — always.
 - **List items and blockquote paragraphs** — yes.
@@ -32,7 +33,8 @@ Markdown renders consecutive lines as one paragraph, so this is a pure source-le
 - **Hard-break blocks** — preserve them.
   Lines ending in two spaces or a backslash (e.g. a `**Date:**` / `**Status:**` metadata block) render a `<br>` that carries meaning, so reflowing them *would* change the output.
 
-**Migrating an existing repo.** Because the convention is render-neutral, a migration can be **gated on render-equivalence**: reflow the source, render both versions to normalised HTML, and keep the change only where the HTML is byte-identical.
+**Migrating an existing repo.**
+Because the convention is render-neutral, a migration can be **gated on render-equivalence**: reflow the source, render both versions to normalised HTML, and keep the change only where the HTML is byte-identical.
 This plugin ships [`reflow.py`](../../../scripts/reflow.py), which implements exactly that — never do a blind unwrap instead.
 It covers everything the rule covers: top-level paragraphs, list items at any nesting level and marker width, and blockquotes including nested ones, carrying each continuation line's indent or `>` prefix, and leaving hard-break blocks alone.
 At runtime the script is at `${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py`; run it from the target repo's root:

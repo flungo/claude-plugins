@@ -39,10 +39,13 @@ The session is scoped to a specific set of repositories, **listed individually**
 
   So the test is **"an owner already in this session"**, not "an owner the GitHub integration is installed in" — an installed owner, visible in `list_repos`, is refused just the same.
 - **A cross-tier refusal says nothing about authorisation.**
-  The check runs before any access check, so a third-party repo fails with exactly this error rather than an auth error — and a session that already holds repositories, which is every session, therefore can't discover what a genuine no-access failure looks like. Don't report a cross-tier message as "no access".
-- **One identity spans the owners.** In a two-owner session, `git` reached both and the GitHub MCP resolved to a single account — it behaves as one credential, not one per owner.
+  The check runs before any access check, so a third-party repo fails with exactly this error rather than an auth error — and a session that already holds repositories, which is every session, therefore can't discover what a genuine no-access failure looks like.
+  Don't report a cross-tier message as "no access".
+- **One identity spans the owners.**
+  In a two-owner session, `git` reached both and the GitHub MCP resolved to a single account — it behaves as one credential, not one per owner.
 - **When you can't attach a repo you only need to read**, use `WebFetch` against `github.com` / `raw.githubusercontent.com` (see `egress-and-tooling.md`); otherwise the fix is a new session with it as an initial source, which is the user's to make.
-- **Treat `list_repos` totals as indicative.** Repeat runs returned different totals and different `has_more` values, and a repository listed there may not appear in the session-creation picker.
+- **Treat `list_repos` totals as indicative.**
+  Repeat runs returned different totals and different `has_more` values, and a repository listed there may not appear in the session-creation picker.
 - **`/add-dir` is not available in web sessions**, so you can't attach a local directory after start that way.
 
 ## Project config in a multi-repo session
@@ -60,7 +63,8 @@ Two related behaviours are **still untested** — don't assume either way:
 - whether `.mcp.json` loads on the same terms as `.claude/settings.json` (only `enabledPlugins` was observed);
 - whether a repository attached mid-session with `add_repo` gets its project config loaded, since the ones attached during that test carried none.
 
-> **🤖 Agent** — when a repo's plugins aren't loading, check that the repo actually declares them before blaming the session's shape. If a fresh session does turn out to be the fix, say so — the starting repositories are the user's choice at creation and can't be changed from inside (`/add-dir` isn't available).
+> **🤖 Agent** — when a repo's plugins aren't loading, check that the repo actually declares them before blaming the session's shape.
+> If a fresh session does turn out to be the fix, say so — the starting repositories are the user's choice at creation and can't be changed from inside (`/add-dir` isn't available).
 
 ## MCP servers can be unavailable at first
 

@@ -10,8 +10,10 @@ This skill records what **Fabrizio has manually applied** on top of those defaul
 
 Two things follow from that split:
 
-- **Nothing here is a platform guarantee.** Every entry below exists because he added it, and it can be changed or removed at any time.
-- **The harness's system prompt still wins.** If it describes the environment differently, follow it and correct this skill (see § Keeping this record in step).
+- **Nothing here is a platform guarantee.**
+  Every entry below exists because he added it, and it can be changed or removed at any time.
+- **The harness's system prompt still wins.**
+  If it describes the environment differently, follow it and correct this skill (see § Keeping this record in step).
 
 *Recorded 2026-08-02, from Fabrizio's description of the environment's settings form; the variable values were confirmed the same day against a live session.
 A variable added mid-session was visible to a later turn of that session, but that says nothing about propagation into a running container — the container is replaced across idle periods (see `sessions.md` in `cloud-sessions`), so the value most likely arrived at a fresh start.*
@@ -53,7 +55,8 @@ The domains are as applied; the *why* column is inferred from each host's role r
 | `production.cloudfront.docker.com` | The CDN Docker Hub serves image layers from, so `docker pull` completes once the daemon is up. |
 | `registry.terraform.io` | Provider resolution during `terraform init`; added 2026-07-29 at a session's request, and what makes the Terraform workflow in `cloud-sessions` viable here. |
 
-> **Verify:** `pkg-containers.githubusercontent.com` is already covered by the `*.githubusercontent.com` wildcard above it, so it is likely redundant. Harmless either way — worth removing only if the list is being tidied, and only after confirming the wildcard does match subdomains in this policy.
+> **Verify:** `pkg-containers.githubusercontent.com` is already covered by the `*.githubusercontent.com` wildcard above it, so it is likely redundant.
+> Harmless either way — worth removing only if the list is being tidied, and only after confirming the wildcard does match subdomains in this policy.
 
 ### Environment variables
 
@@ -68,7 +71,8 @@ A **secret** value is never worth writing down, in this table or anywhere else i
 | `NODE_EXTRA_CA_CERTS` | `/root/.ccr/ca-bundle.crt` | Same CA bundle for Node and npm. |
 | `PIP_CERT` | `/root/.ccr/ca-bundle.crt` | Same CA bundle for `pip`, which `cloud-sessions` recommends setting. Added 2026-08-02, in review of the change that created this skill. |
 
-> **🤖 Agent** — if a value differs from the expectation above, use the live value and say so, then offer a PR reconciling the two. Silently adapting is what lets the record rot.
+> **🤖 Agent** — if a value differs from the expectation above, use the live value and say so, then offer a PR reconciling the two.
+> Silently adapting is what lets the record rot.
 
 ## Repository scope
 
@@ -77,11 +81,15 @@ Fabrizio installs the Claude GitHub integration **per organisation**, so a sessi
 
 *Verified 2026-08-02 across four sessions; the mechanics are in `sessions.md` in `cloud-sessions`, and only what is specific to him is repeated here.*
 
-- **`flungo` is a user account, not the boundary.** The integration is also installed in the organisations `flungo-ansible`, `flungo-avr`, `flungo-docker`, `flungo-maven`, `flungo-soton`, `flungo-theaigames`, `flungo-vibe`, `bashrc-io`, `plugcraft`, `SystemDocker` and `WorldCretornica` — as seen in `list_repos` that day, and not necessarily exhaustive or current.
-- **One credential covers them all.** Every session resolved to the single account `flungo`, and reached both owners' repositories in a session started with two.
-- **Mixing owners is a decision at session creation.** `add_repo` will not introduce an owner the session lacks, so if work spans two of these, they have to be picked up front — the fix afterwards is a new session, which is Fabrizio's to start.
+- **`flungo` is a user account, not the boundary.**
+  The integration is also installed in the organisations `flungo-ansible`, `flungo-avr`, `flungo-docker`, `flungo-maven`, `flungo-soton`, `flungo-theaigames`, `flungo-vibe`, `bashrc-io`, `plugcraft`, `SystemDocker` and `WorldCretornica` — as seen in `list_repos` that day, and not necessarily exhaustive or current.
+- **One credential covers them all.**
+  Every session resolved to the single account `flungo`, and reached both owners' repositories in a session started with two.
+- **Mixing owners is a decision at session creation.**
+  `add_repo` will not introduce an owner the session lacks, so if work spans two of these, they have to be picked up front — the fix afterwards is a new session, which is Fabrizio's to start.
 
-> **Verify:** `WorldCretornica` appeared in `list_repos` but was not spotted in the session-creation picker, so it may be listable without being startable. Worth checking before planning work that depends on starting a session there.
+> **Verify:** `WorldCretornica` appeared in `list_repos` but was not spotted in the session-creation picker, so it may be listable without being startable.
+> Worth checking before planning work that depends on starting a session there.
 
 ## Keeping this record in step
 
@@ -98,6 +106,7 @@ Both directions end in a PR against [`flungo/claude-plugins`](https://github.com
 **When Fabrizio says he has changed the environment** — an added domain, a new variable, a setup script — treat that as a documentation task due in the same session, not something to remember later.
 Open the PR that persists it here, so the next session inherits it instead of rediscovering it.
 
-> **🤖 Agent** — never treat an entry as live because you wrote it. This file describes applied configuration, and a proposal only becomes that once the PR carrying it is merged and Fabrizio has applied it.
+> **🤖 Agent** — never treat an entry as live because you wrote it.
+> This file describes applied configuration, and a proposal only becomes that once the PR carrying it is merged and Fabrizio has applied it.
 
 Some findings belong in the *other* plugin instead: if what you learned is true of Claude Code Web for everyone rather than of this environment's settings, put it in `cloud-sessions` and leave this record alone.

@@ -46,8 +46,10 @@ cargo install lychee --locked   # in the background; check back before the link 
 
 ## What cannot be validated locally
 
-**Only the offline link check is meaningful locally.** It is deterministic and needs no network, so a local pass is a real pass.
+**Only the offline link check is meaningful locally.**
+It is deterministic and needs no network, so a local pass is a real pass.
 
-**The external URL sweep is not.** It is `workflow_dispatch`-only, needs `LYCHEE_GITHUB_TOKEN` to reach private repos, and depends on the runner's egress — which is not a sandbox's.
+**The external URL sweep is not.**
+It is `workflow_dispatch`-only, needs `LYCHEE_GITHUB_TOKEN` to reach private repos, and depends on the runner's egress — which is not a sandbox's.
 Verify it in GitHub by dispatching the workflow, never locally.
 Curating `.lycheeignore` from a local or tokenless run records token artifacts as if they were dead links; see `cross-references.md`.

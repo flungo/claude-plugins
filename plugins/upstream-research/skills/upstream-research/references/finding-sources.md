@@ -20,7 +20,8 @@ In the web sandbox `add_repo` can't add another owner's repo, and `api.github.co
 ## Pin to a ref, and navigate from the root
 
 - **Pin to the version or commit you depend on** when a fact is version-sensitive — read the file at that tag, not `main`, so the fact matches the version in use.
-- **Navigate from the docs root, not a deep link.** Projects reorganise their docs between releases, so deep links to specific pages rot; start at the docs root, walk to the page, and confirm it's for the right version.
+- **Navigate from the docs root, not a deep link.**
+  Projects reorganise their docs between releases, so deep links to specific pages rot; start at the docs root, walk to the page, and confirm it's for the right version.
 
 ## Record where each fact came from
 
