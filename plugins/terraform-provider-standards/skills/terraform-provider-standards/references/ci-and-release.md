@@ -1,7 +1,7 @@
 # CI and release — adopt the shared provider workflows
 
 A provider's CI is boilerplate for the HashiCorp scaffold (build, lint, test, docs, release), so it is **not** written per repo.
-It is adopted from the shared **`flungo/github-workflows`** reusable workflows, pinned to `@v1` — a moving *branch* (not a tag) that advances on every merge to that repo's `main`, so consumers pick up fixes automatically.
+It is adopted from the shared **`flungo/github-workflows`** reusable workflows, pinned to `@v2` — a moving *branch* (not a tag) that advances on every merge to that repo's `main`, so consumers pick up fixes automatically.
 The authoritative contract, inputs, and secrets live there (`docs/reference/terraform-provider-workflow.md` and the provider adoption runbook); **point to it rather than restating it** — this file captures only what a provider author needs to keep in mind.
 
 ## What the consumer calls, and what it keeps
@@ -10,9 +10,9 @@ Three reusable workflows cover the scaffold; the consumer keeps its own acceptan
 
 | Concern | Where it lives |
 | --- | --- |
-| build + vet, gofmt + golangci-lint, unit tests, docs-in-sync check | `terraform-provider-test.yml@v1` |
-| regenerate + commit Registry docs on a branch | `terraform-provider-docs.yml@v1` |
-| GoReleaser signed publish on a `v*` tag | `terraform-provider-release.yml@v1` |
+| build + vet, gofmt + golangci-lint, unit tests, docs-in-sync check | `terraform-provider-test.yml@v2` |
+| regenerate + commit Registry docs on a branch | `terraform-provider-docs.yml@v2` |
+| GoReleaser signed publish on a `v*` tag | `terraform-provider-release.yml@v2` |
 | **acceptance tests** (provider-specific) | **the consumer's own `testacc` job** |
 
 A reusable workflow composes at the **job** level, so the consumer's `test.yml` mixes the shared `ci:` caller with its own `testacc:` job in the same file — no forking.
@@ -20,9 +20,9 @@ That `testacc:` job runs the provider's acceptance tests (`terraform-plugin-test
 The provider name is derived from the repo name (the `terraform-provider-` prefix stripped), so most callers pass no inputs at all.
 Grant `contents: write` on the caller side for the docs-commit and release callers — a reusable workflow's own `permissions:` only cap the token.
 
-## Also adopt the version check
+## Also adopt `flungo-workflows`
 
-Every provider consumer should call the credential-free `version-check.yml@v1` too, so the repo raises an issue against itself if a future major bump ever leaves it pinning a now-frozen `@vN`.
+Every provider consumer should call the credential-free `flungo-workflows.yml@v2` too — its `version-check` job raises an issue against the repo itself if a future major bump ever leaves it pinning a now-frozen `@vN`.
 
 ## golangci-lint — a v2 config needs the v2 tool
 

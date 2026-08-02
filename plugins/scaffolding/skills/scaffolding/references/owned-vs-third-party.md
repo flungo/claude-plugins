@@ -26,9 +26,9 @@ Relevance is the rule — a Terraform *config* repo takes `terraform-standards`,
 `git-conventions` is personal (user-scope) but is applied at repo level too, so every contributor follows it.
 The **purely personal** plugins — `scaffolding`, `claude-code-web`, `upstream-research` — are **user-scope only and never adopted at repo level**; `scaffolding` in particular assumes full autonomy over an owned repo, which only Fabrizio has.
 
-**Shared CI** — adopt the `flungo/github-workflows` family relevant to the repo type, plus the version check (see `helper-repos.md`).
+**Shared CI** — adopt the `flungo/github-workflows` family relevant to the repo type, plus `flungo-workflows` (see `helper-repos.md`).
 
-An owned repo adopts much of the standard and **extends it with bespoke additions** where its needs genuinely differ — e.g. a repo with a bespoke pipeline still takes the Markdown workflows and the version check.
+An owned repo adopts much of the standard and **extends it with bespoke additions** where its needs genuinely differ — e.g. a repo with a bespoke pipeline still takes the Markdown workflows and `flungo-workflows`.
 
 ## Third-party repo — do nothing without explicit consent
 
