@@ -2,3 +2,9 @@
 # scripts/reflow.py is run or imported.
 __pycache__/
 *.py[cod]
+
+# Node artifacts from running markdownlint-cli2 locally (see § Markdown
+# validation CI). Nothing here declares a package.json, so both are throwaway —
+# npx leaves them out of the repo, a plain npm install does not.
+node_modules/
+package-lock.json
