@@ -16,12 +16,15 @@ The CA bundle lives at `/root/.ccr/ca-bundle.crt`.
 ## The network allowlist is the user's to extend
 
 What the proxy allows is a **user-controlled allowlist**, not a fixed wall.
-If a host you need is blocked and there's a **durable, repeated benefit** to reaching it (not a one-off), you can **ask Fabrizio to add it to the allowlist** instead of only working around it or offloading to CI.
+If a host you need is blocked and there's a **durable, repeated benefit** to reaching it (not a one-off), you can **ask the user to add it to the allowlist** instead of only working around it or offloading to CI.
 
 Two things to weigh before asking:
 
-- The allowlist lives in the **single shared environment** (see `sessions.md`), so anything added is added for **all** his future sessions — only propose hosts that are fine to have globally, and confirm before he adds them.
+- The allowlist lives in the **environment** (see `sessions.md`), so anything added is added for **every** future session using it — only propose hosts that are fine to have globally, and confirm before the user adds them.
 - A genuine one-off is better offloaded to CI or read via `raw.githubusercontent.com`; reserve an allowlist request for access that recurs and is worth making permanent.
+
+Which hosts a given environment already allows is **not** recorded in this plugin — it varies per environment.
+Take it from the system prompt, from a companion skill that records that environment, or by probing.
 
 ## GitHub access
 
@@ -38,7 +41,7 @@ Re-probed 2026-07-29 for the download shapes: `/releases/download/…` → `200`
 
 ## Terraform
 
-*Last verified 2026-07-29: `releases.hashicorp.com` → `200`, `registry.terraform.io` → `200`, `checkpoint-api.hashicorp.com` → `403`; a full `terraform init` in a real repo installed a provider and wrote a lockfile.*
+*Last verified 2026-07-29, in an environment whose allowlist had been extended with `registry.terraform.io`: `releases.hashicorp.com` → `200`, `registry.terraform.io` → `200`, `checkpoint-api.hashicorp.com` → `403`; a full `terraform init` in a real repo installed a provider and wrote a lockfile.*
 
 There is no `terraform` binary in the image, but a web session can run `fmt`, `init`, and `validate` — worth doing before pushing, since it catches syntax and type errors without spending a CI round-trip.
 
@@ -57,9 +60,9 @@ $S/terraform init -backend=false  # no backend credentials needed
 $S/terraform validate
 ```
 
-- **`registry.terraform.io` is allow-listed**, so `init` resolves and installs providers normally.
-  It was added on 2026-07-29 at a session's request — a worked example of the allowlist section above: the benefit recurs across every Terraform repo in the fleet, which is what made it worth making permanent rather than working around.
-- **`checkpoint-api.hashicorp.com` is *not* allow-listed** and returns `403`.
+- **`init` needs `registry.terraform.io`**, which is not in the default allowlist — so it resolves and installs providers only in an environment whose allowlist has been extended with it.
+  That extension is a worked example of the allowlist section above: the benefit recurs across every Terraform repo, which is what makes it worth making permanent rather than working around. If `init` fails to resolve a provider, ask for the host rather than assuming Terraform can't run here.
+- **`checkpoint-api.hashicorp.com` is not in the default allowlist** and returns `403`.
   It is only HashiCorp's optional version-check ping and nothing fails without it, so set `CHECKPOINT_DISABLE=1` to keep the error out of the output.
 - **`-backend=false` skips backend initialisation**, so `init` needs no state-backend token.
   A *remote* backend's credentials are usually a CI secret the session doesn't hold.

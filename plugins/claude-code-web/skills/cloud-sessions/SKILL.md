@@ -1,16 +1,20 @@
 ---
 name: cloud-sessions
-description: Fabrizio's working preferences and hard constraints for Claude Code Web (the browser and cloud environment at claude.ai/code, as opposed to the local CLI). Consult this whenever a session runs in that environment and something behaves differently from local — outbound network going through the egress proxy, GitHub access, installing tools, adding or scoping repositories, setting environment variables or secrets, or a command that can't run in the sandbox and should be delegated to CI. Personal, always-on preferences; they complement a repo's own CLAUDE.md rather than overriding it.
+description: Working preferences and hard constraints for Claude Code Web (the browser and cloud environment at claude.ai/code, as opposed to the local CLI). Consult this whenever a session runs in that environment and something behaves differently from local — outbound network going through the egress proxy, GitHub access, installing tools, adding or scoping repositories, setting environment variables or secrets, or a command that can't run in the sandbox and should be delegated to CI. Always-on preferences; they complement a repo's own CLAUDE.md rather than overriding it.
 ---
 
 # Claude Code Web
 
-How Fabrizio wants a session to behave when it runs in **Claude Code Web** — the managed, cloud-hosted environment at `claude.ai/code`, rather than the local CLI.
+How a session should behave when it runs in **Claude Code Web** — the managed, cloud-hosted environment at `claude.ai/code`, rather than the local CLI.
 The sandbox is real: outbound traffic is proxied, some tools and hosts are blocked, the container is ephemeral, and the session is scoped to specific repositories.
 Work *with* those constraints rather than rediscovering them each time.
 
 Apply these whenever you're in a web session, whether or not a named command was invoked.
-They are personal defaults that **complement repo/context rules, never supersede them** — check the repo's own `CLAUDE.md`/`CONTRIBUTING.md` first, and where it differs, follow the repo.
+They are defaults that **complement repo/context rules, never supersede them** — check the repo's own `CLAUDE.md`/`CONTRIBUTING.md` first, and where it differs, follow the repo.
+
+Everything here describes Claude Code Web as it behaves for **anyone**.
+What *one particular* environment has been configured with — the hosts its owner added to the allowlist, the environment variables it sets, its setup script — is deliberately **not** recorded here, because it differs per environment and per user.
+If a companion skill records that for the environment you're in, it is the place for those specifics; otherwise, treat the harness's system prompt as the only description of them.
 
 ## These constraints change — verify, and defer to the environment's own description
 
@@ -18,7 +22,7 @@ The sandbox's limits are set by Anthropic and by the **network policy chosen for
 Treat everything here as *last-known behaviour, not a permanent guarantee*: before spending effort working around a constraint, probe whether it still holds (the references give reproducers), and don't assume a documented block is universal — a different environment's policy may not have it.
 
 The harness's own description of the environment in the **system prompt** (the "remote execution environment" / network-policy section it gives the session) is authoritative and **supersedes this plugin**.
-Where the two conflict, follow the system prompt and open a PR against `flungo/claude-plugins` to correct the plugin.
+Where the two conflict, follow the system prompt and open a PR against the repository this plugin ships from, to correct the plugin.
 
 Claims that were checked carry a **last-verified date**; an undated or stale claim is a hint to re-probe, not a fact to rely on.
 
@@ -27,8 +31,10 @@ Claims that were checked carry a **last-verified date**; an undated or stale cla
 When you hit a fresh, reusable gotcha about the web environment, record it where the next session will find it:
 
 - **Specific to the current repo** → that repo's `CLAUDE.md` (or its relevant plan).
-- **A general Claude Code Web behaviour**, independent of the repo → back into *this* plugin.
-  You may ask the user to `add_repo flungo/claude-plugins` so you can open a PR updating the relevant reference, with a reproducer and a last-verified date.
+- **A general Claude Code Web behaviour**, independent of the repo *and* of how any one environment is configured → back into *this* plugin.
+  Ask the user to add the repository this plugin ships from to the session (`add_repo`) so you can open a PR updating the relevant reference, with a reproducer and a last-verified date.
+- **A property of the specific environment you're running in** — a host in its allowlist, a variable it sets, a tool its setup script installed → *not* here.
+  That belongs in whatever companion skill records that environment, so this plugin stays true for every reader.
 
 ## The reference files
 

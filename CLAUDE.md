@@ -19,7 +19,7 @@ Plugins are split by **enablement boundary, not by topic** (ADR-001): a plugin i
 
 | Scope | Enabled how | Plugins |
 | --- | --- | --- |
-| **Personal (user)** | Installed + enabled in the claude.ai account; always on | `git-conventions`, `contributor-workflow`, `claude-code-web`, `upstream-research`, `scaffolding` |
+| **Personal (user)** | Installed + enabled in the claude.ai account; always on | `git-conventions`, `contributor-workflow`, `claude-code-web`, `personal-cloud-environment`, `upstream-research`, `scaffolding` |
 | **Repo-adopted (project)** | Declared in a repo's `.claude/settings.json` | `docs-standards`, `markdown-standards`, `terraform-standards`, `terraform-provider-standards` |
 
 Reusable CI (markdownlint, lychee, `terraform` plan/apply) is **not** a plugin — it lives in `flungo/github-workflows` and is referenced by `scaffolding`.
@@ -41,6 +41,13 @@ This repo adopts those Markdown workflows and the version check itself (see § M
 - **Never reference a user-scope-only plugin from a project-scope one.**
   `scaffolding`, `claude-code-web`, and `upstream-research` are user-scope only and never repo-adopted ([ADR-003](docs/decisions/003-owned-vs-third-party-adoption.md)), so a repo-adopted plugin cannot declare one as a dependency — and pointing at it anyway leaves a reference that dangles wherever the plugin is enabled at project scope.
   Where both need the same rule, cite the **ADR** that records it (by full URL, since an installed plugin has no `docs/` tree beside it), or state the rule locally.
+- **Keep generalisable guidance separate from the owner's own configuration.**
+  A plugin whose content would hold for any reader stays that way; the concrete
+  settings *Fabrizio* has applied — an environment's allowlist, its variables,
+  its setup — live in a companion plugin that depends on it, so neither is
+  diluted by the other. `claude-code-web` (generic) and
+  `personal-cloud-environment` (his applied environment) are the worked example
+  ([ADR-005](docs/decisions/005-generic-plugins-and-personal-configuration.md)).
 - **A skill's `name` must not contain `claude`.** claude.ai's marketplace
   ingestion rejects it outright — `plugin_upload_skill_upload_name_reserved_words`,
   *"Skill name in SKILL.md cannot contain the reserved word 'claude'"* — so the
@@ -162,3 +169,7 @@ In short:
 - Markdown authoring conventions ship as the `markdown-standards` plugin here,
   referenced from the `github-workflows` docs instead of being inlined there or
   copied into consumer `CLAUDE.md`s ([ADR-004](docs/decisions/004-markdown-standards-plugin.md)).
+- Generalisable guidance and Fabrizio's own applied configuration ship as
+  separate plugins — `claude-code-web` holds for any user in any environment,
+  `personal-cloud-environment` records his, and depends on it
+  ([ADR-005](docs/decisions/005-generic-plugins-and-personal-configuration.md)).
