@@ -1,7 +1,7 @@
 # Caller for the reusable github-workflows version check: raises (and
 # auto-closes) an issue here if this repo ever pins a frozen @vN major. See
-# flungo/github-workflows docs/runbooks/adopting-version-check.md.
-name: github-workflows version check
+# flungo/github-workflows docs/runbooks/adopting-flungo-workflows.md.
+name: flungo/github-workflows
 
 on:
   schedule:
@@ -9,8 +9,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  version-check:
+  flungo-workflows:
     permissions:
       contents: read
       issues: write
-    uses: flungo/github-workflows/.github/workflows/version-check.yml@v1
+    uses: flungo/github-workflows/.github/workflows/flungo-workflows.yml@v2
