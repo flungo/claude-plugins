@@ -1,6 +1,6 @@
 ---
 name: cloud-sessions
-description: Working preferences and hard constraints for Claude Code Web (the browser and cloud environment at claude.ai/code, as opposed to the local CLI). Consult this whenever a session runs in that environment and something behaves differently from local — outbound network going through the egress proxy, GitHub access, installing tools, adding or scoping repositories, setting environment variables or secrets, or a command that can't run in the sandbox and should be delegated to CI. Always-on preferences; they complement a repo's own CLAUDE.md rather than overriding it.
+description: Working preferences and hard constraints for Claude Code Web (the browser and cloud environment at claude.ai/code, as opposed to the local CLI). Consult this whenever a session runs in that environment and something behaves differently from local — outbound network going through the egress proxy, GitHub access, installing tools, adding or scoping repositories, setting environment variables or secrets, a plugin or a repo's adopted conventions not being loaded, or a command that can't run in the sandbox and should be delegated to CI. Always-on preferences; they complement a repo's own CLAUDE.md rather than overriding it.
 ---
 
 # Claude Code Web
@@ -40,7 +40,7 @@ When you hit a fresh, reusable gotcha about the web environment, record it where
 
 - **`references/egress-and-tooling.md`** — the egress proxy and its CA bundle, which registries and GitHub hosts work, why GitHub goes through the MCP rather than `gh`, how to run Terraform in a session, and why `sleep` is blocked.
   Read it before installing a tool, fetching a URL, hitting the GitHub API, or running Terraform.
-- **`references/sessions.md`** — the session shape: ephemeral containers replaced across idle periods, repo scoping and what `add_repo` will and won't do, project config in a multi-repo session, MCP servers that connect late, and setting environment variables or secrets.
+- **`references/sessions.md`** — the session shape: ephemeral containers replaced across idle periods, repo scoping and what `add_repo` will and won't do, project config in a multi-repo session, why a repo's own plugins never load and how the user-scope ones arrive, MCP servers that connect late, and setting environment variables or secrets.
   Read it before adding a repo, relying on project config, or setting an env var.
 - **`references/ci-iteration.md`** — the pattern for anything the sandbox can't run: push the branch and iterate against CI, provision tokens first, and probe whether a restriction has lifted.
   Read it when a build, container, or toolchain won't run locally.

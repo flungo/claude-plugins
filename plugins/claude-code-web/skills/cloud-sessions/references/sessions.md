@@ -68,6 +68,34 @@ A session can come up with its MCP servers reported as disconnected, and have th
 
 > **🤖 Agent** — treat a missing MCP server as *not yet connected* rather than absent: retry on a later turn before routing around it, and don't tell the user a capability is unavailable on the strength of one turn.
 
+## A repo's own plugins never load
+
+A repo-adopted plugin — one a repository enables through `enabledPlugins` in its `.claude/settings.json` — **does not load in a web session**, even though the settings themselves are read.
+Two mechanisms cause this, and neither can be fixed from inside the session.
+
+**No marketplace is configured at session start** (last verified 2026-08-01, Claude Code v2.1.220).
+`claude plugin marketplace list` reports none and `claude plugin list` reports nothing installed, with `SKIP_PLUGIN_MARKETPLACE=true` set in the session environment.
+A repo's `extraKnownMarketplaces` declaration is not acted on, so its plugins have no source to install from.
+That flag cannot be turned off: setting it empty in the environment's variables leaves it reading `true`, while a canary variable added alongside arrives intact.
+
+**Even with a marketplace configured, project-scope plugins load one launch too late.**
+They are installed during one launch of Claude Code but only become available from the *next* one, and a web session gets exactly one launch.
+`claude plugin list` will report them installed and **enabled** in a session where their skills were never loaded — check your own available skills instead of trusting it.
+
+Neither mechanism depends on how many repositories the session started with; see the preceding section for what repo count does and doesn't affect.
+
+> **🤖 Agent** — when a repo's adopted conventions matter to the work, read them from the repo's files rather than expecting the plugin to be loaded.
+
+## User-scope plugins arrive through the environment's setup script
+
+Plugins enabled at user scope on the account do **not** reach a web session; only account *Skills* do.
+What does reach one is whatever the **cloud environment's setup script** installs, because that runs as root before Claude Code launches — typically `claude plugin marketplace add <owner>/<repo>` followed by `claude plugin install <name>@<marketplace> --scope user`.
+Which plugins a given environment installs is a property of that environment, so look to its own record rather than assuming.
+
+Because the environment's filesystem is snapshotted and reused, the versions a session gets can lag their source by up to about a week; editing the setup script forces a rebuild.
+
+> **🤖 Agent** — if an expected user-scope plugin is missing or stale, say that the environment's setup script is where it is fixed, rather than installing it into the container by hand where the fix dies with the session.
+
 ## Environment variables and secrets
 
 Set them through the session's **Edit environment** control (the kebab menu `⋮` in the top-right of the session → **Edit environment**), not by `export`-ing in a shell — shell state doesn't persist across turns or the container.
