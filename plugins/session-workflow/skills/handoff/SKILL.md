@@ -97,7 +97,8 @@ A focus given with the request shapes emphasis and the suggested skills; it does
 
 The thread is no longer this session's to carry, and the way you talk about it changes accordingly.
 
-**Say it was handed off. Never say more than that in either direction.**
+**Say it was handed off.
+Never say more than that in either direction.**
 Not "still outstanding", not "done" — neither is yours to assert, and both are wrong in a way the user can't easily catch.
 This binds every later turn, not just the one that produced the document: end-of-session summaries, wrap-ups, PR descriptions, and `/session-clean` reports all inherit it.
 
