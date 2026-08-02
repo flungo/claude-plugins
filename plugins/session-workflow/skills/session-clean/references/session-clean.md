@@ -1,0 +1,105 @@
+# /session-clean
+
+Confirms whether the current chat session is safe to close or delete without losing context, or surfaces what still needs to happen first.
+
+**Never write, commit, or file anything on your own initiative.**
+Always propose the durable-write actions and get the user's go-ahead before touching a `CLAUDE.md`, opening an issue, producing a handoff, or anything else external.
+
+## 0. What "clean" means
+
+A session is clean when every thread it opened is in one of these states:
+
+- **Done** — the work described actually happened (code written and applied,
+  not just planned), not merely discussed.
+- **Answered** — a question posed to the user got a real answer, not left
+  hanging.
+- **Durably deferred** — anything still open is captured somewhere a future
+  agent could find *without this chat's context*: a `CLAUDE.md`, a code
+  comment, an ADR, a commit message, or a GitHub issue. A decision that only
+  lives in this conversation doesn't count, however clearly it was stated at
+  the time.
+
+Not everything from the session needs a durable record.
+One-off housekeeping — "which flag do I pass for X", already answered and acted on — doesn't need to survive the session ending.
+Only capture what a future agent, or the user in three weeks, would actually need and couldn't otherwise reconstruct.
+
+## 1. Sweep the session
+
+Review the full conversation, start to end — not just the last few turns.
+For each distinct thread of work or discussion, check for:
+
+- **Open questions**: anything posed, by either side, that never got resolved.
+- **Presented-but-undecided options**: tradeoffs or approaches laid out where
+  no actual choice got made.
+- **Soft deferrals**: "we can fix that later", "for now let's just…", "I'll
+  come back to this". These are easy to lose because they don't read as open
+  questions — they read as progress.
+- **Silent assumptions**: a call made without flagging it, that the user might
+  want to weigh in on, or that's worth recording so it isn't re-litigated
+  later.
+- **Useful facts or decisions with nowhere to live**: anything discovered or
+  decided in-session that future work in this repo or area would benefit from
+  knowing, but that currently only exists in this chat.
+
+## 2. Classify each item
+
+For each thread found in step 1:
+
+- **Already durable** — it's in a `CLAUDE.md`, a comment, an issue, a commit
+  message, or similar. Nothing to do; don't re-list it in the report just to
+  show it was checked.
+- **Finishable now** — small enough to complete before closing the session.
+  Flag it as a candidate; don't finish it without saying so first (step 4).
+- **Needs durable capture** — real, unresolved, and worth recording. Needs a
+  destination (step 3).
+- **Fine to drop** — resolved in a way that genuinely doesn't need a record
+  (see step 0). Leave it out of the report entirely; don't pad the report with
+  confirmations of things that didn't need doing.
+
+## 3. Pick a destination for anything needing durable capture
+
+- **A fact or decision future work in this area should know** — why something
+  was built a certain way, a constraint discovered, a choice between
+  approaches and why it was made: the nearest relevant `CLAUDE.md`. Check for
+  a subdirectory-specific one before defaulting to the repo root. Read the
+  existing file first and match its structure; don't append to the bottom if
+  it already has organised sections.
+- **Something that still needs to be *done*, not just known** — a bug, a
+  follow-up task, unfinished work: a GitHub issue in the relevant repo.
+- If a thread spans multiple repos or projects, route each part to its own
+  destination rather than picking one repo for everything.
+- If it's genuinely unclear which of the two fits — or whether it needs both,
+  such as a decision recorded in a `CLAUDE.md` *and* a tracked follow-up task
+  — ask rather than guessing.
+
+## 4. Propose — don't write yet
+
+Before touching anything, present the user a list:
+
+- **Verdict up front**: clean and safe to delete, or not yet.
+- **Finishable now**: what it is, and that you'd finish it now if they want.
+- **Needs durable capture**: the fact, decision, or task; the proposed
+  destination (which `CLAUDE.md`, or which repo's issue tracker); and a draft
+  of what you'd actually write — not just "I'll note this somewhere".
+
+Nothing gets written, committed, or filed until the user confirms.
+A general go-ahead on the whole list is enough — don't demand a separate confirmation per item unless their response leaves it unclear which items they meant.
+
+## 5. Execute confirmed items
+
+- **`CLAUDE.md` edits**: read the current file, edit in place matching its
+  existing structure and tone. Don't restate history the file already implies,
+  and don't paste in raw chat quotes — write it the way the rest of the file
+  is written.
+- **GitHub issues**: check for an existing near-duplicate first — the GitHub
+  MCP's search, or `gh issue list --search …` — before filing a new one.
+- **Anything the user chose to finish now** instead of deferring: do that
+  work, then re-check it against step 0 before including it in the verdict.
+
+## 6. Final report
+
+- **Verdict**: clean and safe to delete, or what's still open and why.
+- What was actually written and where — `CLAUDE.md` file and section, or issue
+  number and link — for anything the user confirmed.
+- Anything left open because the user didn't confirm it or wanted to handle it
+  themselves.

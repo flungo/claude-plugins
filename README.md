@@ -8,8 +8,9 @@ All three surfaces are covered — the local Claude Code CLI, cloud sessions, an
 
 - **[personal-defaults](plugins/personal-defaults)** — the always-on personal
   set as a single install (user scope). A dependency-only bundle carrying
-  `git-conventions`, `contributor-workflow`, `upstream-research`, and
-  `scaffolding`; it contributes no skills of its own and costs no context.
+  `git-conventions`, `contributor-workflow`, `session-workflow`,
+  `upstream-research`, and `scaffolding`; it contributes no skills of its own
+  and costs no context.
   The Claude Code Web plugins stay outside it, being useful only there —
   `personal-cloud-environment` picks them up instead.
 - **[git-conventions](plugins/git-conventions)** — standing git/PR hygiene
@@ -64,6 +65,13 @@ All three surfaces are covered — the local Claude Code CLI, cloud sessions, an
   link/anchor CI failures (fix the target, never suppress), and
   `/adopt-markdown-ci` for onboarding a repo to the reusable Markdown CI from
   `flungo/github-workflows`.
+- **[session-workflow](plugins/session-workflow)** — personal, always-on
+  commands (user scope) for ending a Claude session well: `/session-clean`
+  (aliases "Session Clean?", "Safe to delete?") checks whether closing the
+  session would lose anything and proposes where each loose end should be
+  recorded, and `/handoff` produces a document that carries unfinished work
+  into a fresh session. The two halves of the same moment — record it, or
+  carry it.
 - **[scaffolding](plugins/scaffolding)** — personal, always-on guide (user
   scope) for setting up, building out, and extending repos across the fleet:
   gated on verified ownership (an owned repo adopts the conventions and standards

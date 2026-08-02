@@ -8,8 +8,8 @@
     {
       "name": "personal-defaults",
       "source": "./plugins/personal-defaults",
-      "description": "Fabrizio's always-on personal conventions as one install — a dependency-only bundle carrying git-conventions, contributor-workflow, upstream-research, and scaffolding. Contributes no skills of its own.",
-      "version": "0.1.0"
+      "description": "Fabrizio's always-on personal conventions as one install — a dependency-only bundle carrying git-conventions, contributor-workflow, session-workflow, upstream-research, and scaffolding. Contributes no skills of its own.",
+      "version": "0.2.0"
     },
     {
       "name": "git-conventions",
@@ -64,6 +64,12 @@
       "source": "./plugins/markdown-standards",
       "description": "Markdown authoring conventions — unambiguous cross-references and link hygiene, semantic line breaks, unique cross-referenced headings, adjacent-blockquote handling, compact tables (delimiter rows included), handling lint rules a linter bump introduces, fix-the-target-never-suppress remediation for markdownlint/link-check failures, and the /adopt-markdown-ci onboarding command.",
       "version": "0.7.0"
+    },
+    {
+      "name": "session-workflow",
+      "source": "./plugins/session-workflow",
+      "description": "Named commands for ending a Claude session well — /session-clean to confirm nothing durable is left only in the chat, and /handoff to carry an unfinished session into a fresh one.",
+      "version": "0.1.0"
     },
     {
       "name": "scaffolding",
