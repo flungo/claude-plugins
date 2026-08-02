@@ -10,6 +10,7 @@ ADRs are numbered sequentially and **never deleted or renumbered** — a superse
 | [003](003-owned-vs-third-party-adoption.md) | Owned-vs-third-party — adoption depends on who owns the repo | Accepted |
 | [004](004-markdown-standards-plugin.md) | Markdown conventions ship as a marketplace plugin, referenced from `github-workflows` | Accepted |
 | [005](005-generic-plugins-and-personal-configuration.md) | Generalisable guidance and applied configuration ship as separate plugins | Accepted |
+| [006](006-plugin-delivery-per-surface.md) | Plugin delivery differs per surface — a cloud-environment setup script carries user-scope plugins | Accepted |
 
 ## Template
 

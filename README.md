@@ -1,7 +1,8 @@
 # claude-plugins
 
 Personal Claude Code / Claude.ai plugin marketplace.
-One repo, plugins usable from both Claude Code and claude.ai, kept in sync by pulling from this repo rather than by re-uploading files by hand.
+One repo, plugins kept in sync by pulling from this repo rather than by re-uploading files by hand.
+All three surfaces are covered — the local Claude Code CLI, cloud sessions, and claude.ai chat — but each pulls through a different mechanism ([ADR-006](docs/decisions/006-plugin-delivery-per-surface.md)).
 
 ## Plugins
 
@@ -28,7 +29,8 @@ One repo, plugins usable from both Claude Code and claude.ai, kept in sync by pu
 - **[claude-code-web](plugins/claude-code-web)** — always-on working
   preferences for Claude Code Web (user scope): the egress proxy and CA bundle,
   GitHub-via-MCP, containers replaced across idle periods, repo scoping and
-  `add_repo`'s cross-owner rule, project config in a multi-repo session, and
+  `add_repo`'s cross-owner rule, project config in a multi-repo session, why
+  repo-adopted plugins never load and how the user-scope ones arrive, and
   delegating unrunnable steps to CI. Written to hold for any Claude Code Web
   user, in any environment.
 - **[personal-cloud-environment](plugins/personal-cloud-environment)** — the
@@ -69,7 +71,7 @@ One repo, plugins usable from both Claude Code and claude.ai, kept in sync by pu
   routing to the shared CI and the helper repos (`github-workflows`,
   `claude-plugins`, `terraform-github`) added as needed.
 
-## Install in Claude Code
+## Install in Claude Code (local CLI)
 
 ```text
 /plugin marketplace add flungo/claude-plugins
@@ -91,17 +93,75 @@ To pull in updates later:
 
 (Claude Code also refreshes marketplaces in the background periodically; `update` forces it immediately.)
 
-## Install in claude.ai (web, desktop, Cowork)
+## Install in Claude Code Web and other cloud sessions
 
-1. Open **Customize** in the left sidebar → **Plugins** tab.
-2. Under **Personal plugins**, click "+" → **Add marketplace**.
-3. Choose **Add from a repository** and paste this repo's URL:
-   `https://github.com/flungo/claude-plugins`
-4. Claude parses `.claude-plugin/marketplace.json` and lists the plugins —
-   install `contributor-workflow` (which brings in `git-conventions`), or
-   `git-conventions` on its own.
+Cloud sessions install no plugins of their own, and a repo's `.claude/settings.json` declaration has no effect in one — see [ADR-006](docs/decisions/006-plugin-delivery-per-surface.md).
+The working channel is the **setup script** on the cloud environment, which runs before Claude Code launches.
 
-To pick up updates after pushing changes here, use the marketplace's "Update" action in the Plugins tab to pull the latest commit.
+Set it at [claude.ai/code](https://claude.ai/code) → the environment selector above the message box → the environment's settings icon → **Setup script**:
+
+```bash
+#!/bin/bash
+# Resolve the CLI without assuming it is on PATH. /opt/node*/bin/claude is only a
+# symlink to a self-contained binary, and that directory is added to PATH by
+# /etc/profile.d/nodejs.sh — so a non-login shell doesn't have it.
+CLAUDE="$(command -v claude 2>/dev/null || true)"
+if [ -z "$CLAUDE" ]; then
+  for candidate in /opt/claude-code/bin/claude /opt/node*/bin/claude; do
+    if [ -x "$candidate" ]; then CLAUDE="$candidate"; break; fi
+  done
+fi
+if [ -z "$CLAUDE" ]; then
+  echo "setup: claude CLI not found — skipping plugin install" >&2
+  exit 0
+fi
+
+"$CLAUDE" plugin marketplace add flungo/claude-plugins || echo "setup: FAILED to add marketplace" >&2
+
+# personal-cloud-environment carries claude-code-web and the personal-defaults
+# bundle through its dependencies, so this one install is the whole setup.
+"$CLAUDE" plugin install personal-cloud-environment@flungo-plugins --scope user \
+  || echo "setup: FAILED to install personal-cloud-environment" >&2
+exit 0
+```
+
+This is the authoritative copy of that script — the environment holds the only live one, and nothing here can detect drift between the two.
+
+Every step is deliberately non-fatal, because a setup script that exits non-zero stops the session from starting at all.
+But a bare `|| true` hides a failed install behind a session that starts perfectly and is simply missing a plugin, so each step announces its own failure instead.
+A named plugin that isn't on this repo's default branch yet fails exactly that way — the install returns non-zero, the session starts, and nothing else says so.
+
+One environment serves every cloud surface, so this covers Claude Code Web, `claude --cloud`, the mobile and Desktop apps, routines, and Claude Tag, in every repository rather than only in repos that adopt this marketplace.
+
+Installed versions are frozen into the environment's filesystem snapshot, which rebuilds when the script changes or after roughly seven days.
+To pull newer plugin versions immediately, edit the script — changing a comment is enough — which forces a rebuild on the next session.
+The same applies after a plugin is *added* to this marketplace: the snapshot has no idea the catalogue changed, so a newly published plugin only arrives once the script is edited or the cache expires.
+
+`SKIP_PLUGIN_MARKETPLACE=true` is set in every cloud session and **cannot be overridden** from the environment's variables — the platform sets it after copying yours, verified with a canary variable.
+Nothing in this flow depends on changing it; it is noted so nobody spends an afternoon trying.
+
+## Install in claude.ai chat (web, Desktop Chat tab, Cowork)
+
+**Add the marketplace** — **Settings** → **Plugins** → **Add** → **Add marketplace** → **Add from a repository**, paste `https://github.com/flungo/claude-plugins`, then **Sync**.
+
+**Install from it** — **Settings** → **Plugins** → **Browse** → **Personal**, which lists every plugin in the marketplace: a **+** to install, a cog once it is installed.
+
+**Check its sync state** — same screen. Above the plugin list the marketplace appears under its repository name (`claude-plugins`), with a **…** menu carrying the short **Synced commit** sha, a **Sync automatically** toggle (on by default), **Check for updates**, and **Remove**.
+
+Installed plugins' skills load into every conversation, namespaced as `<plugin>:<skill>`, with their `references/` readable.
+
+Install only what belongs in a chat window.
+The plugins here are written for repo work, so a plugin that is always-on in Claude Code is not automatically one you want in chat — that is a separate enablement decision, not a smaller version of the same one, and it is the one surface where the set can be narrowed to what a chat can actually use.
+
+This crashed for months, and the cause is worth knowing because it can recur.
+Two marketplace records for this repo were created 88 ms apart by a double-submit, and the Personal tab appears to key its list on `name` rather than `id` — so two records sharing a name send it into a React update-depth loop that unmounts the whole app, with no way to reach the UI that would let you delete either.
+Deleting one record resolved it: the tab renders, all plugins list, and **Add marketplace** works again.
+Filed upstream with captures and an instrumented trace as [anthropics/claude-code#83139](https://github.com/anthropics/claude-code/issues/83139); tracked here in [issue #21](https://github.com/flungo/claude-plugins/issues/21).
+
+**If the Plugins tab ever unmounts the app again, suspect a duplicate marketplace name first.**
+Two repos with the same name under different owners — `alice/plugins` and `bob/plugins` — would do it, since `name` is derived from the repo name.
+
+Note separately that claude.ai's ingestion rejects any skill whose name contains the reserved word `claude` — unrelated to the crash, and a rule for authoring skills here rather than a property of this delivery path.
 
 ## Repo layout
 
