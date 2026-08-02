@@ -13,6 +13,10 @@ A marketplace named for the owner (`flungo-plugins`), not for any one plugin, so
 Its scope is **Fabrizio's personal conventions, packaged so they load automatically** — always-on for his account (user scope) or adopted by a repository (project scope) — rather than being restated per session.
 See [ADR-001](docs/decisions/001-marketplace-structure.md).
 
+**Delivery differs per surface** ([ADR-006](docs/decisions/006-plugin-delivery-per-surface.md)): the local CLI installs from the marketplace directly, cloud sessions get the user-scope plugins from the cloud environment's setup script (recorded in the README), and claude.ai chat installs from the marketplace directly, which now works — the crash that blocked it was a duplicate-marketplace-name bug, since resolved.
+Chat is its own enablement decision, not a smaller copy of the user-scope set: install there only what belongs in a chat window.
+Repo-adopted plugins do not load in cloud sessions at all, which is why a repo's own `CLAUDE.md` still has to summarise the rules it adopts.
+
 ## Structure
 
 Plugins are split by **enablement boundary, not by topic** (ADR-001): a plugin is the unit enabled/disabled at a scope; a skill is the topic unit within it.
@@ -178,3 +182,8 @@ In short:
   separate plugins — `claude-code-web` holds for any user in any environment,
   `personal-cloud-environment` records his, and depends on it
   ([ADR-005](docs/decisions/005-generic-plugins-and-personal-configuration.md)).
+- Plugin delivery differs per surface — a cloud-environment setup script carries
+  the user-scope plugins into every cloud session, chat installs from the
+  marketplace as its own enablement decision, and repo-adopted plugins are left
+  at project scope even though they don't load in cloud sessions
+  ([ADR-006](docs/decisions/006-plugin-delivery-per-surface.md)).
