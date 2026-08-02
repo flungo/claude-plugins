@@ -21,6 +21,8 @@ Read the relevant reference before doing the work:
 - **`references/prose-conventions.md`** — the prose conventions paired with the markdownlint rule defaults: semantic line breaks (`MD013` disabled), unique names for cross-referenced headings (`MD024` `siblings_only` and the anchor-ambiguity gap it leaves), adjacent-blockquote handling (`MD028`), and compact tables (delimiter rows included) (`MD060`).
   Also the **register of positions taken** — the rules the fleet has had to decide on, not a list of every enabled rule.
   Read it before writing prose, structuring headings, or fixing a finding from one of those rules.
+- **`references/validating-locally.md`** — running both checks before pushing: why the linter version must be read from a CI run rather than pinned in a note, installing `lychee` in a locked-down sandbox, and which check cannot be trusted locally.
+
 - **`references/new-lint-rules.md`** — what to do when a linter version bump introduces a rule nobody chose.
   The CI tracks the linter by major tag, so a Dependabot bump can enable new rules across every repo at once, firing on files the failing pull request never touched.
   Covers establishing that it is not the surfacing pull request's fault, then adopting it (the fleet already accepted it), disabling it with a justification (already rejected), or **asking first** and recording the position here (no position yet).
