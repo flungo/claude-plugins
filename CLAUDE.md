@@ -23,7 +23,7 @@ Plugins are split by **enablement boundary, not by topic** (ADR-001): a plugin i
 
 | Scope | Enabled how | Plugins |
 | --- | --- | --- |
-| **Personal (user)** | Installed + enabled in the claude.ai account; always on | `personal-defaults` (bundle) → `git-conventions`, `contributor-workflow`, `upstream-research`, `scaffolding`; plus `personal-cloud-environment` → `claude-code-web` |
+| **Personal (user)** | Installed + enabled in the claude.ai account; always on | `personal-defaults` (bundle) → `git-conventions`, `contributor-workflow`, `session-workflow`, `upstream-research`, `scaffolding`; plus `personal-cloud-environment` → `claude-code-web` |
 | **Repo-adopted (project)** | Declared in a repo's `.claude/settings.json` | `docs-standards`, `markdown-standards`, `terraform-standards`, `terraform-provider-standards` |
 
 Reusable CI (markdownlint, lychee, `terraform` plan/apply) is **not** a plugin — it lives in `flungo/github-workflows` and is referenced by `scaffolding`.
