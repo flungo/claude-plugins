@@ -28,9 +28,13 @@ If the session touched several repos or projects, findings are routed to each on
 ## Relationship to `/handoff`
 
 These are the two halves of ending a session.
-`/session-clean` asks whether anything durable would be lost by closing this one; `/handoff` carries an unfinished session into a fresh one.
+`/session-clean` asks whether anything durable would be lost by closing this one; [`/handoff`](../handoff/SKILL.md) carries unfinished work into a fresh one.
 A session that comes back clean can simply be closed.
 A session that doesn't, and whose remaining work is better continued than recorded, wants `/handoff` instead — or as well.
+
+**A handoff is not durable capture.**
+It exists only in a chat reply until someone pastes it, so a thread that was handed off but never carried has evaporated rather than moved.
+That is why the sweep treats a confirmed handoff and an unconfirmed one differently, and asks about the second rather than assuming either way.
 
 ## Tooling
 
