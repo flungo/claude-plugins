@@ -1,7 +1,7 @@
 # CI iteration — offloading what the sandbox can't (or shouldn't) run
 
 Some work is better pushed to CI than run in the session — a step the environment's network policy blocks, a toolchain that can't be installed, a build slow enough to waste the session on, or a step that **needs repo-specific secrets**.
-That last reason is easy to underrate: Claude Code Web has no secrets management, and the single shared environment (see `sessions.md`) can't hold per-repo, correctly-scoped, rotated secrets without a real maintenance burden — whereas CI already needs and maintains exactly those secrets, scoped to the repo.
+That last reason is easy to underrate: Claude Code Web has no secrets management, and an environment shared across sessions (see `sessions.md`) can't hold per-repo, correctly-scoped, rotated secrets without a real maintenance burden — whereas CI already needs and maintains exactly those secrets, scoped to the repo.
 So a task that depends on a repo's secrets belongs in CI, not the session.
 The pattern is the same each time: **push the branch and iterate against CI**, reading the job logs, instead of fighting the sandbox.
 

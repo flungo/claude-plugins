@@ -9,6 +9,7 @@ ADRs are numbered sequentially and **never deleted or renumbered** — a superse
 | [002](002-documentation-and-adr-model.md) | Documentation model — Diátaxis docs, Nygard ADRs, self-encoded | Accepted |
 | [003](003-owned-vs-third-party-adoption.md) | Owned-vs-third-party — adoption depends on who owns the repo | Accepted |
 | [004](004-markdown-standards-plugin.md) | Markdown conventions ship as a marketplace plugin, referenced from `github-workflows` | Accepted |
+| [005](005-generic-plugins-and-personal-configuration.md) | Generalisable guidance and applied configuration ship as separate plugins | Accepted |
 
 ## Template
 

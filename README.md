@@ -19,10 +19,17 @@ One repo, plugins usable from both Claude Code and claude.ai, kept in sync by pu
   ephemeral-plan lifecycle, README-index and staleness discipline, the agent
   and verify callouts, and a session-end doc-maintenance checklist hook.
   Depends on `markdown-standards`.
-- **[claude-code-web](plugins/claude-code-web)** — personal, always-on working
+- **[claude-code-web](plugins/claude-code-web)** — always-on working
   preferences for Claude Code Web (user scope): the egress proxy and CA bundle,
   GitHub-via-MCP, ephemeral containers, repo scoping and `add_repo`, the
-  multi-repo config caveat, and delegating unrunnable steps to CI.
+  multi-repo config caveat, and delegating unrunnable steps to CI. Written to
+  hold for any Claude Code Web user, in any environment.
+- **[personal-cloud-environment](plugins/personal-cloud-environment)** — the
+  record of Fabrizio's own Claude Code Web environment (user scope): the
+  domains, environment variables, and setup he has applied on top of the
+  platform defaults, and the round-trip rule that keeps that record and the
+  live environment in step. The owner-specific counterpart to
+  `claude-code-web`, which it depends on.
 - **[upstream-research](plugins/upstream-research)** — personal, always-on
   method (user scope) for verifying facts about third-party/upstream
   components: go to the authoritative source (the project's own repo and docs),
