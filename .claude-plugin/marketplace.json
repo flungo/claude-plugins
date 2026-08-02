@@ -6,6 +6,12 @@
   "description": "Personal Claude Code / Claude.ai plugins.",
   "plugins": [
     {
+      "name": "personal-defaults",
+      "source": "./plugins/personal-defaults",
+      "description": "Fabrizio's always-on personal conventions as one install — a dependency-only bundle carrying git-conventions, contributor-workflow, upstream-research, and scaffolding. Contributes no skills of its own.",
+      "version": "0.1.0"
+    },
+    {
       "name": "git-conventions",
       "source": "./plugins/git-conventions",
       "description": "Standing git/PR hygiene conventions (Conventional Commits, linear history, squash-vs-rebase, no fixup commits, force-push policy, and which commit signature warnings to ignore).",
@@ -32,8 +38,8 @@
     {
       "name": "personal-cloud-environment",
       "source": "./plugins/personal-cloud-environment",
-      "description": "The record of Fabrizio's own Claude Code Web environment — its network allowlist, environment variables, and setup — as manually applied on top of the platform defaults, plus the round-trip rule that keeps that record and the live environment in step. Depends on claude-code-web.",
-      "version": "0.1.0"
+      "description": "The record of Fabrizio's own Claude Code Web environment — its network allowlist, environment variables, and setup — as manually applied on top of the platform defaults, plus the round-trip rule that keeps that record and the live environment in step. Installing it also brings in what that environment carries: claude-code-web and the personal-defaults bundle.",
+      "version": "0.2.0"
     },
     {
       "name": "upstream-research",

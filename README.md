@@ -5,6 +5,12 @@ One repo, plugins usable from both Claude Code and claude.ai, kept in sync by pu
 
 ## Plugins
 
+- **[personal-defaults](plugins/personal-defaults)** — the always-on personal
+  set as a single install (user scope). A dependency-only bundle carrying
+  `git-conventions`, `contributor-workflow`, `upstream-research`, and
+  `scaffolding`; it contributes no skills of its own and costs no context.
+  The Claude Code Web plugins stay outside it, being useful only there —
+  `personal-cloud-environment` picks them up instead.
 - **[git-conventions](plugins/git-conventions)** — standing git/PR hygiene
   conventions (branch management, Conventional Commits, linear history,
   squash-vs-rebase, no fixup commits, force-push policy, and which commit
@@ -30,7 +36,9 @@ One repo, plugins usable from both Claude Code and claude.ai, kept in sync by pu
   domains, environment variables, and setup he has applied on top of the
   platform defaults, and the round-trip rule that keeps that record and the
   live environment in step. The owner-specific counterpart to
-  `claude-code-web`, which it depends on.
+  `claude-code-web`, which it depends on — and, because what that environment
+  carries is part of describing it, `personal-defaults` too. Installing this one
+  plugin is therefore the whole cloud-session setup.
 - **[upstream-research](plugins/upstream-research)** — personal, always-on
   method (user scope) for verifying facts about third-party/upstream
   components: go to the authoritative source (the project's own repo and docs),

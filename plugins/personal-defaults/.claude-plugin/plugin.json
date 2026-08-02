@@ -1,0 +1,14 @@
+{
+  "name": "personal-defaults",
+  "description": "Fabrizio's always-on personal conventions as one install — a dependency-only bundle carrying git-conventions, contributor-workflow, upstream-research, and scaffolding. Contributes no skills of its own.",
+  "version": "0.1.0",
+  "author": {
+    "name": "flungo"
+  },
+  "dependencies": [
+    "git-conventions",
+    "contributor-workflow",
+    "upstream-research",
+    "scaffolding"
+  ]
+}
