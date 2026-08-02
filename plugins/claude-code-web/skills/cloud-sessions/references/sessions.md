@@ -22,22 +22,51 @@ Anything added to it persists into **every future session** that uses it, not ju
 
 ## Repo scoping and `add_repo`
 
-The session is scoped to a specific set of repositories, listed in the system prompt.
+The session is scoped to a specific set of repositories, **listed individually** in the system prompt — there is no owner-level wildcard, and an owner is rendered lower-case there however GitHub cases it.
 
-- **Add another in-scope repo with `add_repo`**, then clone it.
-- **`add_repo` cannot add a repo from a different owner** once the session already holds repos from another owner — cross-owner adds are rejected with "cross-tier adds are not supported in v1".
-  For an out-of-owner *public* repo you only need to read, use `WebFetch` against `github.com` / `raw.githubusercontent.com` instead (see `egress-and-tooling.md`).
+*Last verified 2026-08-02 across four sessions — one repo, one repo from a second owner, two repos under one owner, and two repos under two owners.*
+
+- **Add another repo from an owner the session already has with `add_repo`**, then clone it.
+  Re-adding an attached repo reports it as already attached rather than failing.
+- **The restriction is at add time, not at session creation.**
+  A session may be *created* with repositories from two different owners and reaches both normally; what `add_repo` refuses is introducing an owner the session doesn't already have:
+
+  ```text
+  add_repo: cross-tier adds are not supported in v1: requested "<owner>/<repo>" but session
+  already has repos from owner(s) [<owner> ...]. Start a new session with the requested repo
+  as the initial source, or add a repo from the same owner as the existing sources
+  ```
+
+  So the test is **"an owner already in this session"**, not "an owner the GitHub integration is installed in" — an installed owner, visible in `list_repos`, is refused just the same.
+- **A cross-tier refusal says nothing about authorisation.**
+  The check runs before any access check, so a third-party repo fails with exactly this error rather than an auth error — and a session that already holds repositories, which is every session, therefore can't discover what a genuine no-access failure looks like. Don't report a cross-tier message as "no access".
+- **One identity spans the owners.** In a two-owner session, `git` reached both and the GitHub MCP resolved to a single account — it behaves as one credential, not one per owner.
+- **When you can't attach a repo you only need to read**, use `WebFetch` against `github.com` / `raw.githubusercontent.com` (see `egress-and-tooling.md`); otherwise the fix is a new session with it as an initial source, which is the user's to make.
+- **Treat `list_repos` totals as indicative.** Repeat runs returned different totals and different `has_more` values, and a repository listed there may not appear in the session-creation picker.
 - **`/add-dir` is not available in web sessions**, so you can't attach a local directory after start that way.
 
-## The multi-repo config-loading caveat
+## Project config in a multi-repo session
 
-When a web session is started with **more than one repository**, project-scoped configuration from `.claude/settings.json` (including `enabledPlugins`) and `.mcp.json` is **not loaded from any repository**.
-This is a known limitation ([anthropics/claude-code#4938](https://github.com/anthropics/claude-code/issues/4938)).
-*(Sourced from sibling-repo notes; not re-verified here — re-check the issue for current status.)*
+A multi-repo session **does** load project-scoped configuration from `.claude/settings.json`, including `enabledPlugins`.
 
-Which repositories a session starts with is the **human's choice at session creation** — the agent can't change it mid-session (`/add-dir` isn't available, and `add_repo` doesn't re-trigger project-config loading).
+*Verified 2026-08-02 in two sessions started with two repositories each — one with both under a single owner, one spanning two owners.
+Both loaded the project plugins of the repository that declared them; the repositories that loaded nothing had no `.claude/settings.json` at all.*
 
-> **🤖 Agent** — you can't fix this from inside the session, so make the user aware of the impact: if a repo's plugins or MCP servers aren't loading, it's likely because the session was started with more than one repo — tell them, and that a fresh session scoped to just that repo would load them.
+This **contradicts** the older report that such a session loads project config from no repository ([anthropics/claude-code#4938](https://github.com/anthropics/claude-code/issues/4938)), which this plugin previously carried second-hand and unverified.
+Either it has been fixed or it was always narrower than described; the issue, not this file, is where to check its status.
+
+Two related behaviours are **still untested** — don't assume either way:
+
+- whether `.mcp.json` loads on the same terms as `.claude/settings.json` (only `enabledPlugins` was observed);
+- whether a repository attached mid-session with `add_repo` gets its project config loaded, since the ones attached during that test carried none.
+
+> **🤖 Agent** — when a repo's plugins aren't loading, check that the repo actually declares them before blaming the session's shape. If a fresh session does turn out to be the fix, say so — the starting repositories are the user's choice at creation and can't be changed from inside (`/add-dir` isn't available).
+
+## MCP servers can be unavailable at first
+
+A session can come up with its MCP servers reported as disconnected, and have them connect on a later turn — observed 2026-08-02 on a fresh session whose servers were all missing on the first turn and present when re-prompted, and repeatedly mid-session as servers drop and reconnect between turns.
+
+> **🤖 Agent** — treat a missing MCP server as *not yet connected* rather than absent: retry on a later turn before routing around it, and don't tell the user a capability is unavailable on the strength of one turn.
 
 ## Environment variables and secrets
 
