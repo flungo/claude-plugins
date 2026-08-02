@@ -75,3 +75,4 @@ $S/terraform validate
 
 The harness blocks `sleep`.
 To wait, block on a backgrounded command or a Monitor loop that watches for the condition — never a foreground `sleep`.
+A Monitor loop only covers conditions *this container* can observe, though — a CI run is not one of them, since the script would need a `gh` CLI the session doesn't have (see `ci-iteration.md`).
