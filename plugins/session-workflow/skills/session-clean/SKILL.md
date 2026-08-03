@@ -9,7 +9,7 @@ A check on whether the current chat session can be closed without losing context
 It sweeps the whole session for anything left undone, unanswered, or decided only in chat rather than recorded somewhere durable, and reports either that it is safe to delete or what still needs attention.
 
 Full procedure: `references/session-clean.md`.
-Read it before starting — the classification in steps 2 and 3 is what makes the verdict trustworthy.
+Read it before starting — classifying each thread, grouping whatever is better handed off, and picking a destination for the rest are what make the verdict trustworthy.
 
 ## Never write anything unprompted
 
@@ -31,6 +31,7 @@ These are the two halves of ending a session.
 `/session-clean` asks whether anything durable would be lost by closing this one; [`/handoff`](../handoff/SKILL.md) carries unfinished work into a fresh one.
 A session that comes back clean can simply be closed.
 A session that doesn't, and whose remaining work is better continued than recorded, wants `/handoff` instead — or as well.
+Where several threads want continuing, they usually want *one* new session between them rather than one each; the procedure's grouping step is where that gets decided.
 
 **A handoff is not durable capture.**
 It exists only in a chat reply until someone pastes it, so a thread that was handed off but never carried has evaporated rather than moved.
