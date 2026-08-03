@@ -52,19 +52,19 @@ For each thread found in step 1:
   message, or similar. Nothing to do; don't re-list it in the report just to
   show it was checked.
 - **Finishable now** — small enough to complete before closing the session.
-  Flag it as a candidate; don't finish it without saying so first (step 4).
+  Flag it as a candidate; don't finish it without saying so first (step 5).
 - **Better handed off** — sits between the two either side of it, and needs
   **all three** of these to be true:
   - it wants doing with some urgency, so parking it in an issue undersells it;
   - it doesn't need this session's context, so it can be picked up cold;
   - it's big enough that finishing it here would drag this session out.
 
-  Offer a `/handoff` for it (step 4). If any one of the three fails, it isn't
-  this: work needing the session's context is *finishable now* or *needs
-  durable capture*, and work that isn't urgent is just *needs durable
-  capture*.
+  Offer a `/handoff` for it — grouped in step 3, proposed in step 5. If any one
+  of the three fails, it isn't this: work needing the session's context is
+  *finishable now* or *needs durable capture*, and work that isn't urgent is
+  just *needs durable capture*.
 - **Needs durable capture** — real, unresolved, and worth recording. Needs a
-  destination (step 3).
+  destination (step 4).
 - **Handed off** — a `/handoff` was produced for this thread during the
   session. Which of two states it is in decides everything:
   - **Confirmed** (the user said it landed in a new session): it has an owner.
@@ -82,7 +82,32 @@ For each thread found in step 1:
 Never fold a handed-off thread into *needs durable capture* without asking first, and never leave an unconfirmed one out of the report on the grounds that a handoff was offered.
 Those are the two ways this thread goes missing: counted twice, or not at all.
 
-## 3. Pick a destination for anything needing durable capture
+## 3. Group the handoffs before proposing them
+
+Classification is per-thread; a handoff is not.
+Work out the *set* of new sessions in one pass over everything marked *better handed off*, and default to one.
+A second session is a claim that two bodies of work genuinely don't want the same context, and it costs the user a whole conversation to re-establish what the first one already had.
+
+Bundle into a single handoff when threads:
+
+- **Depend on one another.** Never propose two sessions for dependent work.
+  Splitting it doesn't resolve the dependency — it turns it into a wait, with
+  the blocked half sitting in a session that has no idea when it clears. One
+  session takes the whole chain: it carries the context through the first task
+  and, once the second is unblocked, decides for itself whether to do it or
+  hand it on.
+- **Share a repo, a subsystem, or the same background.** Two threads needing
+  the same files read and the same decisions understood are one handoff,
+  however different their subjects.
+- **Are small side tasks hanging off a main stream of work** — a stray TODO
+  noticed in passing, a doc line to fix in a repo already being touched. These
+  ride along with the stream they came from rather than justifying a session of
+  their own.
+
+Split only where the receiving sessions would share almost nothing: different repos, different context, and no ordering between them.
+When it's marginal, bundle — a session that finds a thread doesn't belong can hand it off again, whereas context never carried can't be recovered.
+
+## 4. Pick a destination for anything needing durable capture
 
 - **A fact or decision future work in this area should know** — why something
   was built a certain way, a constraint discovered, a choice between
@@ -98,16 +123,17 @@ Those are the two ways this thread goes missing: counted twice, or not at all.
   such as a decision recorded in a `CLAUDE.md` *and* a tracked follow-up task
   — ask rather than guessing.
 
-## 4. Propose — don't write yet
+## 5. Propose — don't write yet
 
 Before touching anything, present the user a list:
 
 - **Verdict up front**: clean and safe to delete, or not yet.
 - **Finishable now**: what it is, and that you'd finish it now if they want.
-- **Better handed off**: what it is, why it meets all three tests, and that
-  you'd produce a scoped `/handoff` for it. Say plainly that they can decline
-  and have it finished in-session or captured durably instead — a handoff is a
-  proposal about how to move work, not a verdict on it.
+- **Better handed off**: one entry per proposed session, as grouped in step 3 —
+  not one per thread. For each: what it covers, why each thread in it meets all
+  three tests, and what holds them together. Say plainly that they can decline
+  and have any of it finished in-session or captured durably instead — a
+  handoff is a proposal about how to move work, not a verdict on it.
 - **Needs durable capture**: the fact, decision, or task; the proposed
   destination (which `CLAUDE.md`, or which repo's issue tracker); and a draft
   of what you'd actually write — not just "I'll note this somewhere".
@@ -115,7 +141,7 @@ Before touching anything, present the user a list:
 Nothing gets written, committed, or filed until the user confirms.
 A general go-ahead on the whole list is enough — don't demand a separate confirmation per item unless their response leaves it unclear which items they meant.
 
-## 5. Execute confirmed items
+## 6. Execute confirmed items
 
 - **`CLAUDE.md` edits**: read the current file, edit in place matching its
   existing structure and tone. Don't restate history the file already implies,
@@ -125,11 +151,12 @@ A general go-ahead on the whole list is enough — don't demand a separate confi
   MCP's search, or `gh issue list --search …` — before filing a new one.
 - **Anything the user chose to finish now** instead of deferring: do that
   work, then re-check it against step 0 before including it in the verdict.
-- **A handoff they accepted**: produce it in scoped mode — the thread only,
-  not the session — and then treat it as *handed off, unconfirmed* for the
-  rest of this session. It becomes confirmed only when they say it landed.
+- **A handoff they accepted**: produce it in scoped mode — the threads it
+  groups and nothing else, not the session — and then treat it as *handed off,
+  unconfirmed* for the rest of this session. It becomes confirmed only when
+  they say it landed.
 
-## 6. Final report
+## 7. Final report
 
 - **Verdict**: clean and safe to delete, or what's still open and why.
 - What was actually written and where — `CLAUDE.md` file and section, or issue

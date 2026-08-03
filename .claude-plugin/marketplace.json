@@ -69,7 +69,7 @@
       "name": "session-workflow",
       "source": "./plugins/session-workflow",
       "description": "Named commands for ending a Claude session well — /session-clean to confirm nothing durable is left only in the chat, and /handoff to carry an unfinished session into a fresh one.",
-      "version": "0.1.0"
+      "version": "0.2.0"
     },
     {
       "name": "scaffolding",

@@ -12,8 +12,12 @@ Produce a concise, structured handoff document that lets a fresh session continu
 **Whole-session** is the default: this session is ending, and everything in it carries forward.
 
 **Scoped** applies when the request names a subset — "hand off the API layer work", "handoff for the follow-up task that just came up".
-One thread leaves; this session continues without it.
+That subset leaves; this session continues without it.
 The rest of the conversation is not summarised, mentioned, or carried.
+
+A scope is not necessarily a single task.
+Work that another scoped thread depends on, or that shares its repo and background, belongs in the same document rather than a second one: one session that carries the whole chain beats two that each hold half of it, and the receiving session can hand a piece on later if it turns out not to belong.
+Where the scope is several threads, say so in the document — what it covers and in what order — so the next session isn't left inferring the shape of its own work.
 
 The two differ in more than emphasis, so decide which one you're in before writing anything.
 
