@@ -37,7 +37,13 @@ It is a single install: `personal-cloud-environment` carries `claude-code-web` a
 The authoritative copy of the script lives in [the `flungo/claude-plugins` README](https://github.com/flungo/claude-plugins#install-in-claude-code-web-and-other-cloud-sessions); this file records only that the environment runs it.
 Two consequences worth knowing in a session: the installed versions come from a filesystem snapshot and can lag the repo by up to about a week, and a plugin newly added to the marketplace does not arrive until the script is edited or the cache expires.
 
-> **🤖 Agent** — if a user-scope plugin is missing or stale, tell Fabrizio to edit the setup script, which forces the snapshot to rebuild; installing into the container by hand fixes only the session you are in.
+> **🤖 Agent** — a **missing** user-scope plugin needs adding to the script, and the way to ask for that is a PR editing the README copy linked above, per § Keeping this record in step.
+> Fabrizio applies it to the environment as he merges, so never ask him to edit the environment form directly — that leaves the recorded script and the live one disagreeing.
+
+<!-- -->
+
+> **🤖 Agent** — a merely **stale** plugin is a different case.
+> Update it in-session with `claude plugin update` (see the `cloud-sessions` skill) so the remaining turns get the new version, and let the snapshot catch up at its next rebuild rather than asking for one.
 
 ### Extra allowed domains
 
@@ -91,7 +97,8 @@ Both directions end in a PR against [`flungo/claude-plugins`](https://github.com
 **When a session wants the environment changed** — a blocked host worth allow-listing, a variable worth setting, something worth doing in a setup script — don't just work around it and move on:
 
 1. Confirm the benefit is durable and recurring, not a one-off (a one-off belongs in CI, or on `raw.githubusercontent.com`).
-2. Open a PR adding the entry to the table above, saying what it unblocks — the open PR *is* the proposal.
+2. Open a PR carrying the change, saying what it unblocks — the open PR *is* the proposal.
+   An allowlist entry or an environment variable goes in the tables above; a **setup-script** change goes in the README copy linked from § Setup script, since that is where the authoritative script lives.
 3. Fabrizio applies the change to the environment as he merges that PR, so the merged file and the live environment agree.
    Until then the change isn't live — keep working around the limit for the rest of the session, and don't report it as available.
 
