@@ -32,14 +32,14 @@
     {
       "name": "claude-code-web",
       "source": "./plugins/claude-code-web",
-      "description": "Working preferences and hard constraints for Claude Code Web — the egress proxy and CA bundle, GitHub-via-MCP, containers replaced across idle periods, repo scoping and add_repo's cross-owner rule, project config in a multi-repo session, why repo-adopted plugins never load and how user-scope ones arrive, and delegating unrunnable steps to CI. Environment-agnostic.",
-      "version": "0.6.1"
+      "description": "Working preferences and hard constraints for Claude Code Web — the egress proxy and CA bundle, GitHub-via-MCP, containers that reboot around every turn while their disk persists, repo scoping and add_repo's cross-owner rule, project config in a multi-repo session, why repo-adopted plugins never load, why user-scope ones lag the marketplace and how a session updates them for its own next turn, and delegating unrunnable steps to CI. Environment-agnostic.",
+      "version": "0.7.0"
     },
     {
       "name": "personal-cloud-environment",
       "source": "./plugins/personal-cloud-environment",
       "description": "The record of Fabrizio's own Claude Code Web environment — its network allowlist, environment variables, and setup — as manually applied on top of the platform defaults, plus the round-trip rule that keeps that record and the live environment in step. Installing it also brings in what that environment carries: claude-code-web and the personal-defaults bundle.",
-      "version": "0.3.0"
+      "version": "0.4.0"
     },
     {
       "name": "upstream-research",
