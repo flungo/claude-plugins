@@ -137,7 +137,8 @@ Repos that adopt them continue to summarise their rules in their own `CLAUDE.md`
 - Chat is a third enablement decision to maintain, not a free consequence of the other two: these plugins are written for repo work, so what belongs there has to be chosen deliberately rather than mirrored from user scope.
 - A repo's adopted conventions still do not load in cloud sessions, which keeps the pressure on each repo's `CLAUDE.md` to restate them.
 
-> **Verify:** the setup script is confirmed to deliver the plugins into a session, but not yet that the *snapshot* carries them.
-> A session that loads them may be the cache-miss run where the script executed, which proves nothing about later sessions.
-> To settle it, have the script write a marker — `date -u > /root/.claude/.setup-ran` — and compare that timestamp against session start: a marker older than the session is a cache hit, and proves `/root/.claude` survived the snapshot.
-> If a later session ever starts without the plugins, this is where to look.
+**Settled 2026-08-04: the snapshot does carry them, and no added marker was needed.**
+`claude plugin install` already records an `installedAt` timestamp and the marketplace `gitCommitSha` per plugin in `/root/.claude/plugins/installed_plugins.json`, and the snapshot preserves both.
+A session running on 2026-08-04 reported `installedAt: 2026-08-02T17:54:19Z` for every plugin — two days before that session existed, so a cache hit rather than the run that installed them, which is exactly what the proposed marker was meant to demonstrate.
+It also quantifies the lag above: those were the versions current at the snapshot build, and three had fallen behind by then.
+The mechanics, and what a session can do about a stale plugin, are recorded in the `cloud-sessions` skill.
