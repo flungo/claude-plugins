@@ -51,10 +51,10 @@ LIST_MARKER = re.compile(r"^(\s*)([-*+]|\d+[.)])(\s+)")
 # so the FIRST closing delimiter wins), then "---" or "..." on its own line.
 # No capturing groups — the whole match is the region, taken as group(0).
 FRONTMATTER = re.compile(
-    r"\A(?:[ \t]*\n)*"                       # tolerate blank lines above it
-    r"---[ \t]*\n"                           # opening delimiter, exactly three
-    r"(?:.*\n)*?"                            # metadata, lazily
-    r"(?:---|\.\.\.)[ \t]*(?:\n|\Z)"         # first closing delimiter wins
+    r"\A(?:[ \t]*\r?\n)*"                    # tolerate blank lines above it
+    r"---[ \t]*\r?\n"                        # opening delimiter, exactly three
+    r"(?:.*\r?\n)*?"                         # metadata, lazily
+    r"(?:---|\.\.\.)[ \t]*(?:\r?\n|\Z)"      # first closing delimiter wins
 )
 
 
@@ -178,6 +178,15 @@ def paragraph_spans(src):
 
 def reflow_text(src):
     """Return (reflowed source, blocks changed, blocks rejected by the gate)."""
+    # Windows line endings: normalise for the whole pass and restore on the way
+    # out. Left in place, the "\r" defeats every end-of-line pattern here — the
+    # frontmatter delimiters stop matching, hard breaks stop being detected, and
+    # a joined paragraph comes back with its endings stripped, leaving one file
+    # holding both kinds. Only done for a uniformly-CRLF file; a mixed one keeps
+    # what it has rather than being rewritten wholesale.
+    crlf = "\r\n" in src and "\n" not in src.replace("\r\n", "")
+    if crlf:
+        src = src.replace("\r\n", "\n")
     frontmatter, src = split_frontmatter(src)
     lines = src.split("\n")
     target = norm_html(src)
@@ -196,7 +205,8 @@ def reflow_text(src):
             # replacement is usually longer, so a:b no longer covers it.
             lines[a:a + len(new_block)] = saved
             rejected += 1
-    return frontmatter + "\n".join(lines), changed, rejected
+    out = frontmatter + "\n".join(lines)
+    return (out.replace("\n", "\r\n") if crlf else out), changed, rejected
 
 
 def main():
@@ -205,7 +215,10 @@ def main():
     reflowed, unchanged, partial = [], [], []
     shown = 0
     for f in files:
-        orig = open(f, encoding="utf-8").read()
+        # newline="" throughout: without it Python's universal-newline handling
+        # hands us a CRLF file as LF and writes it back as LF, rewriting every
+        # line ending in a file we may not have changed a word of.
+        orig = open(f, encoding="utf-8", newline="").read()
         new, changed, rejected = reflow_text(orig)
         if rejected:
             partial.append(f"{f} ({rejected} block(s) left)")
@@ -217,7 +230,7 @@ def main():
             continue
         reflowed.append(f)
         if apply_changes:
-            open(f, "w", encoding="utf-8").write(new)
+            open(f, "w", encoding="utf-8", newline="").write(new)
         elif shown < 2:
             shown += 1
             print(f"\n----- SAMPLE DIFF: {f} -----")
