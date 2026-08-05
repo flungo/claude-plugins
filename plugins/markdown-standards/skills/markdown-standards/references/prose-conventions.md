@@ -35,6 +35,7 @@ Markdown renders consecutive lines as one paragraph, so this is a pure source-le
 **Migrating an existing repo.** Because the convention is render-neutral, a migration can be **gated on render-equivalence**: reflow the source, render both versions to normalised HTML, and keep the change only where the HTML is byte-identical.
 This plugin ships [`reflow.py`](../../../scripts/reflow.py), which implements exactly that — never do a blind unwrap instead.
 It covers everything the rule covers: top-level paragraphs, list items at any nesting level and marker width, and blockquotes including nested ones, carrying each continuation line's indent or `>` prefix, and leaving hard-break blocks alone.
+Leading YAML frontmatter is split off before any of that and carried through byte-identically — it is metadata, not prose, and the render gate cannot protect it, because a CommonMark parser reads the delimiters as a thematic break and the key lines as an ordinary paragraph, so YAML mangled into one line renders to exactly the same `<p>`.
 At runtime the script is at `${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py`; run it from the target repo's root:
 
 ```sh
