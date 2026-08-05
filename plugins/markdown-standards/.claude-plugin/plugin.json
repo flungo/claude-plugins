@@ -1,7 +1,7 @@
 {
   "name": "markdown-standards",
   "description": "Fabrizio's Markdown authoring conventions — cross-reference/link hygiene, semantic line breaks, unique cross-referenced headings, adjacent-blockquote handling, compact tables (delimiter rows included) — plus handling lint rules a linter bump introduces, how to fix markdownlint and link/anchor CI failures, and the /adopt-markdown-ci onboarding command.",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "author": {
     "name": "flungo"
   }
