@@ -263,6 +263,21 @@ class TestFrontmatter(ReflowTestCase):
         out, _, _ = self.reflowed(src)
         self.assertEqual(out, "\n---\nname: x\ntags:\n  - a\n---\n\nOne.\nTwo.\n")
 
+    def test_crlf_frontmatter_is_recognised_and_endings_are_preserved(self):
+        """A "\\r" left in place defeats every end-of-line pattern in the script.
+
+        The delimiters stop matching, so the keys reflow; and the joined lines
+        come back stripped of their "\\r", leaving one file holding both kinds.
+        """
+        src = "---\r\nname: x\r\ntags:\r\n  - a\r\n---\r\n\r\nOne. Two.\r\n"
+        out, changed, _ = self.reflowed(src)
+        self.assertEqual(out, "---\r\nname: x\r\ntags:\r\n  - a\r\n---\r\n\r\nOne.\r\nTwo.\r\n")
+        self.assertEqual(changed, 1)
+
+    def test_crlf_body_without_frontmatter_keeps_its_endings(self):
+        out, _, _ = self.reflowed("One. Two.\r\n\r\n- Item one. Item two.\r\n")
+        self.assertEqual(out, "One.\r\nTwo.\r\n\r\n- Item one.\r\n  Item two.\r\n")
+
 
 class TestFrontmatterVersusThematicBreaks(ReflowTestCase):
     """Only a closed "---" opening the file is frontmatter; everything else is a
