@@ -17,7 +17,8 @@ Scope — everywhere the rendered output is unchanged:
   - PRESERVING hard-break blocks (trailing "  " / "\\" — e.g. **Date:** metadata),
     whose <br> carries meaning.
 Headings, tables and fenced code are never touched: they are not paragraphs, so
-the parser never hands them over.
+the parser never hands them over. YAML frontmatter is not Markdown at all and is
+split off before parsing (see split_frontmatter).
 
 The render gate is applied PER BLOCK against the WHOLE FILE: a block's reflow is
 kept only if the entire file still renders identically with that block changed,
@@ -46,6 +47,15 @@ ABBR = re.compile(
 HARD_BREAK = re.compile(r"(  +|\\)$")
 BLOCKQUOTE = re.compile(r"^((?:\s*>)+\s?)")
 LIST_MARKER = re.compile(r"^(\s*)([-*+]|\d+[.)])(\s+)")
+# Leading YAML frontmatter: "---" opening the file, lines of metadata (lazily,
+# so the FIRST closing delimiter wins), then "---" or "..." on its own line.
+# No capturing groups — the whole match is the region, taken as group(0).
+FRONTMATTER = re.compile(
+    r"\A(?:[ \t]*\r?\n)*"                    # tolerate blank lines above it
+    r"---[ \t]*\r?\n"                        # opening delimiter, exactly three
+    r"(?:.*\r?\n)*?"                         # metadata, lazily
+    r"(?:---|\.\.\.)[ \t]*(?:\r?\n|\Z)"      # first closing delimiter wins
+)
 
 
 def split_sentences(text):
@@ -80,6 +90,39 @@ def split_sentences(text):
 
 def norm_html(s):
     return re.sub(r"\s+", " ", md.render(s)).strip()
+
+
+def split_frontmatter(src):
+    """Split leading YAML frontmatter off the Markdown body: (frontmatter, body).
+
+    Frontmatter is metadata, not Markdown, and a CommonMark parser has no notion
+    of it: the delimiters read as a thematic break or a setext underline and the
+    key lines read as prose. That makes a frontmatter block a paragraph like any
+    other, and reflowing it rewrites YAML — "name: a" and "tags:" joined onto one
+    line, or a "description:" value split across two — while the render gate sees
+    nothing wrong, because the mangled keys render to the same <p> as before.
+
+    So it never reaches the parser. Anything a frontmatter-aware consumer would
+    treat as frontmatter is carried through byte-identically, and the body after
+    it reflows as usual.
+
+    Telling it from a thematic break is positional, exactly as Jekyll, Hugo and
+    every other frontmatter reader do it: only a "---" opening the FILE can open
+    frontmatter, it must be exactly three dashes, and it must be closed. A "---"
+    anywhere below, an unterminated one, a setext underline, and the other
+    thematic-break spellings ("- - -", "***", "___") are all left to the parser.
+    The one ambiguity the position rule cannot settle is a document that opens
+    with a genuine thematic break and has another "---" further down; that reads
+    as frontmatter here, as it does everywhere else. Deliberately so: guessing
+    wrong that way skips a reflow, guessing wrong the other way destroys YAML.
+    """
+    m = FRONTMATTER.match(src)
+    return (m.group(0), src[m.end():]) if m else ("", src)
+
+
+def body_html(src):
+    """Normalised render of everything the script may rewrite."""
+    return norm_html(split_frontmatter(src)[1])
 
 
 def split_prefix(line):
@@ -135,6 +178,16 @@ def paragraph_spans(src):
 
 def reflow_text(src):
     """Return (reflowed source, blocks changed, blocks rejected by the gate)."""
+    # Windows line endings: normalise for the whole pass and restore on the way
+    # out. Left in place, the "\r" defeats every end-of-line pattern here — the
+    # frontmatter delimiters stop matching, hard breaks stop being detected, and
+    # a joined paragraph comes back with its endings stripped, leaving one file
+    # holding both kinds. Only done for a uniformly-CRLF file; a mixed one keeps
+    # what it has rather than being rewritten wholesale.
+    crlf = "\r\n" in src and "\n" not in src.replace("\r\n", "")
+    if crlf:
+        src = src.replace("\r\n", "\n")
+    frontmatter, src = split_frontmatter(src)
     lines = src.split("\n")
     target = norm_html(src)
     changed = rejected = 0
@@ -152,7 +205,8 @@ def reflow_text(src):
             # replacement is usually longer, so a:b no longer covers it.
             lines[a:a + len(new_block)] = saved
             rejected += 1
-    return "\n".join(lines), changed, rejected
+    out = frontmatter + "\n".join(lines)
+    return (out.replace("\n", "\r\n") if crlf else out), changed, rejected
 
 
 def main():
@@ -161,19 +215,22 @@ def main():
     reflowed, unchanged, partial = [], [], []
     shown = 0
     for f in files:
-        orig = open(f, encoding="utf-8").read()
+        # newline="" throughout: without it Python's universal-newline handling
+        # hands us a CRLF file as LF and writes it back as LF, rewriting every
+        # line ending in a file we may not have changed a word of.
+        orig = open(f, encoding="utf-8", newline="").read()
         new, changed, rejected = reflow_text(orig)
         if rejected:
             partial.append(f"{f} ({rejected} block(s) left)")
         if new == orig:
             unchanged.append(f)
             continue
-        if norm_html(orig) != norm_html(new):                    # belt and braces
+        if body_html(orig) != body_html(new):                    # belt and braces
             print(f"!! WHOLE-FILE GATE FAILED, skipping: {f}")
             continue
         reflowed.append(f)
         if apply_changes:
-            open(f, "w", encoding="utf-8").write(new)
+            open(f, "w", encoding="utf-8", newline="").write(new)
         elif shown < 2:
             shown += 1
             print(f"\n----- SAMPLE DIFF: {f} -----")

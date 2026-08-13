@@ -20,9 +20,13 @@ _spec.loader.exec_module(reflow)
 class ReflowTestCase(unittest.TestCase):
     def reflowed(self, src):
         out, changed, rejected = reflow.reflow_text(src)
-        # The script's core promise, asserted on every case rather than by eye.
+        # The script's two core promises, asserted on every case rather than by eye.
         self.assertEqual(
-            reflow.norm_html(src), reflow.norm_html(out),
+            reflow.split_frontmatter(src)[0], reflow.split_frontmatter(out)[0],
+            "frontmatter must survive byte-identically",
+        )
+        self.assertEqual(
+            reflow.body_html(src), reflow.body_html(out),
             "rendered HTML changed — the render gate should have prevented this",
         )
         return out, changed, rejected
@@ -176,6 +180,164 @@ class TestRenderGate(ReflowTestCase):
             "Good one.\nGood two.\n",                    # accepted
         )
         self.assertEqual((changed, rejected), (1, 1))
+
+
+class TestFrontmatter(ReflowTestCase):
+    """Frontmatter is metadata, not prose, and must come back byte-identical.
+
+    The regression these guard is silent: a CommonMark parser sees the block as
+    an ordinary paragraph, so the render gate is satisfied by a rewrite that has
+    destroyed the YAML.
+    """
+
+    def test_sequence_valued_frontmatter_is_not_joined(self):
+        """The closing "---" only ends a *setext heading* when a paragraph runs
+        straight into it. Give a key a sequence value and it no longer does, so
+        the keys above it become a plain paragraph — and joining them onto one
+        line turns two keys into one unparseable string.
+        """
+        src = (
+            "---\n"
+            "name: my-command\n"
+            "allowed-tools:\n"
+            "  - Bash\n"
+            "---\n"
+            "\n"
+            "Body one. Body two.\n"
+        )
+        out, _, _ = self.reflowed(src)
+        self.assertEqual(
+            out,
+            "---\n"
+            "name: my-command\n"
+            "allowed-tools:\n"
+            "  - Bash\n"
+            "---\n"
+            "\n"
+            "Body one.\nBody two.\n",                    # only the body moved
+        )
+
+    def test_sentence_valued_key_is_not_split_across_lines(self):
+        src = (
+            "---\n"
+            "description: A skill. It does things.\n"
+            "tags:\n"
+            "  - one\n"
+            "---\n"
+        )
+        out, changed, _ = self.reflowed(src)
+        self.assertEqual(out, src)
+        self.assertEqual(changed, 0)
+
+    def test_setext_style_frontmatter_is_untouched(self):
+        """Frontmatter whose last line runs into "---" parses as a heading.
+
+        It survived by accident before frontmatter was split off; assert it now
+        survives on purpose.
+        """
+        src = "---\nname: foo\ndescription: One. Two.\n---\n\nBody.\n"
+        out, changed, _ = self.reflowed(src)
+        self.assertEqual(out, src)
+        self.assertEqual(changed, 0)
+
+    def test_empty_frontmatter(self):
+        out, _, _ = self.reflowed("---\n---\n\nBody one. Body two.\n")
+        self.assertEqual(out, "---\n---\n\nBody one.\nBody two.\n")
+
+    def test_dot_terminated_frontmatter(self):
+        out, _, _ = self.reflowed("---\ntitle: T\n...\n\nBody one. Body two.\n")
+        self.assertEqual(out, "---\ntitle: T\n...\n\nBody one.\nBody two.\n")
+
+    def test_body_immediately_after_the_delimiter_still_reflows(self):
+        out, changed, _ = self.reflowed("---\ntags:\n  - a\n---\nBody one. Body two.\n")
+        self.assertEqual(out, "---\ntags:\n  - a\n---\nBody one.\nBody two.\n")
+        self.assertEqual(changed, 1)
+
+    def test_blank_lines_above_the_delimiter_still_count(self):
+        """A stray leading newline stops Jekyll seeing frontmatter at all.
+
+        It must not stop *this* from seeing it: the file is already broken, and
+        joining its keys would make that irreversible rather than a one-line fix.
+        """
+        src = "\n---\nname: x\ntags:\n  - a\n---\n\nOne. Two.\n"
+        out, _, _ = self.reflowed(src)
+        self.assertEqual(out, "\n---\nname: x\ntags:\n  - a\n---\n\nOne.\nTwo.\n")
+
+    def test_crlf_frontmatter_is_recognised_and_endings_are_preserved(self):
+        """A "\\r" left in place defeats every end-of-line pattern in the script.
+
+        The delimiters stop matching, so the keys reflow; and the joined lines
+        come back stripped of their "\\r", leaving one file holding both kinds.
+        """
+        src = "---\r\nname: x\r\ntags:\r\n  - a\r\n---\r\n\r\nOne. Two.\r\n"
+        out, changed, _ = self.reflowed(src)
+        self.assertEqual(out, "---\r\nname: x\r\ntags:\r\n  - a\r\n---\r\n\r\nOne.\r\nTwo.\r\n")
+        self.assertEqual(changed, 1)
+
+    def test_crlf_body_without_frontmatter_keeps_its_endings(self):
+        out, _, _ = self.reflowed("One. Two.\r\n\r\n- Item one. Item two.\r\n")
+        self.assertEqual(out, "One.\r\nTwo.\r\n\r\n- Item one.\r\n  Item two.\r\n")
+
+
+class TestFrontmatterVersusThematicBreaks(ReflowTestCase):
+    """Only a closed "---" opening the file is frontmatter; everything else is a
+    thematic break (or a setext underline) and belongs to the parser."""
+
+    def test_unterminated_delimiter_is_a_thematic_break_not_frontmatter(self):
+        out, _, _ = self.reflowed("---\n\nBody one. Body two.\n")
+        self.assertEqual(out, "---\n\nBody one.\nBody two.\n")
+        self.assertEqual(reflow.split_frontmatter("---\n\nBody one.\n"), ("", "---\n\nBody one.\n"))
+
+    def test_thematic_break_below_the_first_line_is_not_frontmatter(self):
+        src = "Intro one. Intro two.\n\n---\n\nkey: value\n\n---\n"
+        out, _, _ = self.reflowed(src)
+        self.assertEqual(out, "Intro one.\nIntro two.\n\n---\n\nkey: value\n\n---\n")
+
+    def test_setext_underline_at_the_top_is_not_frontmatter(self):
+        out, _, _ = self.reflowed("Title\n---\n\nBody one. Body two.\n")
+        self.assertEqual(out, "Title\n---\n\nBody one.\nBody two.\n")
+
+    def test_other_thematic_break_spellings_never_open_frontmatter(self):
+        for rule in ("----", "- - -", "***", "___", "  ---"):
+            with self.subTest(rule=rule):
+                self.assertEqual(
+                    reflow.split_frontmatter(f"{rule}\nname: x\n{rule}\n")[0], "",
+                )
+
+    def test_the_first_closing_delimiter_wins(self):
+        """The metadata quantifier is lazy, so a "---" in the body cannot be
+        mistaken for the close and swallow the prose between the two."""
+        src = "---\ntags:\n  - a\n---\n\nOne. Two.\n\n---\n\nThree. Four.\n"
+        out, changed, _ = self.reflowed(src)
+        self.assertEqual(reflow.split_frontmatter(src)[0], "---\ntags:\n  - a\n---\n")
+        self.assertEqual(out, "---\ntags:\n  - a\n---\n\nOne.\nTwo.\n\n---\n\nThree.\nFour.\n")
+        self.assertEqual(changed, 2)   # both body paragraphs, neither delimiter
+
+    def test_a_dashed_value_is_not_mistaken_for_a_delimiter(self):
+        src = "---\nsummary: a --- b\ntags:\n  - a\n---\n\nOne. Two.\n"
+        self.assertEqual(reflow.split_frontmatter(src)[0], "---\nsummary: a --- b\ntags:\n  - a\n---\n")
+
+    def test_trailing_whitespace_on_a_delimiter_is_tolerated(self):
+        src = "---  \nname: x\ntags:\n  - a\n---\t\n\nOne. Two.\n"
+        self.assertEqual(reflow.split_frontmatter(src)[0], "---  \nname: x\ntags:\n  - a\n---\t\n")
+
+    def test_a_document_opening_with_a_thematic_break_reads_as_frontmatter(self):
+        """The one case position cannot settle — pinned as a decision, not an
+        accident. Every frontmatter reader resolves it the same way, and the
+        cost is a skipped reflow rather than destroyed YAML.
+        """
+        src = "---\n\nSome text. More text.\n\n---\n\nTail one. Tail two.\n"
+        out, _, _ = self.reflowed(src)
+        self.assertEqual(
+            out,
+            "---\n\nSome text. More text.\n\n---\n"   # read as frontmatter, skipped
+            "\nTail one.\nTail two.\n",               # the body below it reflows
+        )
+
+    def test_no_capturing_groups_so_the_whole_match_is_the_region(self):
+        m = reflow.FRONTMATTER.match("---\nname: x\ntags:\n  - a\n---\nBody.\n")
+        self.assertEqual(m.re.groups, 0)
+        self.assertEqual(m.group(0), "---\nname: x\ntags:\n  - a\n---\n")
 
 
 class TestIdempotence(ReflowTestCase):
