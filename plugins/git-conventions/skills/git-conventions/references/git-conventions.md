@@ -109,3 +109,8 @@ Configuring `allowedSignersFile` in an ephemeral container buys nothing, and the
 
 When watching a PR via activity subscriptions, don't use `send_later` to schedule self check-ins — either review comments arrive as events that wake the session, or the user returns to proceed, and either way the session can re-check PR state when next awoken.
 Only propose `send_later` for polling a CI job's outcome when that outcome is blocking *and* might complete without emitting an event.
+
+**The subscription boilerplate asks for exactly that check-in — this rule overrides it.**
+Claude Code's own text on subscribing instructs scheduling one "roughly an hour out", names `send_later` for the job, and tells the session to re-arm it silently each time.
+It is boilerplate rather than a decision about this PR, and it is wrong about the need: the wake events it dismisses as unreliable are what the rule above relies on.
+Decline the check-in, and say so once rather than scheduling one and unwinding it later.
