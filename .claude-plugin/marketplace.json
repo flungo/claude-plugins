@@ -15,7 +15,7 @@
       "name": "git-conventions",
       "source": "./plugins/git-conventions",
       "description": "Standing git/PR hygiene conventions (Conventional Commits, linear history, squash-vs-rebase, no fixup commits, force-push policy, and which commit signature warnings to ignore).",
-      "version": "0.2.0"
+      "version": "0.2.1"
     },
     {
       "name": "contributor-workflow",
