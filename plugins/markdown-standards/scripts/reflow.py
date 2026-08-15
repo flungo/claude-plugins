@@ -44,6 +44,16 @@ ABBR = re.compile(
     re.I,
 )
 
+# Closing markup allowed between a sentence's terminator and the space after
+# it. "**Bold lead-in.** Next sentence." ends a sentence at the "**", not at
+# the "." — and a terminator this misses is invisible in BOTH directions: the
+# line is never split there, and the lead-in is not recognised as a sentence
+# when joining, so a pair of lines already broken correctly gets collapsed.
+# Kept in step with the CLOSERS set in the markdown-sembr check, so the two
+# agree on where a sentence ends: anything this misses that the check catches
+# is residue the reflow leaves behind for someone to fix by hand.
+CLOSING_MARKUP = ")]}\"'’”»*_~"
+
 HARD_BREAK = re.compile(r"(  +|\\)$")
 BLOCKQUOTE = re.compile(r"^((?:\s*>)+\s?)")
 LIST_MARKER = re.compile(r"^(\s*)([-*+]|\d+[.)])(\s+)")
@@ -67,7 +77,13 @@ def split_sentences(text):
             in_code = not in_code
             i += 1
             continue
-        if not in_code and c in ".?!" and i + 1 < n and text[i + 1] == " ":
+        if not in_code and c in ".?!":
+            end = i + 1                                          # past any "**", ")", ...
+            while end < n and text[end] in CLOSING_MARKUP:
+                end += 1
+            if end >= n or text[end] != " ":                     # not a sentence end
+                i += 1
+                continue
             if c == "." and i >= 1 and text[i - 1] == ".":       # ellipsis
                 i += 1
                 continue
@@ -75,10 +91,10 @@ def split_sentences(text):
             if c == "." and ABBR.search(prefix):                 # abbreviation
                 i += 1
                 continue
-            sent = prefix.strip()
+            sent = text[start:end].strip()
             if sent:
                 sents.append(sent)
-            start = i + 2
+            start = end + 1
             i = start
             continue
         i += 1

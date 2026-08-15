@@ -132,6 +132,33 @@ class TestSentenceSplitting(ReflowTestCase):
             ["Wait... then continue here."],
         )
 
+    def test_sentence_ending_inside_markup_is_a_sentence_end(self):
+        """The terminator sits before the closing "**", not after it.
+
+        Missing this is invisible in both directions — see the round-trip case
+        in TestIdempotence.
+        """
+        for text, expected in (
+            ("**Bold lead-in.** Next one.", ["**Bold lead-in.**", "Next one."]),
+            ("*Emphasis.* Next one.", ["*Emphasis.*", "Next one."]),
+            ('He said "stop." Then left.', ['He said "stop."', "Then left."]),
+            ("A point (parenthesised.) Next one.", ["A point (parenthesised.)", "Next one."]),
+            ("_Underscored.__ Next one.", ["_Underscored.__", "Next one."]),
+            ("He said “stop.” Then left.", ["He said “stop.”", "Then left."]),
+            ("Il dit «arrête.» Puis partit.", ["Il dit «arrête.»", "Puis partit."]),
+        ):
+            with self.subTest(text=text):
+                self.assertEqual(reflow.split_sentences(text), expected)
+
+    def test_markup_run_at_end_of_text_is_not_a_split(self):
+        self.assertEqual(reflow.split_sentences("**Only one.**"), ["**Only one.**"])
+
+    def test_abbreviation_guard_still_applies_before_markup(self):
+        self.assertEqual(
+            reflow.split_sentences("Tools e.g. *make* and more here."),
+            ["Tools e.g. *make* and more here."],
+        )
+
     def test_question_and_exclamation_split(self):
         self.assertEqual(
             reflow.split_sentences("Really? Yes! Fine."),
@@ -341,6 +368,25 @@ class TestFrontmatterVersusThematicBreaks(ReflowTestCase):
 
 
 class TestIdempotence(ReflowTestCase):
+    def test_a_correctly_broken_bold_lead_in_is_not_collapsed(self):
+        """The regression that made the reflow actively harmful.
+
+        Blind to the terminator inside "**", it read the pair as one sentence
+        hard-wrapped over two lines and joined them — undoing a break that was
+        already right, on a repo already following the convention.
+        """
+        src = (
+            "**Only when a rule fires on content that was already there.**\n"
+            "That is the signature of a rule nobody chose.\n"
+        )
+        out, changed, _ = self.reflowed(src)
+        self.assertEqual(out, src)
+        self.assertEqual(changed, 0)
+
+    def test_a_bold_lead_in_sharing_a_line_is_split(self):
+        out, _, _ = self.reflowed("**Bold lead-in.** Next sentence.\n")
+        self.assertEqual(out, "**Bold lead-in.**\nNext sentence.\n")
+
     def test_second_pass_is_a_no_op(self):
         src = (
             "Top one. Top two.\n\n"
