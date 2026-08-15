@@ -9,7 +9,8 @@ Serve the provider over **protocol v6** (`terraform-registry-manifest.json` decl
 
 ## Package layout
 
-- `internal/provider/` — the provider plus every resource and data source. One file per resource, `<name>_resource.go` with a colocated `<name>_resource_test.go`; data sources are `<name>_data_source.go`.
+- `internal/provider/` — the provider plus every resource and data source.
+  One file per resource, `<name>_resource.go` with a colocated `<name>_resource_test.go`; data sources are `<name>_data_source.go`.
 - `main.go` at the repo root; the provider constructor is `provider.New(version)`.
 
 Resources and data sources are **registered explicitly** in the provider's `Resources()` / `DataSources()` slices — each `New<Name>Resource` listed by hand, not discovered.

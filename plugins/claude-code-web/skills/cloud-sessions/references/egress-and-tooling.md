@@ -61,7 +61,8 @@ $S/terraform validate
 ```
 
 - **`init` needs `registry.terraform.io`**, which is not in the default allowlist — so it resolves and installs providers only in an environment whose allowlist has been extended with it.
-  That extension is a worked example of the allowlist section above: the benefit recurs across every Terraform repo, which is what makes it worth making permanent rather than working around. If `init` fails to resolve a provider, ask for the host rather than assuming Terraform can't run here.
+  That extension is a worked example of the allowlist section above: the benefit recurs across every Terraform repo, which is what makes it worth making permanent rather than working around.
+  If `init` fails to resolve a provider, ask for the host rather than assuming Terraform can't run here.
 - **`checkpoint-api.hashicorp.com` is not in the default allowlist** and returns `403`.
   It is only HashiCorp's optional version-check ping and nothing fails without it, so set `CHECKPOINT_DISABLE=1` to keep the error out of the output.
 - **`-backend=false` skips backend initialisation**, so `init` needs no state-backend token.

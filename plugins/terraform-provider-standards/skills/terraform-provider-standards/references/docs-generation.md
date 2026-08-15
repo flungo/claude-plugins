@@ -4,7 +4,8 @@ Registry documentation is **generated** with HashiCorp's `terraform-plugin-docs`
 
 ## How it's wired
 
-- `tfplugindocs` is pinned as a **`go.mod` tool dependency** so its version travels with the module — add it with `go get -tool github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs` (Go 1.24+). Older repos may instead pin it through a `//go:build tools` `tools.go` blank import; either works, as long as `go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs` resolves.
+- `tfplugindocs` is pinned as a **`go.mod` tool dependency** so its version travels with the module — add it with `go get -tool github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs` (Go 1.24+).
+  Older repos may instead pin it through a `//go:build tools` `tools.go` blank import; either works, as long as `go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs` resolves.
 - **Inputs** live in `templates/` and `examples/`: `templates/index.md.tmpl` for the provider overview (a hand-written intro plus `{{ .SchemaMarkdown }}`), `examples/resources/<name>/resource.tf` and `import.sh` per resource, and `examples/data-sources/<name>/data-source.tf` per data source.
 - **Output** is the committed `docs/` tree (`docs/index.md`, `docs/resources/*.md`, `docs/data-sources/*.md`).
 - Regenerating locally by hand is a convenience; CI does not depend on it (the shared workflows run `tfplugindocs generate` directly from the module).
