@@ -1,6 +1,7 @@
 # Git & PR Conventions
 
-**Precedence: these are Fabrizio's personal defaults, and they complement repo/context rules — they never supersede them.** Before applying anything below, check the repo for its own instructions — `CLAUDE.md`, `CONTRIBUTING.md`, `.github/`, or any other contributing guidance.
+**Precedence: these are Fabrizio's personal defaults, and they complement repo/context rules — they never supersede them.**
+Before applying anything below, check the repo for its own instructions — `CLAUDE.md`, `CONTRIBUTING.md`, `.github/`, or any other contributing guidance.
 Where the repo specifies a different approach (branch naming, commit message format, merge vs squash vs rebase, force-push policy, etc.), follow the repo's rules instead.
 These conventions only fill the gaps the repo doesn't cover.
 If a repo's instructions are ambiguous about whether they override a specific point here, treat that as the "requires a decision" case in `ready-to-merge.md` step 4 — ask, don't assume.
@@ -12,25 +13,21 @@ Apply whatever is relevant to the command you're running — not every command t
 
 ## Branch management
 
-- Never commit directly to `main`. All work happens on a feature branch.
-- If `main` is checked out at the start of a session: pull to update, then
-  create a new feature branch before making changes.
-- If a non-`main` branch is already checked out: confirm with the user
-  whether to continue on it or start fresh, before proceeding.
-- Before finishing a task, fetch `origin main`. If it has moved, rebase the
-  feature branch onto it:
+- Never commit directly to `main`.
+  All work happens on a feature branch.
+- If `main` is checked out at the start of a session: pull to update, then create a new feature branch before making changes.
+- If a non-`main` branch is already checked out: confirm with the user whether to continue on it or start fresh, before proceeding.
+- Before finishing a task, fetch `origin main`.
+  If it has moved, rebase the feature branch onto it:
 
   ```sh
   git fetch origin main
   git rebase origin/main   # only if fetch produced new commits
   ```
 
-  Review what changed upstream (diff, updated docs/decision records) before
-  continuing. If upstream changes affect work already on the branch, fold in
-  the adjustment via amend/fixup (see "Rebase hygiene" below) rather than a
-  new corrective commit. If anything is ambiguous or conflicts with a
-  decision already made on the branch, stop and ask the user — don't
-  silently resolve it.
+  Review what changed upstream (diff, updated docs/decision records) before continuing.
+  If upstream changes affect work already on the branch, fold in the adjustment via amend/fixup (see "Rebase hygiene" below) rather than a new corrective commit.
+  If anything is ambiguous or conflicts with a decision already made on the branch, stop and ask the user — don't silently resolve it.
 
 ## Commit message convention
 
@@ -46,14 +43,10 @@ This is the default stylistic choice Fabrizio would make contributing by hand, s
 
 **Squash vs rebase when landing:**
 
-- **Squash** when the branch is a single logical change, however many
-  working commits it took (one DNS record, one doc fix, one ADR). The
-  squashed message describes the change, not the journey.
-- **Rebase** (no squash) when the branch holds multiple distinct logical
-  changes worth preserving individually (e.g. separate commits for DNS, a
-  doc update, and a new runbook).
-- When in doubt, squash — a single clean commit is easier to revert and
-  easier to read in `git log`.
+- **Squash** when the branch is a single logical change, however many working commits it took (one DNS record, one doc fix, one ADR).
+  The squashed message describes the change, not the journey.
+- **Rebase** (no squash) when the branch holds multiple distinct logical changes worth preserving individually (e.g. separate commits for DNS, a doc update, and a new runbook).
+- When in doubt, squash — a single clean commit is easier to revert and easier to read in `git log`.
 
 ## Rebase hygiene — no fix-up commits left on a branch
 

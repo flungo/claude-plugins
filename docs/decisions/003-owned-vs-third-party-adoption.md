@@ -12,7 +12,8 @@ When a session works in a repo, it needs a rule for *how much* of this to apply.
 In a repo Fabrizio owns, repo-level adoption is what he wants — every contributor should follow the house style.
 In a repo he does **not** own, adopting anything into it imposes his conventions on someone else's project — wrong by default.
 
-The naive test — "is the repo in his namespace?" — does not work, because **to contribute to a third-party project he forks it into his own namespace**.
+The naive test — "is the repo in his namespace?"
+— does not work, because **to contribute to a third-party project he forks it into his own namespace**.
 A fork sits in his namespace but is not his to standardise.
 So ownership has to be *verified*, not inferred from the namespace.
 
@@ -33,7 +34,8 @@ Verify before treating a repo as owned:
 
 **Owned repo** (his, verified not a fork):
 
-- Adopt at **repo level** — enable, in the repo's `.claude/settings.json`, `git-conventions` plus the project-scope standards *relevant to the repo type* (`docs-standards`, and `terraform-standards` or `terraform-provider-standards`). The purely-personal plugins (`scaffolding`, `claude-code-web`, `upstream-research`) are user-scope only and never adopted at repo level.
+- Adopt at **repo level** — enable, in the repo's `.claude/settings.json`, `git-conventions` plus the project-scope standards *relevant to the repo type* (`docs-standards`, and `terraform-standards` or `terraform-provider-standards`).
+  The purely-personal plugins (`scaffolding`, `claude-code-web`, `upstream-research`) are user-scope only and never adopted at repo level.
 - Adopt the `flungo/github-workflows` reusable CI for the repo's type, and the version check.
 - Repo-level adoption means every contributor and session inherits the conventions, not only Fabrizio's own sessions.
 

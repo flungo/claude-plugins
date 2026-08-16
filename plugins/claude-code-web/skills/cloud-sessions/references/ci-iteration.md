@@ -6,13 +6,17 @@ So a task that depends on a repo's secrets belongs in CI, not the session.
 The pattern is the same each time: **push the branch and iterate against CI**, reading the job logs, instead of fighting the sandbox.
 
 But first — **don't assume something is blocked.
-Verify.** What's reachable is set by the environment's network policy (see the SKILL's note on volatility), so it varies between environments and changes over time.
+Verify.**
+What's reachable is set by the environment's network policy (see the SKILL's note on volatility), so it varies between environments and changes over time.
 
 ## What's actually restricted — check, don't assume
 
 *Last verified 2026-07-24, in this environment; a different environment's policy may differ.*
 
-- **Docker works — but the daemon isn't running by default; you start it.** `docker`/`dockerd` are installed (Engine 29.x), but there's no daemon socket until you launch `dockerd` yourself (needs root; `sudo` is available). Start it with the agent proxy in its environment so image pulls route through the proxy — then pull and run work. Verified 2026-07-24 by pulling and running `alpine:3.20` (`echo` from inside the container, exit 0):
+- **Docker works — but the daemon isn't running by default; you start it.**
+  `docker`/`dockerd` are installed (Engine 29.x), but there's no daemon socket until you launch `dockerd` yourself (needs root; `sudo` is available).
+  Start it with the agent proxy in its environment so image pulls route through the proxy — then pull and run work.
+  Verified 2026-07-24 by pulling and running `alpine:3.20` (`echo` from inside the container, exit 0):
 
   ```sh
   sudo -n env HTTP_PROXY="$HTTPS_PROXY" HTTPS_PROXY="$HTTPS_PROXY" NO_PROXY=localhost,127.0.0.1 dockerd >/tmp/dockerd.log 2>&1 &
@@ -20,7 +24,8 @@ Verify.** What's reachable is set by the environment's network policy (see the S
   docker run --rm alpine:3.20 echo ok
   ```
 
-  So container-based work runs here once the daemon is up. A more restrictive environment policy could still block registry egress — if a pull fails after the daemon is up, that's the policy, not a universal rule.
+  So container-based work runs here once the daemon is up.
+  A more restrictive environment policy could still block registry egress — if a pull fails after the daemon is up, that's the policy, not a universal rule.
 - **`api.github.com` returns `403`; `raw.githubusercontent.com` returns `200`.**
   Use the GitHub MCP for API work and `WebFetch` on `raw.githubusercontent.com` for public files (see `egress-and-tooling.md`).
 - **Installing a toolchain** depends on how it ships: a registry-installable tool (npm/pip/cargo) works once the CA bundle is set; a binary that only ships as a blocked `github.com` release download does not.
