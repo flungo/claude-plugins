@@ -75,16 +75,20 @@ Work through the checks in this order, each as its own commit pair:
 1. **Internal links + anchors** — offline, blocking.
    Confirm it goes red on a genuinely broken link/anchor before fixing.
 2. **markdownlint** — expect many findings on a repo adopting it for the first time.
-3. **Semantic-line-break reflow** — the render-gated pass below.
+3. **Semantic line breaks** — the render-gated reflow below, then the `markdown-sembr` caller that keeps it that way.
 4. **External URLs** — verify **in GitHub via `workflow_dispatch`**, not from a sandbox with limited egress, and only after the token exists (the runbook explains why a tokenless dispatch floods the issue with false 404s).
 
 Adopting may be a **single PR**, provided it still contains those distinct commits.
 
-## The reflow pass
+## The reflow pass, and the gate that follows it
 
 Applying semantic line breaks to a repo's *existing* Markdown is a pure source-whitespace change with identical rendered output.
 Use this plugin's render-gated [`reflow.py`](../../../scripts/reflow.py) (`${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py`) from the target repo's root — see `prose-conventions.md § Semantic line breaks` for what it does and does not touch.
 Land it as its own commit; it is best-effort, and any file it reports as gate-failed is left untouched by design.
+
+**Then run the check, and only add the caller once it is green.**
+`markdown-sembr.yml` is a gate, not a migration: adopting it before the reflow inherits a finding per sentence pair on the next pull request.
+Fix anything the check still reports after the reflow by hand — the script is conservative by design, and the check is the arbiter of done.
 
 ## Checklist
 
@@ -92,6 +96,7 @@ Land it as its own commit; it is best-effort, and any file it reports as gate-fa
    Match the local `markdownlint-cli2` to the version CI is *currently* running and install `lychee` with `cargo install --locked` — both in `validating-locally.md`, which also explains why that version must be read from a CI run rather than copied from a note.
    And never curate `.lycheeignore` from a tokenless dispatch, whose cross-repo 404s are token artifacts rather than dead links.
 1. **Add the caller workflows**, pinned to the current major: `markdown-lint.yml`, and `markdown-links.yml` with the `permissions:` block its external job needs.
+   Add `markdown-sembr.yml` too in a repo on semantic line breaks — which is any repo adopting this plugin — but only once the reflow has landed (see above).
    Also add the (highly recommended) `flungo-workflows.yml` caller if the repo lacks it.
 2. **Add repo-specific config — regenerate, never copy another repo's:** `.markdownlint-cli2.jsonc` from the defaults above, and a seeded `.lycheeignore` populated from this repo's own token-enabled runs.
 3. **Provision `LYCHEE_GITHUB_TOKEN`** per the runbook, **before** curating `.lycheeignore`.
