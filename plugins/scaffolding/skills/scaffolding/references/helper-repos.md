@@ -39,7 +39,8 @@ Don't paraphrase it here; open it (`add_repo` `github-workflows` if needed).
 The Markdown family has a shortcut: with `markdown-standards` enabled, **`/adopt-markdown-ci`** performs that whole adoption — callers, per-repo config, token, working through the checks, and the plugin's own conventions — following the runbook for the mechanics.
 Prefer it over doing the steps by hand in a repo that is taking the conventions anyway.
 
-> **🤖 Agent** — read the current major to pin (`@v2` today) from `github-workflows` itself; a breaking change cuts a new major and freezes the old, so don't assume `v2` is still current. `v1` was frozen when `v2` was cut, and each major's migration is documented in that repo's `docs/reference/upgrading.md`.
+> **🤖 Agent** — read the current major to pin (`@v2` today) from `github-workflows` itself; a breaking change cuts a new major and freezes the old, so don't assume `v2` is still current.
+> `v1` was frozen when `v2` was cut, and each major's migration is documented in that repo's `docs/reference/upgrading.md`.
 
 ### Don't over-share — repo-specific stays in the repo
 

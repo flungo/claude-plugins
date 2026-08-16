@@ -49,20 +49,15 @@ A short flat `## Consequences` paragraph or list is perfectly correct when the c
 
 ## Numbering, status, and supersession
 
-- **Sequential numbering, never reused.** The next ADR takes the next number.
+- **Sequential numbering, never reused.**
+  The next ADR takes the next number.
   ADRs are **never deleted or renumbered** — the number is a stable reference.
-- **Parallel branches collide on ADR numbers — by design.** Because index rows
-  are ordered and numbers are sequential, two branches that each grab "the next"
-  number pick the *same* one; whoever merges second hits a merge conflict and
-  must renumber. Always take the next *available* number, and if your ADR
-  depends on one being introduced on another branch, **stack your branch on that
-  one rather than working in parallel** — don't write dependent ADRs as sibling
-  branches.
-- **Status is a lifecycle**, not a quality bar: `Proposed` → `Accepted`, and
-  later possibly `Superseded by ADR-MMM` or `Deprecated`.
-- **Supersession keeps both files.** When a new ADR replaces an old one, the
-  old ADR stays in place with its `**Status:**` changed to
-  `Superseded by ADR-MMM`, and the new ADR notes what it supersedes.
+- **Parallel branches collide on ADR numbers — by design.**
+  Because index rows are ordered and numbers are sequential, two branches that each grab "the next" number pick the *same* one; whoever merges second hits a merge conflict and must renumber.
+  Always take the next *available* number, and if your ADR depends on one being introduced on another branch, **stack your branch on that one rather than working in parallel** — don't write dependent ADRs as sibling branches.
+- **Status is a lifecycle**, not a quality bar: `Proposed` → `Accepted`, and later possibly `Superseded by ADR-MMM` or `Deprecated`.
+- **Supersession keeps both files.**
+  When a new ADR replaces an old one, the old ADR stays in place with its `**Status:**` changed to `Superseded by ADR-MMM`, and the new ADR notes what it supersedes.
   Never edit the superseded decision away — the chain is the audit trail.
 
 ## Index maintenance
@@ -70,17 +65,12 @@ A short flat `## Consequences` paragraph or list is perfectly correct when the c
 `docs/decisions/README.md` is the ADR index.
 It carries a one-row-per-ADR table (number, title, status) and the template above.
 
-> **🤖 Agent** — every time you add an ADR or change an ADR's status (including
-> marking one superseded), update its row in `docs/decisions/README.md` in the
-> **same commit** — and, on supersession, add both the new row and the status
-> change to the old row.
+> **🤖 Agent** — every time you add an ADR or change an ADR's status (including marking one superseded), update its row in `docs/decisions/README.md` in the **same commit** — and, on supersession, add both the new row and the status change to the old row.
 
 ## Format notes
 
-- **One decision per ADR.** If a PR settles two independent structural
-  questions, that is two ADRs, not one with two Decisions.
-- ADRs record **structural / architectural** decisions — the ones a future
-  contributor would otherwise re-litigate. A routine implementation choice does
-  not need an ADR.
-- Write the Context so it still makes sense years later, without the PR
-  discussion that produced it.
+- **One decision per ADR.**
+  If a PR settles two independent structural questions, that is two ADRs, not one with two Decisions.
+- ADRs record **structural / architectural** decisions — the ones a future contributor would otherwise re-litigate.
+  A routine implementation choice does not need an ADR.
+- Write the Context so it still makes sense years later, without the PR discussion that produced it.

@@ -6,78 +6,29 @@ All three surfaces are covered — the local Claude Code CLI, cloud sessions, an
 
 ## Plugins
 
-- **[personal-defaults](plugins/personal-defaults)** — the always-on personal
-  set as a single install (user scope). A dependency-only bundle carrying
-  `git-conventions`, `contributor-workflow`, `session-workflow`,
-  `upstream-research`, and `scaffolding`; it contributes no skills of its own
-  and costs no context.
-  The Claude Code Web plugins stay outside it, being useful only there —
-  `personal-cloud-environment` picks them up instead.
-- **[git-conventions](plugins/git-conventions)** — standing git/PR hygiene
-  conventions (branch management, Conventional Commits, linear history,
-  squash-vs-rebase, no fixup commits, force-push policy, and which commit
-  signature warnings to ignore). Applies to all git work, not just a named
-  command.
-- **[contributor-workflow](plugins/contributor-workflow)** — personal
-  contributor/review workflow commands. Currently one command,
-  `/ready-to-merge` (aliases "Ready to Merge?", "RTM?"); more expected over
-  time. Depends on `git-conventions`.
-- **[docs-standards](plugins/docs-standards)** — repo-adopted documentation
-  conventions (project scope): the Diátaxis `docs/` split, Nygard ADRs, the
-  ephemeral-plan lifecycle, README-index and staleness discipline, the agent
-  and verify callouts, and a session-end doc-maintenance checklist hook.
+- **[personal-defaults](plugins/personal-defaults)** — the always-on personal set as a single install (user scope).
+  A dependency-only bundle carrying `git-conventions`, `contributor-workflow`, `session-workflow`, `upstream-research`, and `scaffolding`; it contributes no skills of its own and costs no context.
+  The Claude Code Web plugins stay outside it, being useful only there — `personal-cloud-environment` picks them up instead.
+- **[git-conventions](plugins/git-conventions)** — standing git/PR hygiene conventions (branch management, Conventional Commits, linear history, squash-vs-rebase, no fixup commits, force-push policy, and which commit signature warnings to ignore).
+  Applies to all git work, not just a named command.
+- **[contributor-workflow](plugins/contributor-workflow)** — personal contributor/review workflow commands.
+  Currently one command, `/ready-to-merge` (aliases "Ready to Merge?", "RTM?"); more expected over time.
+  Depends on `git-conventions`.
+- **[docs-standards](plugins/docs-standards)** — repo-adopted documentation conventions (project scope): the Diátaxis `docs/` split, Nygard ADRs, the ephemeral-plan lifecycle, README-index and staleness discipline, the agent and verify callouts, and a session-end doc-maintenance checklist hook.
   Depends on `markdown-standards`.
-- **[claude-code-web](plugins/claude-code-web)** — always-on working
-  preferences for Claude Code Web (user scope): the egress proxy and CA bundle,
-  GitHub-via-MCP, containers replaced across idle periods, repo scoping and
-  `add_repo`'s cross-owner rule, project config in a multi-repo session, why
-  repo-adopted plugins never load and how the user-scope ones arrive, and
-  delegating unrunnable steps to CI. Written to hold for any Claude Code Web
-  user, in any environment.
-- **[personal-cloud-environment](plugins/personal-cloud-environment)** — the
-  record of Fabrizio's own Claude Code Web environment (user scope): the
-  domains, environment variables, and setup he has applied on top of the
-  platform defaults, and the round-trip rule that keeps that record and the
-  live environment in step. The owner-specific counterpart to
-  `claude-code-web`, which it depends on — and, because what that environment
-  carries is part of describing it, `personal-defaults` too. Installing this one
-  plugin is therefore the whole cloud-session setup.
-- **[upstream-research](plugins/upstream-research)** — personal, always-on
-  method (user scope) for verifying facts about third-party/upstream
-  components: go to the authoritative source (the project's own repo and docs),
-  distrust training data, web-search summaries, and generated docs, and record
-  provenance.
-- **[terraform-standards](plugins/terraform-standards)** — repo-adopted
-  conventions (project scope) for a Terraform/HCL config repo: one `.tf` per
-  concern, resource names that mirror the real object, sensitive values as
-  variables, durations as arithmetic, pinned providers with a committed lock,
-  and adopting existing resources via `import {}` blocks.
-- **[terraform-provider-standards](plugins/terraform-provider-standards)** —
-  repo-adopted conventions (project scope) for building a Terraform provider in
-  Go: the terraform-plugin-framework layout, `tfplugindocs`-generated docs,
-  MPL-2.0 per-file headers, and adopting the shared `flungo/github-workflows`
-  provider CI (golangci-lint v2, GoReleaser dual-registry release).
-- **[markdown-standards](plugins/markdown-standards)** — repo-adopted Markdown
-  authoring conventions (project scope): unambiguous cross-references and link
-  hygiene, semantic line breaks, unique cross-referenced headings,
-  adjacent-blockquote handling, compact tables (delimiter rows included),
-  handling lint rules a linter bump introduces, fixing markdownlint and
-  link/anchor CI failures (fix the target, never suppress), and
-  `/adopt-markdown-ci` for onboarding a repo to the reusable Markdown CI from
-  `flungo/github-workflows`.
-- **[session-workflow](plugins/session-workflow)** — personal, always-on
-  commands (user scope) for ending a Claude session well: `/session-clean`
-  (aliases "Session Clean?", "Safe to delete?") checks whether closing the
-  session would lose anything and proposes where each loose end should be
-  recorded, and `/handoff` produces a document that carries unfinished work
-  into a fresh session. The two halves of the same moment — record it, or
-  carry it.
-- **[scaffolding](plugins/scaffolding)** — personal, always-on guide (user
-  scope) for setting up, building out, and extending repos across the fleet:
-  gated on verified ownership (an owned repo adopts the conventions and standards
-  plugins; a fork or third-party repo gets nothing without explicit consent),
-  routing to the shared CI and the helper repos (`github-workflows`,
-  `claude-plugins`, `terraform-github`) added as needed.
+- **[claude-code-web](plugins/claude-code-web)** — always-on working preferences for Claude Code Web (user scope): the egress proxy and CA bundle, GitHub-via-MCP, containers replaced across idle periods, repo scoping and `add_repo`'s cross-owner rule, project config in a multi-repo session, why repo-adopted plugins never load and how the user-scope ones arrive, and delegating unrunnable steps to CI.
+  Written to hold for any Claude Code Web user, in any environment.
+- **[personal-cloud-environment](plugins/personal-cloud-environment)** — the record of Fabrizio's own Claude Code Web environment (user scope): the domains, environment variables, and setup he has applied on top of the platform defaults, and the round-trip rule that keeps that record and the live environment in step.
+  The owner-specific counterpart to `claude-code-web`, which it depends on — and, because what that environment carries is part of describing it, `personal-defaults` too.
+  Installing this one plugin is therefore the whole cloud-session setup.
+- **[upstream-research](plugins/upstream-research)** — personal, always-on method (user scope) for verifying facts about third-party/upstream components: go to the authoritative source (the project's own repo and docs), distrust training data, web-search summaries, and generated docs, and record provenance.
+- **[terraform-standards](plugins/terraform-standards)** — repo-adopted conventions (project scope) for a Terraform/HCL config repo: one `.tf` per concern, resource names that mirror the real object, sensitive values as variables, durations as arithmetic, pinned providers with a committed lock, and adopting existing resources via `import {}` blocks.
+- **[terraform-provider-standards](plugins/terraform-provider-standards)** — repo-adopted conventions (project scope) for building a Terraform provider in Go: the terraform-plugin-framework layout, `tfplugindocs`-generated docs, MPL-2.0 per-file headers, and adopting the shared `flungo/github-workflows` provider CI (golangci-lint v2, GoReleaser dual-registry release).
+- **[markdown-standards](plugins/markdown-standards)** — repo-adopted Markdown authoring conventions (project scope): unambiguous cross-references and link hygiene, semantic line breaks, unique cross-referenced headings, adjacent-blockquote handling, compact tables (delimiter rows included), handling lint rules a linter bump introduces, fixing markdownlint and link/anchor CI failures (fix the target, never suppress), and `/adopt-markdown-ci` for onboarding a repo to the reusable Markdown CI from `flungo/github-workflows`.
+- **[session-workflow](plugins/session-workflow)** — personal, always-on commands (user scope) for ending a Claude session well: `/session-clean` (aliases "Session Clean?", "Safe to delete?")
+  checks whether closing the session would lose anything and proposes where each loose end should be recorded, and `/handoff` produces a document that carries unfinished work into a fresh session.
+  The two halves of the same moment — record it, or carry it.
+- **[scaffolding](plugins/scaffolding)** — personal, always-on guide (user scope) for setting up, building out, and extending repos across the fleet: gated on verified ownership (an owned repo adopts the conventions and standards plugins; a fork or third-party repo gets nothing without explicit consent), routing to the shared CI and the helper repos (`github-workflows`, `claude-plugins`, `terraform-github`) added as needed.
 
 ## Install in Claude Code (local CLI)
 
@@ -154,7 +105,8 @@ Nothing in this flow depends on changing it; it is noted so nobody spends an aft
 
 **Install from it** — **Settings** → **Plugins** → **Browse** → **Personal**, which lists every plugin in the marketplace: a **+** to install, a cog once it is installed.
 
-**Check its sync state** — same screen. Above the plugin list the marketplace appears under its repository name (`claude-plugins`), with a **…** menu carrying the short **Synced commit** sha, a **Sync automatically** toggle (on by default), **Check for updates**, and **Remove**.
+**Check its sync state** — same screen.
+Above the plugin list the marketplace appears under its repository name (`claude-plugins`), with a **…** menu carrying the short **Synced commit** sha, a **Sync automatically** toggle (on by default), **Check for updates**, and **Remove**.
 
 Installed plugins' skills load into every conversation, namespaced as `<plugin>:<skill>`, with their `references/` readable.
 
