@@ -18,7 +18,10 @@ Markdown renders consecutive lines as one paragraph, so this is a pure source-le
 - A sentence lives on a single line however long it runs — that's why `MD013` (line-length) is disabled rather than left to fight the convention.
   A hard wrap column and one-sentence-per-line are mutually exclusive, and the sentence is the meaningful unit, so the wrap limit goes.
   Never "fix" a long line by hard-wrapping it.
-- Nothing enforces one-sentence-per-line mechanically (Prettier declined it — cross-language sentence detection is too hard; markdownlint has no reflow rule) — it is convention, applied when writing and editing.
+- markdownlint has no rule for this, and Prettier declined one (cross-language sentence detection is too hard) — but it is not unenforced.
+  [`markdown-sembr.yml`](https://github.com/flungo/github-workflows/blob/main/.github/workflows/markdown-sembr.yml) in `flungo/github-workflows` gates the one MUST rule: two sentences must not share a source line.
+  It is opt-in by adoption, since it is the only Markdown workflow there that imposes a prose style.
+  Where a line *could* also have been broken stays a judgement call the check never reports, so the rest remains convention, applied when writing and editing.
 - ("Semantic line breaks" / "ventilated prose" — see <https://sembr.org/> — has no universal consensus; adopted for the diff and review benefits.)
 
 **Scope — apply it wherever the rendered output is unchanged.**
@@ -46,7 +49,8 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py"            # dry run — sampl
 python3 "${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py" --apply    # write the render-verified reflow in place
 ```
 
-It is a one-time best-effort migration pass, not repo CI.
+It is a one-time best-effort migration pass, not repo CI — `markdown-sembr.yml` is the repeatable gate, and the two are meant to be adopted together.
+Run the check after the reflow and fix anything it still reports by hand: the script is deliberately conservative, and the gate is the arbiter of done.
 The gate is applied **per block against the whole file**: a paragraph's reflow is kept only if the entire file still renders identically with it changed, so an awkward paragraph costs only itself rather than forfeiting the file.
 Anything it reports as left behind is deliberate — reflow those by hand or leave them.
 
