@@ -10,6 +10,11 @@ Read `references/git-conventions.md` before starting — commit history cleanup 
 **Subagent model:** the research and commit-triage subagents dispatched below (steps 4 and 5) default to the `sonnet` model regardless of what model is orchestrating this skill — the work handed off is well-scoped enough not to need a larger one, and defaulting smaller keeps the skill cheaper and faster to run.
 Use judgment to escalate a given dispatch if that specific case looks unusually large or hard (e.g. an enormous or deeply entangled diff for step 5); don't escalate by default.
 
+**Subagent permission:** some environments instruct an agent not to spawn a subagent unless the user asked for one.
+Invoking this command **is** that request — steps 4 and 5 prescribe the delegation, so running `/ready-to-merge` asks for it as surely as naming the tool would, and those dispatches proceed as written.
+Only an environment that bars subagents outright changes anything: there, do the same analysis in the main loop and say so in the step 8 report.
+The delegation is there to keep a large diff out of the orchestrating context, not because the work is impossible without it — dropping it costs context economy, never the step itself.
+
 ## 0. Identify the target PR
 
 - If the user gave an explicit PR (number, URL, or branch name), use that — it always takes precedence.
