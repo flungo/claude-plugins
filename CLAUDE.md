@@ -129,6 +129,10 @@ The conventions themselves stay in `markdown-standards` (above); only repo-speci
   Take the version from the first line of the markdownlint job's log and match it locally (`npx markdownlint-cli2@<version> "**/*.md" "!node_modules/**"`) before chasing findings; matching a *stale* pin gives a false pass, which is the failure mode this note exists to prevent.
   Last seen: **0.23.1** (markdownlint 0.41.1), 2026-08-01.
 - **`.lycheeignore`** is populated only from this repo's own token-enabled `workflow_dispatch` runs, per the rules in its header.
+- **The pre-canned-data exclusion lands on `fixtures/`, not `evals/`, and is declared once.**
+  `.markdownlint-cli2.jsonc` ignores `**/fixtures/**`, which is where a plugin's eval inputs live, so they are out of scope for the prose conventions entirely (`markdown-standards` carries why).
+  `markdown-sembr` reads that same `ignores` rather than repeating it, so the sembr caller carries no exclusions of its own and the two cannot diverge.
+  The enclosing `evals/README.md` is authored prose and stays under both checks — widening the pattern to `evals` would take it with them.
 
 ## Active work
 

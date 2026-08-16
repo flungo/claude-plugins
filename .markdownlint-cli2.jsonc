@@ -19,8 +19,13 @@
     // one edit reflows the whole table and one long cell taxes every row.
     "MD060": { "style": "compact" }
   },
-  // Eval fixtures are dev-time artifacts reproduced verbatim (e.g. PR
-  // descriptions, deliberately messy inputs) — linting them would alter what
-  // they exist to preserve. Plugin docs outside fixtures/ are still linted.
-  "ignores": ["plugins/*/evals/fixtures/**"]
+  // Fixtures are dev-time artifacts reproduced verbatim (e.g. PR descriptions,
+  // deliberately messy inputs) — linting them would alter what they exist to
+  // preserve, so they are out of scope for the house style entirely, not just
+  // for CI. See prose-conventions.md § Semantic line breaks.
+  // Matched at any depth rather than at plugins/*/evals/, so a fixture tree
+  // anywhere is covered and adding one never means editing this. The sembr
+  // caller excludes the same set. Anything outside fixtures/ is still linted,
+  // an evals/README.md included.
+  "ignores": ["**/fixtures/**"]
 }

@@ -49,6 +49,22 @@ Start the repo's `.markdownlint-cli2.jsonc` from these, then add further overrid
 `MD028` stays at its default (enabled).
 Each of these four is half of a pair whose human half is in `prose-conventions.md` — read it before applying them, and record neither half in the repo's `CLAUDE.md`: the plugin is what carries them (step 5).
 
+### In a repo with pre-canned data, ignore it
+
+```jsonc
+  "ignores": ["**/fixtures/**"]
+```
+
+Fixtures, sample inputs, recorded responses: reproduced to look like the thing they stand in for, so imposing the house style on them changes what they exist to preserve.
+That puts them out of scope for the conventions themselves, not merely exempt from CI — `prose-conventions.md § Semantic line breaks` carries the rule; this is only how it is wired up.
+
+Name whichever directory the repo keeps them in — `fixtures` above is the common one, not the only one — and match it at any depth, so a tree anywhere is covered and adding one never means revisiting the config.
+Exclude the data directory itself rather than a parent that also holds authored prose, so a README explaining the data stays in scope.
+
+**`markdown-sembr.yml` picks this up on its own.**
+It reads `ignores` out of this same file, so the exclusion is declared once rather than restated per check ([ADR-016](https://github.com/flungo/github-workflows/blob/main/docs/decisions/016-sembr-inherits-markdownlint-ignores.md)).
+Set `inherit-markdownlint-ignores: false` on the caller only where a repo genuinely wants the prose gate over a tree its linter skips.
+
 ### In a repo that holds Terraform config, also ignore `.terraform/`
 
 ```jsonc
@@ -89,6 +105,11 @@ Land it as its own commit; it is best-effort, and any file it reports as gate-fa
 **Then run the check, and only add the caller once it is green.**
 `markdown-sembr.yml` is a gate, not a migration: adopting it before the reflow inherits a finding per sentence pair on the next pull request.
 Fix anything the check still reports after the reflow by hand — the script is conservative by design, and the check is the arbiter of done.
+Expect little, and expect no particular shape.
+**Residue you can describe is a defect, not a caveat**: if a kind of finding recurs often enough to name, fix it instead — in `reflow.py` where the script is blind to something, or in the source where the prose is doing by hand what a better structure would do for it.
+Naming one here would only date this file, which is what happened to the version of this paragraph that did.
+
+The caller needs no exclusions of its own: it inherits the linter's, as § In a repo with pre-canned data describes.
 
 ## Checklist
 
