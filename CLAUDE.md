@@ -120,7 +120,7 @@ In brief:
 
 ## Markdown validation CI
 
-The checks those conventions pair with, adopted from [flungo/github-workflows](https://github.com/flungo/github-workflows) and pinned `@v2`: markdownlint (`.markdownlint-cli2.jsonc`), a blocking offline check of relative links and heading anchors on every PR, and a daily external-URL sweep that reports through a single auto-updated issue.
+The checks those conventions pair with, adopted from [flungo/github-workflows](https://github.com/flungo/github-workflows) and pinned `@v2`: markdownlint (`.markdownlint-cli2.jsonc`), a blocking offline check of relative links and heading anchors on every PR, and a daily external-URL sweep that reports through a single auto-updated issue, and `markdown-sembr` — blocking on every PR — for the one semantic-line-break MUST rule, two sentences never sharing a source line.
 A repo-specific `plugin-validate` workflow runs `claude plugin validate` on the marketplace and every plugin, so a broken manifest can't merge.
 The conventions themselves stay in `markdown-standards` (above); only repo-specific facts belong here:
 
