@@ -1,0 +1,18 @@
+# Caller for the reusable semantic-line-break check in flungo/github-workflows.
+# The one Markdown workflow that imposes a prose style, so it is opt-in by
+# adoption — this repo defines the convention in markdown-standards and writes
+# to it. See that repo's docs/runbooks/adopting-markdown-workflows.md.
+#
+# Unfiltered, like the other two Markdown callers here: a path filter would
+# stop the check run being created at all on a PR touching no Markdown, which
+# rules out ever requiring the context.
+name: Markdown semantic line breaks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  markdown-sembr:
+    uses: flungo/github-workflows/.github/workflows/markdown-sembr.yml@v2
