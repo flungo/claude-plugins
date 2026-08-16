@@ -80,6 +80,20 @@ A session can come up with its MCP servers reported as disconnected, and have th
 
 > **🤖 Agent** — treat a missing MCP server as *not yet connected* rather than absent: retry on a later turn before routing around it, and don't tell the user a capability is unavailable on the strength of one turn.
 
+## The system prompt can withhold subagents
+
+A web session's system prompt may carry tool restrictions the local CLI's does not — observed 2026-08-04: *"Do not call the AgentTool unless the user requested it"*, and the same for workflows and deep research.
+Whether it appears varies: it comes from the harness, and a session can also be created with an appended system prompt, so read your own rather than assuming either way.
+
+Note what it gates on.
+The instruction conditions delegation on the user having asked; it does not forbid subagents outright.
+Its target is a fan-out nobody asked for, in an environment where the user cannot watch the tokens being spent.
+
+That leaves the question of what counts as asking, which is not this plugin's to answer — a skill whose documented procedure dispatches subagents is the place that decides how its own steps read against such an instruction, and one may state outright that invoking it is itself the request.
+
+> **🤖 Agent** — before following a procedure step that delegates, check your own system prompt for a restriction like this.
+> Where one applies and the skill doesn't say otherwise, do the work in the main loop and say so in your report, rather than dispatching anyway or silently dropping the step.
+
 ## A repo's own plugins never load
 
 A repo-adopted plugin — one a repository enables through `enabledPlugins` in its `.claude/settings.json` — **does not load in a web session**, even though the settings themselves are read.
