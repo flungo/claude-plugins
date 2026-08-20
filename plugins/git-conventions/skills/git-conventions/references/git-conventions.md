@@ -61,6 +61,19 @@ A branch is **not** clean if it contains commits like `fix typo`, `address revie
 Force-pushing is allowed on feature branches (expected after `--amend` or interactive rebase).
 Never force-push `main`.
 
+Prefer `--force-with-lease` over a bare `--force`, and know the one failure that will tempt you off it: **in a shallow clone it refuses with `stale info`**.
+`git clone --depth <n>` implies `--single-branch`, so the clone carries one remote-tracking ref (`+refs/heads/main:refs/remotes/origin/main`) — a feature branch pushed from it has an upstream but no `origin/<branch>`, and the bare lease has no recorded value to check against.
+Fetching the missing ref afterwards (`git fetch origin '+refs/heads/*:refs/remotes/origin/*'`) creates it, but that alone did not restore the bare lease when tried — so treat widening the refspec as a fix worth trying, not one to rely on.
+
+Name the expected commit instead — the sha you believe the remote branch is on, which is what you are about to overwrite:
+
+```sh
+git push --force-with-lease=<branch>:<sha> origin <branch>
+```
+
+That is still a genuine lease: it fails if anyone has moved the branch off `<sha>`.
+Reach for it rather than downgrading to `--force`, which checks nothing.
+
 ## Landing — always via PR
 
 Never push directly to `main`.
