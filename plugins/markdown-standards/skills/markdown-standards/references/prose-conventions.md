@@ -33,8 +33,17 @@ That is the whole test, and it reaches further than top-level paragraphs:
   The source is fiddlier, because each continuation line must carry the list item's indent or the blockquote's `>` prefix; that is a reason to take care, not a reason to exempt them.
 - **Headings, tables, and code blocks** — no.
   A line break there changes the render, or the content.
-- **Hard-break blocks** — preserve them.
-  Lines ending in two spaces or a backslash (e.g. a `**Date:**` / `**Status:**` metadata block) render a `<br>` that carries meaning, so reflowing them *would* change the output.
+- **Hard-break blocks** — leave them alone, but read one as a smell rather than a pattern to copy.
+  Lines ending in two spaces or a backslash render a `<br>`, so rewrapping them changes the output and the reflow refuses to touch them.
+  That is a rule about not breaking a document, not an endorsement: a run of `**Key:** value` lines held together by trailing whitespace is a list that has not admitted it, and the `<br>` is papering over the mismatch between a source that looks like separate lines and a render that is one paragraph.
+  Written as a list it renders the way it reads, every item is already on its own line, and the question of where sentences may break never comes up — which is how the ADRs here carry their `Date` and `Status`.
+- **Pre-canned data** — out of scope entirely, wherever a repo keeps it.
+  A fixture, a sample input, a recorded response: it is reproduced to look like the thing it stands in for, so imposing the house style on it changes the very thing it exists to preserve.
+  This is a scope rule rather than a lint exemption — don't reflow one by hand either, and don't read a hard-wrapped one as a defect.
+  **Keep such data in a directory the checks can match** — `fixtures/`, `inputs/`, `testdata/`, whatever the repo calls it — rather than scattering it and excluding file by file.
+  One directory pattern covers the files that do not exist yet; a list naming files goes stale the moment somebody adds another, and it goes stale silently, as a passing build.
+  Exclude that directory rather than a parent that also holds authored prose, so a README explaining the data stays in scope.
+  Declare it once, in the repo's markdownlint config: the semantic-line-break check reads `ignores` from there too, so neither check can end up covering a tree the other skips.
 
 **Migrating an existing repo.**
 Because the convention is render-neutral, a migration can be **gated on render-equivalence**: reflow the source, render both versions to normalised HTML, and keep the change only where the HTML is byte-identical.
