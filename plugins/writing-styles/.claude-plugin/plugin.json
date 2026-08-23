@@ -1,0 +1,8 @@
+{
+  "name": "writing-styles",
+  "description": "A library of named prose styles, one reference file each, for the plugins and repos that cite them — currently instructional-writing, the style for text a reader acts on as instruction. Applies nothing by being enabled: a style takes effect only where something names it, which is what makes this safe as a dependency at any scope.",
+  "version": "0.1.0",
+  "author": {
+    "name": "flungo"
+  }
+}

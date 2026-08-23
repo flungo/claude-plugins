@@ -24,7 +24,7 @@ Plugins are split by **enablement boundary, not by topic** (ADR-001): a plugin i
 | Scope | Enabled how | Plugins |
 | --- | --- | --- |
 | **Personal (user)** | Installed + enabled in the claude.ai account; always on | `personal-defaults` (bundle) → `git-conventions`, `contributor-workflow`, `session-workflow`, `upstream-research`, `scaffolding`, `connector-conventions`; plus `personal-cloud-environment` → `claude-code-web` |
-| **Repo-adopted (project)** | Declared in a repo's `.claude/settings.json` | `docs-standards`, `markdown-standards`, `terraform-standards`, `terraform-provider-standards` |
+| **Repo-adopted (project)** | Declared in a repo's `.claude/settings.json` | `docs-standards`, `markdown-standards`, `writing-styles`, `claude-plugin-standards`, `terraform-standards`, `terraform-provider-standards` |
 
 Reusable CI (markdownlint, lychee, `terraform` plan/apply) is **not** a plugin — it lives in `flungo/github-workflows` and is referenced by `scaffolding`.
 
@@ -35,45 +35,20 @@ This repo adopts those Markdown workflows and `flungo-workflows` itself (see § 
 
 ## Plugin authoring conventions
 
-- **One plugin per `plugins/<name>/`**, with `.claude-plugin/plugin.json`, and skills under `skills/<skill-name>/SKILL.md` (+ `references/` for detail).
-  Register each in `.claude-plugin/marketplace.json`.
-- **Compose via first-party dependencies.**
-  Where a plugin builds on another, list it in the plugin's `dependencies` array (bare string = latest in this marketplace).
-  Installing the dependent auto-installs the dependency.
-  **Where a plugin references another, it declares the dependency** — including where a bundle such as `personal-defaults` is expected to supply it anyway, since the bundle is a convenience rather than a guarantee and any plugin can be installed on its own.
-  Do not depend on third-party marketplaces ([ADR-001](docs/decisions/001-marketplace-structure.md), [ADR-002](docs/decisions/002-documentation-and-adr-model.md)).
+The authoritative conventions are two plugins this repo dogfoods at project scope via [`.claude/settings.json`](.claude/settings.json) ([ADR-009](docs/decisions/009-plugin-authoring-standards.md)):
+
+- **Structure** — `claude-plugin-standards` (`plugins/claude-plugin-standards/skills/plugin-authoring/SKILL.md`): the directory and manifest layout, declaring every dependency you reference, citing a dependency's skill or reference by name rather than by path, whether a plugin is ambient or on-demand and what may therefore depend on it, filing a fact by what it is a property of, skill naming in single- and multi-skill plugins, keeping cross-references current by basename, the reserved word that makes a skill silently fail to load on claude.ai, `SKILL.md` frontmatter hazards, validating and test-installing before committing, and the minor-versus-patch test.
+- **Prose** — the instructional-writing style in `writing-styles` (`plugins/writing-styles/skills/writing-styles/references/instructional-writing.md`): state the current truth rather than the document's own history, converge on plain fact over time, fix wrong guidance at its source instead of annotating it, and never direct an agent to do what only the user can do.
+
+Only what is specific to *this marketplace* stays here:
+
 - **A new user-scope plugin must be reachable from a bundle.**
   `personal-defaults` carries the surface-independent set and `personal-cloud-environment` carries what a cloud session needs; between them they are the only things anything installs by name.
   A plugin in neither is one nobody installs, and nothing fails to say so.
-- **Never reference a user-scope-only plugin from a project-scope one.**
-  `scaffolding`, `claude-code-web`, and `upstream-research` are user-scope only and never repo-adopted ([ADR-003](docs/decisions/003-owned-vs-third-party-adoption.md)), so a repo-adopted plugin cannot declare one as a dependency — and pointing at it anyway leaves a reference that dangles wherever the plugin is enabled at project scope.
-  Where both need the same rule, cite the **ADR** that records it (by full URL, since an installed plugin has no `docs/` tree beside it), or state the rule locally.
-- **Keep generalisable guidance separate from the owner's own configuration.**
-  A plugin whose content would hold for any reader stays that way; the concrete settings *Fabrizio* has applied — an environment's allowlist, its variables, its setup — live in a companion plugin that depends on it, so neither is diluted by the other.
-  `claude-code-web` (generic) and `personal-cloud-environment` (his applied environment) are the worked example ([ADR-005](docs/decisions/005-generic-plugins-and-personal-configuration.md)).
-- **File a fact by what it is a property of, not by where you found it.**
-  A connector's behaviour — what a tool returns, mangles, or omits — belongs to its skill in `connector-conventions`, so it loads wherever that connector is used; which tools exist at all belongs to the surface plugin (`claude-code-web`); platform behaviour an agent reasons about away from any tool stays with the domain plugin that owns the subject (`git-conventions`) ([ADR-008](docs/decisions/008-connector-behaviour-belongs-to-the-connector.md)).
-  A connector skill never tells a session to prefer its connector over some other tool — that is the environment's call, and the skill is consulted once the agent is already using it.
-- **A skill's `name` must not contain `claude`.**
-  claude.ai's marketplace ingestion rejects it outright — `plugin_upload_skill_upload_name_reserved_words`, *"Skill name in SKILL.md cannot contain the reserved word 'claude'"* — so the skill silently never loads on that surface.
-  Nothing local catches this: `claude plugin validate` passes, and Claude Code loads the skill normally, so the only signal is the marketplace's `sync_errors` after a sync.
-  The restriction appears to bind **skills only** — the `claude-code-web` *plugin* synced under that name while its skill was rejected — which is why that skill is `cloud-sessions` while the plugin keeps its name.
-  Prefer a skill name that describes the domain without naming the product.
-  A single-skill plugin names its skill after itself, so `claude-code-web` is the one mismatch there — deliberate, and not an inconsistency to tidy away.
-  A **multi-skill** plugin names each skill for the axis that varies within it instead, the plugin name supplying the rest — `connector-conventions` carries `google-drive`, not `drive-conventions`, which would say "conventions" twice in `<plugin>:<skill>`.
-- **`SKILL.md` frontmatter is YAML** — keep `name` and `description` on single lines and **avoid a colon followed by a space (`:` + space) inside an unquoted value** (it parses as a mapping and silently drops the frontmatter).
-  The `description` is what drives skill triggering; write it for that.
-- **Validate before committing:** `claude plugin validate .` (marketplace) and `claude plugin validate plugins/<name>` (each plugin).
-  Test-install from the local path and confirm the skill loads and any dependency resolves.
-- **Bump the version when a plugin's behaviour or footprint changes.**
-  These are content plugins pulled from this repo, not immutable releases, so the version is a human signal rather than a resolver input — keep it cheap.
-  **Minor** for anything a consumer would notice: a skill or command added or removed, a new dependency or hook, a *newly* shipped script, or a convention change that alters what an agent does.
-  **Patch** for wording that clarifies without changing a rule, and for fixing a shipped script so that it finally does what it already claimed to — the offering is the same, it just works now.
-  The test between them is whether what the plugin offers has changed, not how big the diff was.
-  **Major** for a break — a rename, a removed command, or a reversal that invalidates a repo's existing `.claude/settings.json`.
-  Update the matching `marketplace.json` entry in the same commit.
-- **Name for the domain, not the initial slice** — plugin names are install identifiers, so a rename is breaking.
-- **Evals** live under a plugin's `evals/` (dev-time fixtures, not loaded at runtime).
+- **The user-scope-only plugins are `scaffolding`, `claude-code-web`, and `upstream-research`** ([ADR-003](docs/decisions/003-owned-vs-third-party-adoption.md)), so no repo-adopted plugin here may declare one as a dependency or point at it.
+- **Where each kind of fact goes here** ([ADR-008](docs/decisions/008-connector-behaviour-belongs-to-the-connector.md)): a connector's behaviour to its skill in `connector-conventions`, which tools exist at all to the surface plugin (`claude-code-web`), and platform behaviour an agent reasons about away from any tool to the domain plugin that owns the subject (`git-conventions`).
+- **Two skills here are not named after their plugin** — `claude-code-web` ships `cloud-sessions`, and `claude-plugin-standards` ships `plugin-authoring` — both because the plugin name carries the reserved word.
+  Deliberate, and not an inconsistency to tidy away.
 
 ## Sensitive information
 
@@ -151,3 +126,4 @@ In short:
 - Plugin delivery differs per surface — a cloud-environment setup script carries the user-scope plugins into every cloud session, chat installs from the marketplace as its own enablement decision, and repo-adopted plugins are left at project scope even though they don't load in cloud sessions ([ADR-006](docs/decisions/006-plugin-delivery-per-surface.md)).
 - Conventions for working through connectors ship as one plugin — `connector-conventions` — with a skill per connector plus cross-cutting skills, aspects within a connector split by reference file rather than by skill; its Drive skill finds a folder's `CONVENTIONS` document by walking the parent chain and applies the deepest one last, and the owner's actual rules stay in Drive rather than in a companion plugin ([ADR-007](docs/decisions/007-connector-carried-conventions.md)).
 - A fact is sorted by what it is a property of, not by where it was discovered — connector behaviour to `connector-conventions`, which tools exist at all to the surface plugin, platform behaviour reasoned about away from any tool to the domain plugin that owns the subject ([ADR-008](docs/decisions/008-connector-behaviour-belongs-to-the-connector.md)).
+- Prose styles ship as an on-demand `writing-styles` plugin that `claude-plugin-standards` and `docs-standards` both depend on, so the instructional-writing rules are stated once and cited by name; applying nothing until named is what makes it safe to depend on from either scope, and plugin *structure* conventions live in `claude-plugin-standards` ([ADR-009](docs/decisions/009-plugin-authoring-standards.md)).

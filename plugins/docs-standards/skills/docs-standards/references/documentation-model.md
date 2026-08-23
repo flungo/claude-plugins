@@ -23,6 +23,18 @@ The distinction that most often trips people:
 
 Only create a directory when it has content — an empty `runbooks/` or `reference/` is noise until the first doc lands.
 
+## Writing a reference doc
+
+A reference exists to be looked up, so it is read in fragments by someone who has never seen an earlier version of it.
+That makes it the `docs/` tree's worst case for prose that explains itself by contrast with what it used to say.
+
+Write it in the **instructional-writing** style, in the `writing-styles` skill — a declared dependency of this plugin, so it is installed wherever these conventions are.
+In brief: state the current truth and never the document's own history, converge on plain fact over time rather than leaving a hedge in place once the evidence firms up, fix wrong guidance at its source instead of annotating it, and never direct an agent to do what only the user can do.
+Read the style before revising a reference in the light of something just learned, which is where all four bite hardest.
+
+The style keeps evidence and dates, a `Verify:` callout, and a contrary claim from an outside source: those are facts about the world rather than about the file's past.
+It puts the history in the commit message and, where a decision was made, in an ADR.
+
 ## README index per directory — kept current in the same commit
 
 Every one of the four directories has a `README.md` that indexes its contents.

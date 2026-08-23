@@ -13,6 +13,7 @@ ADRs are numbered sequentially and **never deleted or renumbered** — a superse
 | [006](006-plugin-delivery-per-surface.md) | Plugin delivery differs per surface — a cloud-environment setup script carries user-scope plugins | Accepted |
 | [007](007-connector-carried-conventions.md) | Conventions for working through connectors, as one plugin with a skill per connector | Accepted |
 | [008](008-connector-behaviour-belongs-to-the-connector.md) | A connector's behaviour belongs to the connector plugin, not the surface or workflow that met it | Accepted |
+| [009](009-plugin-authoring-standards.md) | Authoring conventions ship as plugins, with shared styles cited on demand | Accepted |
 
 ## Template
 
