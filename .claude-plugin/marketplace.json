@@ -32,8 +32,8 @@
     {
       "name": "docs-standards",
       "source": "./plugins/docs-standards",
-      "description": "Repo-adopted documentation conventions — Diátaxis docs, Nygard ADRs, ephemeral-plan lifecycle, README-index and staleness discipline, agent/verify callouts, and a session-end doc-maintenance checklist hook. Depends on markdown-standards.",
-      "version": "0.2.0"
+      "description": "Repo-adopted documentation conventions — Diátaxis docs, Nygard ADRs, ephemeral-plan lifecycle, README-index and staleness discipline, agent/verify callouts, and a session-end doc-maintenance checklist hook. Depends on markdown-standards and writing-styles.",
+      "version": "0.3.0"
     },
     {
       "name": "claude-code-web",
@@ -76,6 +76,18 @@
       "source": "./plugins/session-workflow",
       "description": "Named commands for ending a Claude session well — /session-clean to confirm nothing durable is left only in the chat, and /handoff to carry an unfinished session into a fresh one. Depends on connector-conventions.",
       "version": "0.3.0"
+    },
+    {
+      "name": "writing-styles",
+      "source": "./plugins/writing-styles",
+      "description": "A library of named prose styles, one reference file each, for the plugins and repos that cite them — currently instructional-writing, the style for text a reader acts on as instruction. Applies nothing by being enabled: a style takes effect only where something names it, which is what makes this safe as a dependency at any scope.",
+      "version": "0.1.0"
+    },
+    {
+      "name": "claude-plugin-standards",
+      "source": "./plugins/claude-plugin-standards",
+      "description": "Conventions for authoring plugins — the directory and manifest layout, composing via first-party dependencies and declaring every one you reference, whether a plugin is ambient or on-demand and what may depend on it, filing a fact by what it is a property of, skill naming in single- and multi-skill plugins, keeping cross-references current by basename, the reserved word that silently breaks a skill on claude.ai, YAML frontmatter hazards, validating before committing, and when to bump which part of the version. Depends on writing-styles and markdown-standards.",
+      "version": "0.1.0"
     },
     {
       "name": "scaffolding",

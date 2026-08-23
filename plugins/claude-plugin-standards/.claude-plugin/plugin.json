@@ -1,0 +1,12 @@
+{
+  "name": "claude-plugin-standards",
+  "description": "Fabrizio's conventions for authoring plugins — the directory and manifest layout, composing via first-party dependencies and declaring every one you reference, whether a plugin is ambient or on-demand and what may depend on it, filing a fact by what it is a property of, skill naming in single- and multi-skill plugins, keeping cross-references current by basename, the reserved word that silently breaks a skill on claude.ai, YAML frontmatter hazards, validating before committing, and when to bump which part of the version. Depends on writing-styles for the instructional-writing style its prose is written in, and on markdown-standards for the Markdown itself.",
+  "version": "0.1.0",
+  "author": {
+    "name": "flungo"
+  },
+  "dependencies": [
+    "writing-styles",
+    "markdown-standards"
+  ]
+}
