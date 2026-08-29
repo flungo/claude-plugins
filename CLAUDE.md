@@ -23,7 +23,7 @@ Plugins are split by **enablement boundary, not by topic** (ADR-001): a plugin i
 
 | Scope | Enabled how | Plugins |
 | --- | --- | --- |
-| **Personal (user)** | Installed + enabled in the claude.ai account; always on | `personal-defaults` (bundle) → `git-conventions`, `contributor-workflow`, `session-workflow`, `upstream-research`, `scaffolding`; plus `personal-cloud-environment` → `claude-code-web` |
+| **Personal (user)** | Installed + enabled in the claude.ai account; always on | `personal-defaults` (bundle) → `git-conventions`, `contributor-workflow`, `session-workflow`, `upstream-research`, `scaffolding`, `connector-conventions`; plus `personal-cloud-environment` → `claude-code-web` |
 | **Repo-adopted (project)** | Declared in a repo's `.claude/settings.json` | `docs-standards`, `markdown-standards`, `terraform-standards`, `terraform-provider-standards` |
 
 Reusable CI (markdownlint, lychee, `terraform` plan/apply) is **not** a plugin — it lives in `flungo/github-workflows` and is referenced by `scaffolding`.
@@ -55,7 +55,8 @@ This repo adopts those Markdown workflows and `flungo-workflows` itself (see § 
   Nothing local catches this: `claude plugin validate` passes, and Claude Code loads the skill normally, so the only signal is the marketplace's `sync_errors` after a sync.
   The restriction appears to bind **skills only** — the `claude-code-web` *plugin* synced under that name while its skill was rejected — which is why that skill is `cloud-sessions` while the plugin keeps its name.
   Prefer a skill name that describes the domain without naming the product.
-  Every other plugin here names its skill after itself, so `claude-code-web` is the one mismatch — deliberate, and not an inconsistency to tidy away.
+  A single-skill plugin names its skill after itself, so `claude-code-web` is the one mismatch there — deliberate, and not an inconsistency to tidy away.
+  A **multi-skill** plugin names each skill for the axis that varies within it instead, the plugin name supplying the rest — `connector-conventions` carries `google-drive`, not `drive-conventions`, which would say "conventions" twice in `<plugin>:<skill>`.
 - **`SKILL.md` frontmatter is YAML** — keep `name` and `description` on single lines and **avoid a colon followed by a space (`:` + space) inside an unquoted value** (it parses as a mapping and silently drops the frontmatter).
   The `description` is what drives skill triggering; write it for that.
 - **Validate before committing:** `claude plugin validate .` (marketplace) and `claude plugin validate plugins/<name>` (each plugin).
@@ -144,3 +145,4 @@ In short:
 - Markdown authoring conventions ship as the `markdown-standards` plugin here, referenced from the `github-workflows` docs instead of being inlined there or copied into consumer `CLAUDE.md`s ([ADR-004](docs/decisions/004-markdown-standards-plugin.md)).
 - Generalisable guidance and Fabrizio's own applied configuration ship as separate plugins — `claude-code-web` holds for any user in any environment, `personal-cloud-environment` records his, and depends on it ([ADR-005](docs/decisions/005-generic-plugins-and-personal-configuration.md)).
 - Plugin delivery differs per surface — a cloud-environment setup script carries the user-scope plugins into every cloud session, chat installs from the marketplace as its own enablement decision, and repo-adopted plugins are left at project scope even though they don't load in cloud sessions ([ADR-006](docs/decisions/006-plugin-delivery-per-surface.md)).
+- Conventions for working through connectors ship as one plugin — `connector-conventions` — with a skill per connector plus cross-cutting skills, aspects within a connector split by reference file rather than by skill; its Drive skill finds a folder's `CONVENTIONS` document by walking the parent chain and applies the deepest one last, and the owner's actual rules stay in Drive rather than in a companion plugin ([ADR-007](docs/decisions/007-connector-carried-conventions.md)).

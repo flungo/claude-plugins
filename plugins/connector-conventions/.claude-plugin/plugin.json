@@ -1,0 +1,8 @@
+{
+  "name": "connector-conventions",
+  "description": "Conventions for working through connectors — both the rules a connected store carries in its own content and the rules an agent should follow when using it. A skill per connector (currently Google Drive, where a CONVENTIONS document governs its own folder and everything beneath it), plus cross-cutting skills for rules that span sources.",
+  "version": "0.1.0",
+  "author": {
+    "name": "flungo"
+  }
+}

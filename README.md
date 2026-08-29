@@ -7,7 +7,7 @@ All three surfaces are covered — the local Claude Code CLI, cloud sessions, an
 ## Plugins
 
 - **[personal-defaults](plugins/personal-defaults)** — the always-on personal set as a single install (user scope).
-  A dependency-only bundle carrying `git-conventions`, `contributor-workflow`, `session-workflow`, `upstream-research`, and `scaffolding`; it contributes no skills of its own and costs no context.
+  A dependency-only bundle carrying `git-conventions`, `contributor-workflow`, `session-workflow`, `upstream-research`, `scaffolding`, and `connector-conventions`; it contributes no skills of its own and costs no context.
   The Claude Code Web plugins stay outside it, being useful only there — `personal-cloud-environment` picks them up instead.
 - **[git-conventions](plugins/git-conventions)** — standing git/PR hygiene conventions (branch management, Conventional Commits, linear history, squash-vs-rebase, no fixup commits, force-push policy, and which commit signature warnings to ignore).
   Applies to all git work, not just a named command.
@@ -21,6 +21,10 @@ All three surfaces are covered — the local Claude Code CLI, cloud sessions, an
 - **[personal-cloud-environment](plugins/personal-cloud-environment)** — the record of Fabrizio's own Claude Code Web environment (user scope): the domains, environment variables, and setup he has applied on top of the platform defaults, and the round-trip rule that keeps that record and the live environment in step.
   The owner-specific counterpart to `claude-code-web`, which it depends on — and, because what that environment carries is part of describing it, `personal-defaults` too.
   Installing this one plugin is therefore the whole cloud-session setup.
+- **[connector-conventions](plugins/connector-conventions)** — conventions for working through connectors (user scope): both the rules a connected store carries in its own content and the rules an agent should follow when using it.
+  `google-drive` covers Drive, where a `CONVENTIONS` document governs its own folder and everything beneath it, discovered by walking a file's parent chain, cached for the session, and applied deepest-first — plus the connector's verified behaviours and how to write such a document.
+  `data-boundaries` is cross-cutting, for information crossing between sources — a connector, another connector, and the local repo.
+  The mechanism ships here; the rules themselves stay in the store, beside the content they describe.
 - **[upstream-research](plugins/upstream-research)** — personal, always-on method (user scope) for verifying facts about third-party/upstream components: go to the authoritative source (the project's own repo and docs), distrust training data, web-search summaries, and generated docs, and record provenance.
 - **[terraform-standards](plugins/terraform-standards)** — repo-adopted conventions (project scope) for a Terraform/HCL config repo: one `.tf` per concern, resource names that mirror the real object, sensitive values as variables, durations as arithmetic, pinned providers with a committed lock, and adopting existing resources via `import {}` blocks.
 - **[terraform-provider-standards](plugins/terraform-provider-standards)** — repo-adopted conventions (project scope) for building a Terraform provider in Go: the terraform-plugin-framework layout, `tfplugindocs`-generated docs, MPL-2.0 per-file headers, and adopting the shared `flungo/github-workflows` provider CI (golangci-lint v2, GoReleaser dual-registry release).
