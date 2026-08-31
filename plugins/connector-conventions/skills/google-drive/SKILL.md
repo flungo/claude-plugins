@@ -1,6 +1,6 @@
 ---
 name: google-drive
-description: Working rules for Google Drive through the connector, and the convention documents a Drive folder can carry. Consult this whenever acting on a file or folder in Google Drive — reading, searching, renaming, moving, filing, de-duplicating, trashing, or uploading — so that any CONVENTIONS document governing that folder or one of its parents is applied first, and so that trashing, stale search results, and silent upload corruption are handled correctly. Covers the hard rules that always hold, and indexes the references carrying the discovery algorithm, the connector's verified behaviours, and how to write a convention document.
+description: Working rules for Google Drive through the connector, and the convention documents a Drive folder can carry. Consult this whenever acting on a file or folder in Google Drive — reading, searching, renaming, moving, filing, de-duplicating, trashing, or uploading — so that any CONVENTIONS document governing that folder or one of its parents is applied first, and so that trashing, moving, stale search results, lossy reads, and silent upload corruption are handled correctly. Covers the hard rules that always hold, what the connector cannot do at all — edit a document, create or resolve a shortcut, act on a folder in bulk — and how to hand those actions back, plus an index of the references carrying the discovery algorithm, the connector's verified behaviours, and how to write a convention document.
 ---
 
 # Google Drive
@@ -19,11 +19,14 @@ Before the first write to any Drive file or folder, and before reading a file wh
 Walk the target's parent chain and look in every ancestor, not just the immediate folder.
 
 Discovery is **once per session**, cached per folder, not once per file.
-Re-run it when the user asks, and after you create or edit a convention document.
+Re-run it when the user asks, and after you create or replace a convention document.
 
 Documents named `AGENTS` or `CLAUDE`, or carrying a descriptive tail, are recognised and applied the same way.
 When you meet one, or find more than one in a single folder, offer to normalise it — rename to plain `CONVENTIONS`, and combine multiples into one document with a section each.
 Offer only; never rename, merge, or trash a convention document unasked.
+
+Read a convention document with the markdown export, never with `read_file_content`.
+The latter is a *rendering*, and it drops code spans and blockquote markers and strips a table's header row — so a rule can be read as something other than what it says.
 
 → [`references/convention-discovery.md`](references/convention-discovery.md) for the algorithm and the exact queries.
 
@@ -70,6 +73,41 @@ Whether to ask is the ordinary judgement call it would be anyway, governed by th
 **Trashing a folder trashes everything beneath it.**
 Trash the top of the subtree and stop; do not walk into it.
 A descendant then reports *"not found"* or *"caller does not have permission"* — both mean *already trashed*, not a failure to work around.
+
+## Documents are write-once
+
+Nothing in the connector edits a document's body — there is no append, no edit, no overwrite.
+
+Changing one means writing a full replacement and trashing the original, and a same-title create does **not** overwrite the first; it leaves two documents with the same name and no way to tell which is current.
+Do both halves in the same session, never across one.
+
+→ [`references/convention-authoring.md`](references/convention-authoring.md) for the sequence and its failure mode.
+
+## Moving or renaming can strand a reference
+
+A move replaces a file's only location — it leaves the source folder immediately, and the response looks like an unqualified success either way.
+A rename is the same hazard by a different route: a shortcut's title is fixed at creation and does not follow its target, so renaming a file leaves every pointer to it reading the old name.
+
+Neither raises an error, and nothing surfaces the damage later.
+So before moving or renaming anything, ask what else points at it.
+
+Where you know of a pointer, **offer to update it in the same step** rather than fixing it afterwards.
+A rename and its pointer are one change; splitting them leaves a window where the index is wrong, and an interruption makes that window permanent.
+
+## Hand back what the connector cannot do
+
+The connector cannot create a shortcut from scratch, resolve one, act on a folder in bulk, or upload a binary.
+The Drive UI can do all of it, so the honest move is to hand the action back — not to approximate it.
+
+Hand it back in **one executable pass**, so the user acts once instead of assembling the task themselves:
+
+- **Group the items by the folder they are acted on from**, since that is what a person has open.
+- **Link that folder**, so it opens in a click.
+- **List the exact filenames**, in a form that can be pasted or multi-selected.
+- **Say what to do**, once per group.
+
+Then **verify afterwards** rather than assuming it worked, and report anything missed or wrongly included.
+A hand-back you never check is a hand-back you cannot claim as done.
 
 ## Never treat search as current
 

@@ -29,7 +29,8 @@ Given a target file or folder:
 3. **Filter by title.**
    `title contains` is a substring match, so discard anything whose title does not *start with* one of the three keywords.
 
-4. **Read each survivor** with `read_file_content`, which renders a Google Doc as text with `#` heading markers, so an authored structure survives.
+4. **Read each survivor** with `download_file_content` and `exportMimeType: 'text/markdown'`, decoding the base64 it returns.
+   Not `read_file_content` — it drops code spans and blockquote markers and mangles tables, which is how a rule gets read as something other than what it says ([`behaviours.md`](behaviours.md)).
 
 5. **Order by depth, deepest last.**
    Each result carries the `parentId` it was found under; map that back to the chain to get its depth.
@@ -37,7 +38,7 @@ Given a target file or folder:
 
 ## Cost
 
-For a chain of depth *d* with *n* documents found — *d* sequential `get_file_metadata` calls, **one** `search_files` call, and *n* `read_file_content` calls.
+For a chain of depth *d* with *n* documents found — *d* sequential `get_file_metadata` calls, **one** `search_files` call, and *n* `download_file_content` calls.
 
 Only the metadata walk is sequential, and it cannot be batched.
 Chains in practice are shallow; the hop cap bounds a pathological case, not an expected one.
