@@ -4,7 +4,7 @@ How this connector actually behaves, where knowing it changes what you do.
 Not only surprises — some entries are simply the mechanism, recorded so it is not re-derived.
 Each entry states the behaviour, how it was established, and a `**Do:**` line.
 
-Verified against the live connector on **2026-08-29**, from a Claude Code Web session.
+Verified against the live connector on **2026-08-29**, and extended on **2026-08-31**, from Claude Code Web sessions.
 
 > **Verify:** these are properties of Anthropic's Google Drive connector, not of the Google Drive API, and its tool surface can change without notice.
 > An undated or stale entry is a hint to re-probe, not a fact to rely on.
@@ -72,3 +72,78 @@ Drive's API can model multiple parents; this connector surfaces one, so treat an
 A root returns **no `parentId` field at all** — both My Drive (titled `My Drive`, reporting its concrete id rather than the `'root'` alias) and a shared-with-me root (carrying `sharedWithMeTime` and an `owner` that is not the user).
 
 A chain can cross an ownership boundary partway up, from the user's own folders into another account's, before terminating at that shared root.
+
+## Reading a document loses formatting that exporting keeps
+
+`read_file_content` returns a *natural language representation*, not the document.
+Headings and list nesting survive it; several things do not.
+
+A document written with code spans, a blockquote and a table came back with the backticks gone, the `>` marker gone, and the table's header row emptied — its headings pushed into a body row where the bold markers appeared as literal `\*\*Column\*\*`.
+Underscores inside identifiers came back backslash-escaped, and doubly so inside the table.
+
+`download_file_content` with `exportMimeType: 'text/markdown'` returned the *same document* byte-faithfully, every one of those constructs intact.
+It returns base64, so it must be decoded.
+
+**Do:** read a convention document — anything whose structure carries meaning — with the markdown export.
+Keep `read_file_content` for prose you only need the gist of.
+
+**Do not** conclude from a `read_file_content` result that a write lost formatting.
+Export before believing it; the loss is usually in the reading, not in the document.
+
+## Markdown creates a faithful Google Doc
+
+`create_file` with `textContent` and `contentMimeType: 'text/markdown'` converts to a Google Doc, preserving headings, bold, italic, code spans, nested and ordered lists, blockquotes, and tables.
+
+Established by exporting the created document straight back to markdown and comparing: only the table's alignment markers changed (`---` became `:----`).
+
+**Do:** use markdown for any document an agent will later read.
+
+## Document content cannot be changed
+
+No tool edits a document's body.
+`update_file` takes only `title` and `parentId`; there is no content parameter, and no other tool writes into an existing file.
+
+**Do:** treat every document as write-once.
+To change one, create its replacement and trash the original — and read [`convention-authoring.md`](convention-authoring.md) first, because the replacement is visible to discovery before the original is gone.
+
+## A same-title create adds a second document
+
+Creating a file whose title already exists in the folder does **not** overwrite it.
+
+Two documents titled `CONVENTIONS`, with different ids, coexisted in one folder after a second create.
+Nothing in either response flagged the collision.
+
+**Do:** trash the original in the same session that creates its replacement.
+Between the two calls the folder has two convention documents, which is precisely the ambiguity discovery cannot resolve.
+
+## Moving a file replaces its only parent
+
+`update_file` with a `parentId` **moves** the file; it does not add a location.
+
+A file moved from one folder to another was gone from the source folder's listing immediately, with no warning in the response.
+
+**Do:** before moving anything, consider what still points at it.
+A folder that indexed the file develops a hole, and nothing raises an error — the move looks entirely successful from the response alone.
+
+## Shortcuts are opaque, and can only be made by copying
+
+`create_file` cannot make one.
+Asked for `application/vnd.google-apps.shortcut` it fails, naming the only types that can be created empty: `document`, `spreadsheet`, `presentation`, `vid`, `folder`, `form`.
+
+`copy_file` on an existing shortcut **does** yield a shortcut, with a title and parent of your choosing.
+
+A shortcut's target is invisible either way.
+`get_file_metadata` returns no target field, `read_file_content` returns `{}`, and `download_file_content` is refused outright with *"Download not allowed"*.
+
+> **Verify:** whether a copied shortcut still points at the original's target is not observable through the connector, only in the Drive UI.
+> Until that is checked, treat `copy_file` as producing a shortcut of unconfirmed aim.
+
+**Do:** confirm a shortcut's target in the UI rather than inferring it from the connector.
+The title is set independently of the target and is not evidence of what it points at.
+
+## Folders have no downloadable content
+
+`download_file_content` on a folder fails with *"The head revision doesn't seem to have any content."*
+
+There is no way to fetch a folder, or resolve the shortcuts inside one, through the connector.
+That is a Drive UI capability, and reaching it means handing the action back — see the skill's rule on doing so in one executable pass.

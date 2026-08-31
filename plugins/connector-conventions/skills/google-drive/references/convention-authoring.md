@@ -40,6 +40,9 @@ Nest freely below that.
 H2 and deeper are for structure *within* a topic — cases, exceptions, worked examples — and are encouraged where a topic has real internal shape.
 The rule is only that a **topic** starts at H1, so that the document reads as a flat list of rules with their detail tucked underneath.
 
+Prefer headings, lists and prose to tables.
+The document survives being written and exported intact, but an agent reading it the lossy way loses a table's header row entirely ([`behaviours.md`](behaviours.md)) — and a rule read out of a headerless table is a rule read wrong.
+
 Name each heading for the **decision it settles**, since that is what an agent scans to find the rule bearing on what it is doing.
 `Which date to use` earns its place; `Notes on dates` does not.
 
@@ -62,11 +65,31 @@ Name each heading for the **decision it settles**, since that is what an agent s
 Prefer the imperative.
 *"Preserve duplicate markers"* is unambiguous in a way that *"duplicate markers are generally preserved"* is not.
 
+## Changing a document means replacing it
+
+The connector cannot edit a document's body ([`behaviours.md`](behaviours.md)).
+There is no append, no edit, no overwrite — the only way to change a convention document is to write a new one carrying the full revised text, then trash the old one.
+
+So a change is **create then trash**, and the order matters:
+
+1. **Read the current document first**, with the markdown export rather than `read_file_content`, which drops code spans and blockquotes and mangles tables.
+   The replacement has to carry every rule the original held; anything not read is a rule silently dropped.
+2. **Create the replacement**, with the full text, in the same folder.
+3. **Trash the original**, reporting it as the skill requires for anything trashed.
+
+Between steps 2 and 3 the folder holds **two** convention documents, and a same-title create does not overwrite the first — it adds a second with its own id.
+Discovery finding two documents in one folder cannot tell which is current.
+Close that window in the same session; never leave it open across one.
+
+If the trash cannot be completed, say so explicitly rather than leaving the pair in place — a folder with two convention documents is worse than one with a stale document, because the stale one is at least unambiguous.
+
+Because replacing is this expensive, prefer a document whose rules can absorb a new case without a rewrite.
+
 ## Keeping it true
 
 The document is read *before* the folder is touched, so a stale rule is applied with the same confidence as a current one.
 
-- Update it in the same session in which a rule changes.
+- Replace it in the same session in which a rule changes, by the create-and-trash sequence above.
 - Say when it was last updated.
 - When a session establishes a rule that previously existed only in someone's head, offer to write it in.
   That is how the document accumulates.

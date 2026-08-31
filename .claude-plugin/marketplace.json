@@ -15,7 +15,7 @@
       "name": "connector-conventions",
       "source": "./plugins/connector-conventions",
       "description": "Conventions for working through connectors — the rules a connected store carries in its own content, and the rules an agent should follow when using it. A skill per connector (currently Google Drive, where a CONVENTIONS document governs its folder and everything beneath it), plus cross-cutting skills such as handling information that crosses between sources.",
-      "version": "0.1.0"
+      "version": "0.2.0"
     },
     {
       "name": "git-conventions",
