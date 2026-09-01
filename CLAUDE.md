@@ -132,7 +132,7 @@ The conventions themselves stay in `markdown-standards` (above); only repo-speci
 - **Tool version — read it from a CI run, don't trust this note.**
   The shared workflow tracks the action's major tag, so the linter version *floats*: it moved from `markdownlint-cli2-action@v19` (markdownlint-cli2 0.17.2 / markdownlint 0.37.4) to `@v24` (0.23.1 / 0.41.1) without any change here, and the new major added `MD060` — which failed CI on tables that had been clean for months (PR #31).
   Take the version from the first line of the markdownlint job's log and match it locally (`npx markdownlint-cli2@<version> "**/*.md" "!node_modules/**"`) before chasing findings; matching a *stale* pin gives a false pass, which is the failure mode this note exists to prevent.
-  Last seen: **0.23.1** (markdownlint 0.41.1), 2026-08-01.
+  Last seen: **0.23.2** (markdownlint 0.41.1), 2026-08-30.
 - **`.lycheeignore`** is populated only from this repo's own token-enabled `workflow_dispatch` runs, per the rules in its header.
 
 ## Active work
