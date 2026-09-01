@@ -13,7 +13,7 @@ All three surfaces are covered — the local Claude Code CLI, cloud sessions, an
   Applies to all git work, not just a named command.
 - **[contributor-workflow](plugins/contributor-workflow)** — personal contributor/review workflow commands.
   Currently one command, `/ready-to-merge` (aliases "Ready to Merge?", "RTM?"); more expected over time.
-  Depends on `git-conventions`.
+  Depends on `git-conventions`, and on `connector-conventions` for what the GitHub MCP mangles and omits.
 - **[docs-standards](plugins/docs-standards)** — repo-adopted documentation conventions (project scope): the Diátaxis `docs/` split, Nygard ADRs, the ephemeral-plan lifecycle, README-index and staleness discipline, the agent and verify callouts, and a session-end doc-maintenance checklist hook.
   Depends on `markdown-standards`.
 - **[claude-code-web](plugins/claude-code-web)** — always-on working preferences for Claude Code Web (user scope): the egress proxy and CA bundle, the GitHub MCP as the *only* route to the API there, containers replaced across idle periods, repo scoping and `add_repo`'s cross-owner rule, project config in a multi-repo session, why repo-adopted plugins never load and how the user-scope ones arrive, and delegating unrunnable steps to CI.

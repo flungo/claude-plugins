@@ -24,6 +24,8 @@ Full procedure: `references/ready-to-merge.md`.
 **PR identification**: an explicitly named PR (number/URL/branch) always takes precedence; otherwise use the PR for the currently checked-out branch.
 If neither is available, ask.
 
-**Tooling**: try MCP GitHub tools first (thread listing, resolving, editing); fall back to the `gh` CLI where MCP doesn't cover something (e.g. GraphQL calls for review thread state).
+**Tooling**: use whichever GitHub tooling the session actually has — some environments offer only the MCP, others a `gh` CLI alongside it, and which to reach for is the environment's business rather than this command's.
+Review thread state needs a GraphQL call either way.
+Where you are working through the MCP, **`connector-conventions:github`** (a declared dependency of this plugin) covers what its reads mangle and omit — both of which bite a command that reads PR descriptions and review threads and then rewrites them.
 
 **Tests**: `evals/` holds regression fixtures for the commit-history and thread-triage logic in this command — see `evals/README.md`.
