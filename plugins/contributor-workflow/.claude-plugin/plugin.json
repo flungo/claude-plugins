@@ -1,11 +1,12 @@
 {
   "name": "contributor-workflow",
   "description": "Fabrizio's personal contributor/review workflow commands — currently /ready-to-merge, a final pre-merge sweep of a PR.",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "author": {
     "name": "flungo"
   },
   "dependencies": [
-    "git-conventions"
+    "git-conventions",
+    "connector-conventions"
   ]
 }

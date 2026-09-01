@@ -21,8 +21,8 @@ The delegation is there to keep a large diff out of the orchestrating context, n
 - Otherwise, use the PR associated with the currently checked-out branch.
 - If there's no PR for the current branch and none was specified, stop and ask the user which PR they mean.
 
-**Getting PR data:** try MCP GitHub tools first if available in this session.
-Fall back to the `gh` CLI otherwise:
+**Getting PR data:** use whatever GitHub tooling this session has — the MCP, a `gh` CLI, or both.
+Which of them exists is the environment's business, not this procedure's; the `gh` equivalents are:
 
 ```sh
 gh pr view <number> --json title,body,state,isDraft,headRefName,baseRefName,reviewDecision,statusCheckRollup
@@ -55,6 +55,10 @@ Review what changed upstream before continuing — if it affects work on this br
 Compare the PR title and description against the actual diff.
 If either is stale, inaccurate, or missing something the PR now does, update it (`gh pr edit --title ... --body ...`).
 The description should reflect what the PR *actually does*, not what it originally set out to do.
+
+**A description that reads as mangled or cut short is not stale.**
+If you read it through the GitHub MCP, that is a fact about the read path rather than about the text (see `connector-conventions:github`).
+Check the rendered page before editing anything on the strength of such a read, or this step will "correct" a description that was already right.
 
 Then do the same for anything the repo tracks **in-doc** that this PR advances — plan step checkboxes and status rows, a `CLAUDE.md` "Active work" table, ADR statuses, a CHANGELOG.
 Update them to the state the repo will be in *once this PR merges*: the PR that completes a tracked step is the one that ticks it (`[ ]` → `[x]`) and flips its status, not a later follow-up.
@@ -149,7 +153,7 @@ This skill doesn't wait on or retrigger CI — it checks current state once, at 
 **`reviewDecision` is the signal to gate on**, and it also tells you whether the repo requires approval at all.
 Its only values are `APPROVED`, `CHANGES_REQUESTED`, and `REVIEW_REQUIRED`; **null means the repo doesn't require approval** — the usual case on a solo repo.
 `COMMENTED` is *not* among them — that is a state of an individual review, so comment-only reviews leave the decision untouched however many of them there are.
-The GitHub MCP's `pull_request_read` doesn't return `reviewDecision`: read it with `gh pr view --json reviewDecision`, or infer it from `mergeable_state` being `clean` while unapproved together with the reviews list showing no `APPROVED`.
+The GitHub MCP doesn't return it at all (see `connector-conventions:github`), so read it with `gh pr view --json reviewDecision` where the session has a `gh` CLI, or infer it from `mergeable_state` being `clean` while unapproved together with the reviews list showing no `APPROVED`.
 
 **Then scan the individual review states for `PENDING`.**
 A pending review is one someone has started and not yet submitted — they are mid-review, so the PR is not yours to declare ready.
