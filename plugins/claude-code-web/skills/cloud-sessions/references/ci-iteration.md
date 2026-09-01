@@ -45,7 +45,7 @@ If a host is genuinely blocked but you'll need it repeatedly, extending the **us
 When a step genuinely can't run here, or is heavy enough to be worth offloading:
 
 - **Push to the feature branch and read the CI job log**, iterating there.
-  Trigger a run through the GitHub MCP (`actions_run_trigger`); `workflow_dispatch` with an explicit `ref` works on a feature branch *before* the workflow exists on the default branch.
+  Trigger a run through the GitHub MCP (`actions_run_trigger`), which can dispatch a workflow that is not on the default branch yet — so a new workflow is testable from here without merging it first (see `connector-conventions:github`).
 - **Provision required tokens/secrets before a verification run**, or its findings are noise.
   (A tokenless lychee dispatch, for instance, floods the auto-issue with false `404`s on private cross-repo links — token artifacts, not dead links.)
 - **Watch the run through the GitHub MCP, not a Monitor script.**
