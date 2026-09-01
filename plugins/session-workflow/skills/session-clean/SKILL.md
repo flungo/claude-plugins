@@ -39,4 +39,7 @@ That is why the sweep treats a confirmed handoff and an unconfirmed one differen
 
 ## Tooling
 
-Try the GitHub MCP tools first for issue search and creation; fall back to the `gh` CLI where the MCP doesn't cover something.
+Use whichever GitHub tooling the session has for issue search and creation — some environments offer only the MCP, others a `gh` CLI alongside it.
+
+Where you are working through the MCP, **`connector-conventions:github`** (a declared dependency of this plugin) covers what its reads mangle and omit.
+That matters for the near-duplicate check before filing an issue — an existing issue whose body reads as truncated has not been read, and dismissing it on that basis files the duplicate this command exists to avoid.

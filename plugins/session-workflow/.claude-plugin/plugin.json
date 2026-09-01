@@ -1,8 +1,11 @@
 {
   "name": "session-workflow",
   "description": "Fabrizio's named commands for ending a Claude session well — /session-clean to confirm nothing durable is left only in the chat, and /handoff to carry an unfinished session into a fresh one.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": {
     "name": "flungo"
-  }
+  },
+  "dependencies": [
+    "connector-conventions"
+  ]
 }

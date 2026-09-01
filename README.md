@@ -35,6 +35,7 @@ All three surfaces are covered — the local Claude Code CLI, cloud sessions, an
 - **[session-workflow](plugins/session-workflow)** — personal, always-on commands (user scope) for ending a Claude session well: `/session-clean` (aliases "Session Clean?", "Safe to delete?")
   checks whether closing the session would lose anything and proposes where each loose end should be recorded, and `/handoff` produces a document that carries unfinished work into a fresh session.
   The two halves of the same moment — record it, or carry it.
+  Depends on `connector-conventions`, since filing an issue means reading existing ones through the GitHub MCP first.
 - **[scaffolding](plugins/scaffolding)** — personal, always-on guide (user scope) for setting up, building out, and extending repos across the fleet: gated on verified ownership (an owned repo adopts the conventions and standards plugins; a fork or third-party repo gets nothing without explicit consent), routing to the shared CI and the helper repos (`github-workflows`, `claude-plugins`, `terraform-github`) added as needed.
 
 ## Install in Claude Code (local CLI)
