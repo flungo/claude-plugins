@@ -35,11 +35,14 @@ When you hit a fresh, reusable gotcha about the web environment, record it where
   Ask the user to add the repository this plugin ships from to the session (`add_repo`) so you can open a PR updating the relevant reference, with a reproducer and a last-verified date.
 - **A property of the specific environment you're running in** — a host in its allowlist, a variable it sets, a tool its setup script installed → *not* here.
   That belongs in whatever companion skill records that environment, so this plugin stays true for every reader.
+- **A behaviour of a connector the session happens to reach through** — what the GitHub MCP returns, what it mangles, what it omits → *not* here either.
+  Those hold wherever that connector is used, local CLI and chat included, so they belong to `connector-conventions`.
+  What this plugin owns is only which tools the environment leaves you with, which is a fact about the sandbox.
 
 ## The reference files
 
-- **`references/egress-and-tooling.md`** — the egress proxy and its CA bundle, which registries and GitHub hosts work, why GitHub goes through the MCP rather than `gh`, what that MCP silently mangles when it reads issue and pull request text, how to run Terraform in a session, and why `sleep` is blocked.
-  Read it before installing a tool, fetching a URL, hitting the GitHub API, acting on a description or comment it returned, or running Terraform.
+- **`references/egress-and-tooling.md`** — the egress proxy and its CA bundle, which registries and GitHub hosts work, why the GitHub MCP is the *only* route to the API here, how to run Terraform in a session, and why `sleep` is blocked.
+  Read it before installing a tool, fetching a URL, hitting the GitHub API, or running Terraform.
 - **`references/sessions.md`** — the session shape: containers that reboot around every turn while their disk persists, repo scoping and what `add_repo` will and won't do, project config in a multi-repo session, why a repo's own plugins never load and how the user-scope ones arrive, why their versions lag the marketplace and how a session updates them for its own next turn, MCP servers that connect late, system-prompt restrictions on spawning subagents, and setting environment variables or secrets.
   Read it before adding a repo, relying on project config, setting an env var, dispatching a subagent, or acting on a plugin that looks stale.
 - **`references/ci-iteration.md`** — the pattern for anything the sandbox can't run: push the branch and iterate against CI, provision tokens first, and probe whether a restriction has lifted.

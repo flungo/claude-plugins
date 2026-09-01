@@ -16,8 +16,9 @@ All three surfaces are covered — the local Claude Code CLI, cloud sessions, an
   Depends on `git-conventions`.
 - **[docs-standards](plugins/docs-standards)** — repo-adopted documentation conventions (project scope): the Diátaxis `docs/` split, Nygard ADRs, the ephemeral-plan lifecycle, README-index and staleness discipline, the agent and verify callouts, and a session-end doc-maintenance checklist hook.
   Depends on `markdown-standards`.
-- **[claude-code-web](plugins/claude-code-web)** — always-on working preferences for Claude Code Web (user scope): the egress proxy and CA bundle, GitHub-via-MCP, containers replaced across idle periods, repo scoping and `add_repo`'s cross-owner rule, project config in a multi-repo session, why repo-adopted plugins never load and how the user-scope ones arrive, and delegating unrunnable steps to CI.
+- **[claude-code-web](plugins/claude-code-web)** — always-on working preferences for Claude Code Web (user scope): the egress proxy and CA bundle, the GitHub MCP as the *only* route to the API there, containers replaced across idle periods, repo scoping and `add_repo`'s cross-owner rule, project config in a multi-repo session, why repo-adopted plugins never load and how the user-scope ones arrive, and delegating unrunnable steps to CI.
   Written to hold for any Claude Code Web user, in any environment.
+  Which tools the sandbox leaves you with is its subject; how those connectors then behave is `connector-conventions`', which it depends on.
 - **[personal-cloud-environment](plugins/personal-cloud-environment)** — the record of Fabrizio's own Claude Code Web environment (user scope): the domains, environment variables, and setup he has applied on top of the platform defaults, and the round-trip rule that keeps that record and the live environment in step.
   The owner-specific counterpart to `claude-code-web`, which it depends on — and, because what that environment carries is part of describing it, `personal-defaults` too.
   Installing this one plugin is therefore the whole cloud-session setup.

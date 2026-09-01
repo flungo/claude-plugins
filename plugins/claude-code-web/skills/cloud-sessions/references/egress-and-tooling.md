@@ -31,23 +31,11 @@ Take it from the system prompt, from a companion skill that records that environ
 *Last verified 2026-07-24: `api.github.com` → `403`, `raw.githubusercontent.com` → `200`, CA bundle present at the path above.
 Re-probed 2026-07-29 for the download shapes: `/releases/download/…` → `200` (a real 9 MB asset), while `/archive/refs/tags/…` and `codeload.github.com` → `403`.*
 
-- **Use the GitHub MCP (`mcp__github__*`) for anything API-shaped** — PRs, issues, review threads, checks, workflow runs and dispatch.
-  There is no `gh` CLI in web sessions, and `api.github.com` returns `403` through the proxy.
-- **What that MCP hands back for issue and pull request *text* is sanitised, and lossy.**
-  A tag-shaped token is deleted outright — `<n>`, `<branch>` and `<sha>` all vanish — while a lone or unmatched bracket returns as `&lt;`/`&gt;` and an allow-listed HTML tag such as `<b>` survives intact.
-  Markdown offers no protection: inline code, fenced and indented code blocks, and table cells are all mangled alike, so the pass runs over raw text before anything parses it.
-  Worst of it, a token naming an HTML raw-text element — `<title>` and `<style>` both do it — **truncates the whole remainder of the body**, silently and with no error, wherever it appears.
-  One incidental mention in a preamble is enough to discard everything after it.
-  *Verified 2026-08-22 against a description and comments posted from a session, plus a control comment typed by hand in the browser — all read back mangled, all render correctly on the page.*
-- **The text on GitHub is fine; only this read path is not.**
-  The same content renders correctly on the page, arrives intact in a webhook payload, and comes back unaltered through `get_file_contents` — so never rewrite a description or comment because an MCP read looks mangled or cut short.
-  Check the rendered page with `WebFetch` first, and treat an apparently truncated body as unread rather than incomplete.
-  The same loss applies to code quoted in a comment, so generics (`Vec<T>`, `List<String>`) can disappear from something you are reviewing.
-  The one real exception: a tag-shaped token written as **bare prose**, outside backticks, is stored but does not render, because GitHub drops unknown tags at display time — which is the ordinary reason to put a placeholder in backticks, and nothing to do with the MCP.
-- **It is deliberate upstream, and known to be lossy.**
-  The sanitising is applied on purpose to untrusted response fields — issue comments, pull request bodies, reviews, releases, commit messages — with a stated goal of preserving "source-code and file-content fidelity" ([github/github-mcp-server#3106](https://github.com/github/github-mcp-server/issues/3106)), which for body text it does not achieve.
-  The symptom is reported in [github/github-mcp-server#2202](https://github.com/github/github-mcp-server/issues/2202), open since March 2026 and scoped narrower than what is described above — `issue_read` and fenced code blocks alone.
-  So expect it to persist, and don't re-derive it as a local quirk.
+- **The GitHub MCP (`mcp__github__*`) is the only way to reach anything API-shaped** — PRs, issues, review threads, checks, workflow runs and dispatch.
+  This is not a preference between two options: there is no `gh` CLI in web sessions, and `api.github.com` returns `403` through the proxy, so nothing else here can make an API call at all.
+  A procedure written around `gh` has to be translated to the MCP rather than followed, and a script that shells out to it will fail.
+- **How that connector then behaves is `connector-conventions:github`'s subject, not this plugin's** — most importantly that the text it returns for issues and pull requests is sanitised and lossy, so a description that reads as mangled or truncated must never be "fixed" on the strength of that read.
+  Those properties belong to the MCP server and hold wherever it is used; only the fact that it is the *sole* route belongs here.
 - **`git` over `github.com` works** for repositories in the session's scope (clone, fetch, push).
 - **Read public files with `WebFetch` against `raw.githubusercontent.com`** (`https://raw.githubusercontent.com/<owner>/<repo>/<branch>/<path>`) — this works unauthenticated, even for repositories outside the session's scope.
 - **Source archives for an out-of-scope repo are blocked; published release assets are not**.
