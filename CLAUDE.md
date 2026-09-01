@@ -40,6 +40,7 @@ This repo adopts those Markdown workflows and `flungo-workflows` itself (see § 
 - **Compose via first-party dependencies.**
   Where a plugin builds on another, list it in the plugin's `dependencies` array (bare string = latest in this marketplace).
   Installing the dependent auto-installs the dependency.
+  **Where a plugin references another, it declares the dependency** — including where a bundle such as `personal-defaults` is expected to supply it anyway, since the bundle is a convenience rather than a guarantee and any plugin can be installed on its own.
   Do not depend on third-party marketplaces ([ADR-001](docs/decisions/001-marketplace-structure.md), [ADR-002](docs/decisions/002-documentation-and-adr-model.md)).
 - **A new user-scope plugin must be reachable from a bundle.**
   `personal-defaults` carries the surface-independent set and `personal-cloud-environment` carries what a cloud session needs; between them they are the only things anything installs by name.
@@ -50,6 +51,9 @@ This repo adopts those Markdown workflows and `flungo-workflows` itself (see § 
 - **Keep generalisable guidance separate from the owner's own configuration.**
   A plugin whose content would hold for any reader stays that way; the concrete settings *Fabrizio* has applied — an environment's allowlist, its variables, its setup — live in a companion plugin that depends on it, so neither is diluted by the other.
   `claude-code-web` (generic) and `personal-cloud-environment` (his applied environment) are the worked example ([ADR-005](docs/decisions/005-generic-plugins-and-personal-configuration.md)).
+- **File a fact by what it is a property of, not by where you found it.**
+  A connector's behaviour — what a tool returns, mangles, or omits — belongs to its skill in `connector-conventions`, so it loads wherever that connector is used; which tools exist at all belongs to the surface plugin (`claude-code-web`); platform behaviour an agent reasons about away from any tool stays with the domain plugin that owns the subject (`git-conventions`) ([ADR-008](docs/decisions/008-connector-behaviour-belongs-to-the-connector.md)).
+  A connector skill never tells a session to prefer its connector over some other tool — that is the environment's call, and the skill is consulted once the agent is already using it.
 - **A skill's `name` must not contain `claude`.**
   claude.ai's marketplace ingestion rejects it outright — `plugin_upload_skill_upload_name_reserved_words`, *"Skill name in SKILL.md cannot contain the reserved word 'claude'"* — so the skill silently never loads on that surface.
   Nothing local catches this: `claude plugin validate` passes, and Claude Code loads the skill normally, so the only signal is the marketplace's `sync_errors` after a sync.
@@ -146,3 +150,4 @@ In short:
 - Generalisable guidance and Fabrizio's own applied configuration ship as separate plugins — `claude-code-web` holds for any user in any environment, `personal-cloud-environment` records his, and depends on it ([ADR-005](docs/decisions/005-generic-plugins-and-personal-configuration.md)).
 - Plugin delivery differs per surface — a cloud-environment setup script carries the user-scope plugins into every cloud session, chat installs from the marketplace as its own enablement decision, and repo-adopted plugins are left at project scope even though they don't load in cloud sessions ([ADR-006](docs/decisions/006-plugin-delivery-per-surface.md)).
 - Conventions for working through connectors ship as one plugin — `connector-conventions` — with a skill per connector plus cross-cutting skills, aspects within a connector split by reference file rather than by skill; its Drive skill finds a folder's `CONVENTIONS` document by walking the parent chain and applies the deepest one last, and the owner's actual rules stay in Drive rather than in a companion plugin ([ADR-007](docs/decisions/007-connector-carried-conventions.md)).
+- A fact is sorted by what it is a property of, not by where it was discovered — connector behaviour to `connector-conventions`, which tools exist at all to the surface plugin, platform behaviour reasoned about away from any tool to the domain plugin that owns the subject ([ADR-008](docs/decisions/008-connector-behaviour-belongs-to-the-connector.md)).
