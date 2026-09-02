@@ -34,6 +34,11 @@ A connector skill therefore never tells a session to prefer its connector over a
 **Where a plugin references another, it declares the dependency** — including where the reference is expected to be satisfied some other way, such as through the `personal-defaults` bundle.
 The bundle is a convenience, not a guarantee, and a stated reference with no declared dependency is a dangling one wherever the plugin is installed alone.
 
+**A connector skill carries a convention-discovery half only where the store holds rules that nothing else loads.**
+Google Drive needs one because nothing there is read automatically; a repository does not, because its own files already load and the harness understands them.
+[ADR-007](007-connector-carried-conventions.md)'s shared reference filenames are therefore a naming convention for the files a connector skill *does* have, not a requirement that every connector have all three.
+Nor is the absence worth explaining to an agent in the skill itself: a mechanism invented for one store is not something a reader expects to find in another, so a skill that narrates what it does not have spends attention answering a question nobody asked.
+
 ## Consequences
 
 ### Positive
