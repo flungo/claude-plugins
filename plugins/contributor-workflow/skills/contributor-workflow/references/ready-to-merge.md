@@ -82,6 +82,12 @@ For each unresolved thread, work out which of three cases it is:
 Never resolve a thread you haven't either verified as already-fixed or fixed yourself this pass.
 When genuinely unsure which of the three cases a thread falls into, treat it as the third.
 
+**A question of your own on a thread does not change its case.**
+Classify by the reviewer's ask.
+Where that ask is addressed, the thread is the first or second case however much you added to it — resolve it, and carry your own question into the step 8 report as an item in its own right.
+A question you raised is not a reviewer's ask left open, and leaving the thread unresolved to keep your question visible misreports the reviewer as still waiting.
+It is still parked for the user, so step 7 decides whether it blocks readiness.
+
 ## 4. Resolve fixable ambiguity elsewhere in the diff
 
 Beyond review threads, reviewing the diff on your own may surface ambiguity in code or docs that nobody's flagged in a comment.
@@ -173,8 +179,11 @@ Marking the PR ready is gated on **all** of the following:
 - Commit history is clean (step 5 complete).
 
 **A bare invocation approves the sweep, not the substance.**
-It is not an answer to anything you parked for the user: a thread left open in step 3, or a "requires a decision" question from step 4, still blocks readiness.
-Don't read it as agreement with the resolution you proposed, or as permission to pick one.
+It is not an answer to anything you parked for the user, so never read it as agreement with the resolution you proposed, or as permission to pick one.
+
+What blocks is a question whose answer would change whether the current diff is right — a thread left open in step 3, or a "requires a decision" question from step 4.
+An **optional addition you offered with a stated default** does not: the diff is correct either way, so apply the default, say in the report that you applied it rather than that it was agreed, and leave the offer standing for them to take up later.
+Holding readiness for one makes the PR hostage to a nicety, and reporting the default as settled is the error the paragraph above guards against.
 
 **"LGTM" (or equivalent) with the request is a review of the code** — a positive verdict on the repo in the **exact state it is in at that moment**, which settles the approval gate.
 It also carries the decisions that state embodies: where a thread proposed an option, or a step 4 question was awaiting confirmation, and the code as presented *is* the outcome, LGTM confirms it — resolve those threads, recording what was decided.
