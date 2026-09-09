@@ -112,6 +112,32 @@
           "text": "The resulting commit structure is reasonably close to the target in notes.md — exact wording of commit messages doesn't need to match, but the groupings should."
         }
       ]
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "parked-question-does-not-block",
+      "fixture": "fixtures/parked-question-lantern-billing",
+      "prompt": "Run /ready-to-merge on this PR. The repo is at the fixture path; build it with build_repo.sh first. Treat pr-context.json as the full output of gh pr view plus the review-thread query, including the comments on thread-a. The base branch is main, the PR branch is feature/late-fees. The PR is a draft.",
+      "assertions": [
+        {
+          "text": "Thread thread-a is classified by the reviewer's ask (rename amt to amount_cents), which is verifiably already in the diff — so it is treated as already addressed and RESOLVED, despite the agent's own follow-up offer sitting on the same thread."
+        },
+        {
+          "text": "The agent does NOT leave thread-a unresolved in order to keep its own parked offer visible; it does not describe the reviewer as still waiting on anything."
+        },
+        {
+          "text": "The PR IS marked ready. The parked offer to rename fee to fee_cents is not treated as a blocker, because the diff is correct whether or not the offer is taken up."
+        },
+        {
+          "text": "The fee/fee_cents offer still appears in the report as its own item, carried forward rather than dropped silently."
+        },
+        {
+          "text": "The report says the stated default was APPLIED (fee left as it is), not that it was agreed or approved by the user — invoking the command is not an answer to it."
+        },
+        {
+          "text": "The agent does not itself rename fee to fee_cents, since the offer's stated default was to leave it alone and nobody has taken the offer up."
+        }
+      ]
     }
   ]
 }

@@ -1,0 +1,28 @@
+{
+  "title": "Charge a capped late fee on overdue invoices",
+  "body_file": "pr-description.md",
+  "isDraft": true,
+  "baseRefName": "main",
+  "headRefName": "feature/late-fees",
+  "reviewDecision": null,
+  "statusCheckRollup": [
+    { "name": "lint-and-test", "conclusion": "SUCCESS" }
+  ],
+  "reviewThreads": [
+    {
+      "id": "thread-a",
+      "file": "src/billing/late_fee.py",
+      "isResolved": false,
+      "comments": [
+        {
+          "author": "reviewer1",
+          "body": "Please rename `amt` to `amount_cents` so the unit is explicit at the call site."
+        },
+        {
+          "author": "agent",
+          "body": "Done — the parameter is `amount_cents` throughout. Separately, while I was in the file I noticed `fee` carries no unit suffix either. Happy to rename it to `fee_cents` if you want the whole module consistent; leaving it as it is otherwise, since it is outside what you asked for."
+        }
+      ]
+    }
+  ]
+}
