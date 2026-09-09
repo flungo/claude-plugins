@@ -7,7 +7,7 @@ Five scenarios, each a real (buildable) git repo plus a mock PR context, targeti
 | `messy-history-needs-splitting` | `fixtures/messy-history-orbital-cafe` | Under-splitting: bundled features, a deferred docs-index update, a stray fixup commit. This is the general shape of the original bug. |
 | `clean-history-no-unnecessary-rewrite` | `fixtures/clean-history-starlight-planner` | Over-eagerness: an already-clean history shouldn't get rewritten for its own sake. |
 | `review-thread-triage` | `fixtures/thread-triage-tidepool-notes` | The three-way thread split (already addressed / trivial fix now / requires a decision), including the framing-research rule for decision-required threads. |
-| `parked-question-does-not-block` | `fixtures/parked-question-lantern-billing` | A thread whose reviewer ask is addressed but which carries the agent's own optional offer: the thread resolves, the offer doesn't block readiness, and the report says the default was applied rather than agreed. |
+| `parked-question-does-not-block` | `fixtures/parked-question-lantern-billing` | A thread whose reviewer ask is addressed but which carries the agent's own optional offer: the thread resolves, the offer doesn't block readiness, and the report says the default was applied rather than agreed. Measured against both versions of the rule — see that fixture's `notes.md`. |
 | `regression-bundled-commits-sanitized` | `fixtures/regression-owner-onboarding` | A sanitized reproduction of the actual PR that surfaced the original bug — see that fixture's `notes.md` for provenance. |
 
 ## Building a fixture
