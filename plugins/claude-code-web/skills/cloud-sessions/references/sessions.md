@@ -192,3 +192,23 @@ This is where an MCP token, a `TF_VAR_*`, or any other secret the session needs 
 
 Only the user can edit that form, so an agent's part is to **propose** the variable and say what it's for, never to assume one exists.
 Which variables a given environment already sets is a property of that environment, not of Claude Code Web — read them from the system prompt, or from a companion skill that records them.
+
+## API credentials the proxy attaches for you
+
+An environment can also hold **API credentials**: a named token bound to one or more hosts, plus the header it travels in.
+The egress proxy attaches the header to every request the session makes to those hosts, and **the hosts become reachable even when the network policy would otherwise block them** — a credential is its own allowlist entry.
+The value is never visible after saving and never reaches the session as an environment variable or a file.
+
+That changes how a session uses such a token compared with an environment variable: **send the request with no credential at all** — a plain `curl` to the host, a `git` fetch or push over HTTPS — and let the proxy add the header.
+Setting an `Authorization` header yourself is at best redundant and at worst a conflict with the one the proxy injects.
+The form's *resolved curl example* shows exactly what the host will receive.
+
+The credential type sets the header shape (a Bearer-style `Authorization: <prefix> <value>`, the prefix editable, or a custom header), so a host with its own convention — a different prefix, an `X-Api-Key` header — is a matter of naming the header and prefix the host documents.
+
+Prefer this over an environment variable for any token whose only use is talking to a host: the session cannot leak what it never holds, and no allowlist entry has to be maintained alongside it.
+An environment variable is still the right tool when a program needs the value itself — a `TF_VAR_*`, an MCP server's key read from its process environment.
+
+Which credentials an environment holds is, like its variables, a property of that environment: read them from a companion skill that records them, and propose a new one to the user rather than assuming it exists.
+
+> **Verify:** whether a given host accepts the injected header on every path a session uses — a git smart-HTTP push as well as its REST API — is the host's business, not the proxy's.
+> Confirm it on the first use with that host, and record what was found in the companion skill.
