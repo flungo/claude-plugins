@@ -26,6 +26,7 @@ A variable added mid-session was visible to a later turn of that session, but th
 | Network access | Custom |
 | Default allowed domains included | Yes |
 | Extra allowed domains | Listed below |
+| API credentials | Listed below |
 | Setup script | Installs the user-scope plugins — see below |
 
 "Custom" network access with the [default allowed domains](https://code.claude.com/docs/en/claude-code-on-the-web#default-allowed-domains) still included means the common package-manager hosts work as documented, **plus** the extras below — it is an extension of the default policy, not a replacement for it.
@@ -79,6 +80,18 @@ A **secret** value is never worth writing down, in this table or anywhere else i
 
 > **🤖 Agent** — if a value differs from the expectation above, use the live value and say so, then offer a PR reconciling the two.
 > Silently adapting is what lets the record rot.
+
+### API credentials
+
+Credentials the proxy attaches to requests for a host, as `cloud-sessions` describes: the value never reaches the session, and the host is reachable without an allowlist entry.
+A session uses one by sending the request **without** any credential of its own.
+
+| Name | Hosts | Header | Why it is there |
+| --- | --- | --- | --- |
+| `codeberg` | `codeberg.org` | `Authorization: token <value>` | A Codeberg personal access token with repository read and write scope, for Fabrizio's account there. Codeberg (Forgejo) is where some upstream projects keep their canonical repository and issue tracker, so this lets a session read an upstream's issues, push to Fabrizio's forks over HTTPS, and open pull requests through the Forgejo REST API at `https://codeberg.org/api/v1/`. Added 2026-09-10 at a session's request, to submit fixes to `mdformat-sembr`. |
+
+Confirmed working on 2026-09-10 with the `token` prefix, on both paths a session uses: `GET /api/v1/user` returned Fabrizio's account, `POST …/forks` created a fork, `git push` over HTTPS landed branches on it, and `POST …/pulls` and `POST …/issues` opened pull requests and issues on the upstream repository — all with no credential set in the session itself.
+Forgejo's own API reference is the spec the instance serves at `https://codeberg.org/swagger.v1.json`, reachable through the same credential.
 
 ## Repository scope
 
