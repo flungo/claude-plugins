@@ -35,6 +35,13 @@ That is the whole test, and it reaches further than top-level paragraphs:
   A line break there changes the render, or the content.
 - **Hard-break blocks** — preserve them.
   Lines ending in two spaces or a backslash (e.g. a `**Date:**` / `**Status:**` metadata block) render a `<br>` that carries meaning, so reflowing them *would* change the output.
+- **Pre-canned data** — out of scope entirely, wherever a repo keeps it.
+  A fixture, a sample input, a recorded response: it is reproduced to look like the thing it stands in for, so imposing the house style on it changes the very thing it exists to preserve.
+  This is a scope rule rather than a lint exemption — don't reflow one by hand either, and don't read a hard-wrapped one as a defect.
+  **Keep such data in a directory the checks can match** — `fixtures/`, `inputs/`, `testdata/`, whatever the repo calls it — rather than scattering it and excluding file by file.
+  One directory pattern covers the files that do not exist yet; a list naming files goes stale the moment somebody adds another, and it goes stale silently, as a passing build.
+  Exclude that directory rather than a parent that also holds authored prose, so a README explaining the data stays in scope.
+  Declare it once, in the repo's markdownlint config: the semantic-line-break check reads `ignores` from there too, so neither check can end up covering a tree the other skips.
 
 **Migrating an existing repo.**
 Because the convention is render-neutral, a migration can be **gated on render-equivalence**: reflow the source, render both versions to normalised HTML, and keep the change only where the HTML is byte-identical.
