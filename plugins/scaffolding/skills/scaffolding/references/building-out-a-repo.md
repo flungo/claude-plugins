@@ -15,6 +15,9 @@ The repo itself is often created and configured through the `terraform-github` h
 5. **Adopt the shared CI** — the `github-workflows` family for the repo's type plus `flungo-workflows` (`helper-repos.md`).
    Some jobs have a **prerequisite stub** — e.g. the Terraform workflow needs minimal Terraform/backend config, and the provider test workflow a minimal provider — so land that stub in the same step (see below).
 
+All five land as the repository's **first pull request**, before any other content.
+A repository created through `terraform-github` carries `markdown = false` until then, because the checks that flag requires cannot report before the Markdown callers exist; its creation runbook removes that line together with `repository_exists = false` in one follow-up once this first pull request is on the default branch, so the repository is not fully to standard until it lands.
+
 ## The generic build-out checklist (extend per repo)
 
 Every fresh owned repo's plan starts from roughly this, then grows repo-specific steps:
