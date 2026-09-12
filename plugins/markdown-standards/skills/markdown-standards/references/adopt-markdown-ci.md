@@ -37,8 +37,9 @@ Start the repo's `.markdownlint-cli2.jsonc` from these, then add further overrid
     // convention for anything cross-referenced.
     "MD024": { "siblings_only": true },
     // Compact tables, one space each side of every pipe. Pinned rather than
-    // left to MD060's ambiguous default ("consistent" infers per table, and
-    // picks "aligned" where no row disambiguates). Same reasoning as MD013:
+    // left to MD060's ambiguous default ("any" accepts each table in whichever
+    // style it already satisfies, and reports one matching no style against
+    // the closest fit, which can be "aligned"). Same reasoning as MD013:
     // under "aligned" a cell's width is shared state, so one long value
     // reflows every row and a diff stops being the size of the change.
     "MD060": { "style": "compact" }
