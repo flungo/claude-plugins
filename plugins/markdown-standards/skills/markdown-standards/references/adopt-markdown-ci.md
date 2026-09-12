@@ -106,6 +106,9 @@ Land it as its own commit; it is best-effort, and any file it reports as gate-fa
 **Then run the check, and only add the caller once it is green.**
 `markdown-sembr.yml` is a gate, not a migration: adopting it before the reflow inherits a finding per sentence pair on the next pull request.
 Fix anything the check still reports after the reflow by hand — the script is conservative by design, and the check is the arbiter of done.
+Expect little, and expect no particular shape.
+**Residue you can describe is a defect, not a caveat**: if a kind of finding recurs often enough to name, fix it instead — in `reflow.py` where the script is blind to something, or in the source where the prose is doing by hand what a better structure would do for it.
+Naming one here would only date this file: the shape is fixed, and the example outlives the defect it described.
 
 The caller needs no exclusions of its own: it inherits the linter's, as § In a repo with pre-canned data describes.
 
