@@ -81,8 +81,8 @@ No tool flags that redirect:
 Header and body rows get padded naturally; the delimiter row is the one that gets compressed out of habit, leaving the table inconsistent with itself.
 `markdownlint-cli2 --fix` rewrites it, so this is worth knowing rather than hand-applying.
 
-**Pin `compact` rather than leaving the default `"consistent"`, which is ambiguous.**
-It infers the style per table, and a table no row disambiguates — cells all different widths — infers `"aligned"` instead.
+**Pin `compact` rather than leaving the default `"any"`, which is ambiguous.**
+It accepts each table in whichever supported style it already satisfies, so tables can differ from one to the next, and a table that matches no style is reported against whichever is the closest fit — which can be `"aligned"`.
 
 Compact is the choice for the same reason `MD013` is off: **a diff should be the size of the change.**
 Under `aligned`, cell width is shared state — every cell is padded to its column's widest, so editing one cell reflows the whitespace of every row in the table and a one-word change arrives as a whole-table diff.
