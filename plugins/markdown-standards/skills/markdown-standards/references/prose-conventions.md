@@ -33,8 +33,12 @@ That is the whole test, and it reaches further than top-level paragraphs:
   The source is fiddlier, because each continuation line must carry the list item's indent or the blockquote's `>` prefix; that is a reason to take care, not a reason to exempt them.
 - **Headings, tables, and code blocks** — no.
   A line break there changes the render, or the content.
-- **Hard-break blocks** — preserve them.
-  Lines ending in two spaces or a backslash (e.g. a `**Date:**` / `**Status:**` metadata block) render a `<br>` that carries meaning, so reflowing them *would* change the output.
+- **Hard-break blocks** — the reflow leaves them alone: rewrapping a line that ends in two spaces or a backslash would drop the `<br>` it renders.
+  That is a rule about not breaking a document, not an endorsement of either spelling.
+  **Never write a hard break as two trailing spaces.**
+  The whole intent then rides on invisible characters — a reader cannot see it, a diff does not show it, and any editor that trims trailing whitespace silently changes what the document renders.
+  Where a hard break is genuinely wanted, write the backslash, which says on the page what it is doing.
+  Better still, use a structure that gives distinct lines by itself: a run of `**Key:** value` lines held together by trailing whitespace is a list that has not admitted it, and written as a list it renders the way it reads, every item already on its own line with no `<br>` to lose — which is how the ADRs here carry their `Date` and `Status`.
 - **Pre-canned data** — out of scope entirely, wherever a repo keeps it.
   A fixture, a sample input, a recorded response: it is reproduced to look like the thing it stands in for, so imposing the house style on it changes the very thing it exists to preserve.
   This is a scope rule rather than a lint exemption — don't reflow one by hand either, and don't read a hard-wrapped one as a defect.
