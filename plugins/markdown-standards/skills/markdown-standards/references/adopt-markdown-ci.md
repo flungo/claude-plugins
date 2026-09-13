@@ -62,8 +62,8 @@ That puts them out of scope for the conventions themselves, not merely exempt fr
 Name whichever directory the repo keeps them in — `fixtures` above is the common one, not the only one — and match it at any depth, so a tree anywhere is covered and adding one never means revisiting the config.
 Exclude the data directory itself rather than a parent that also holds authored prose, so a README explaining the data stays in scope.
 
-**`markdown-sembr.yml` picks this up on its own.**
-It reads `ignores` out of this same file, so the exclusion is declared once rather than restated per check ([ADR-016](https://github.com/flungo/github-workflows/blob/main/docs/decisions/016-sembr-inherits-markdownlint-ignores.md)).
+**`markdown-sembr.yml` and `reflow.py` both pick this up on their own.**
+Each reads `ignores` out of this same file, so the exclusion is declared once rather than restated per tool ([ADR-016](https://github.com/flungo/github-workflows/blob/main/docs/decisions/016-sembr-inherits-markdownlint-ignores.md)).
 Set `inherit-markdownlint-ignores: false` on the caller only where a repo genuinely wants the prose gate over a tree its linter skips.
 
 ### In a repo that holds Terraform config, also ignore `.terraform/`
@@ -100,7 +100,8 @@ Adopting may be a **single PR**, provided it still contains those distinct commi
 ## The reflow pass, and the gate that follows it
 
 Applying semantic line breaks to a repo's *existing* Markdown is a pure source-whitespace change with identical rendered output.
-Use this plugin's render-gated [`reflow.py`](../../../scripts/reflow.py) (`${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py`) from the target repo's root — see `prose-conventions.md § Semantic line breaks` for what it does and does not touch.
+Use this plugin's render-gated [`reflow.py`](../../../scripts/reflow.py) (`${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py`) from the target repo's root — see `prose-conventions.md § Semantic line breaks` for what it does and does not touch, and for the paths and exclusions it accepts.
+Run it **after** the `ignores` above are in the config, so the pass it makes is the one the checks will grade.
 Land it as its own commit; it is best-effort, and any file it reports as gate-failed is left untouched by design.
 
 **Then run the check, and only add the caller once it is green.**

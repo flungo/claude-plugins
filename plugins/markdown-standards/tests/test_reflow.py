@@ -7,9 +7,17 @@ Requires markdown-it-py (the script's only dependency).
 Every assertion here is about *source* shape; the script's own guarantee is that
 rendered output never changes, which the `reflowed` helper asserts on every case.
 """
+import builtins
+import contextlib
 import importlib.util
+import io
+import os
 import pathlib
+import sys
+import tempfile
+import types
 import unittest
+from unittest import mock
 
 SCRIPT = pathlib.Path(__file__).resolve().parent.parent / "scripts" / "reflow.py"
 _spec = importlib.util.spec_from_file_location("reflow", SCRIPT)
@@ -397,6 +405,267 @@ class TestIdempotence(ReflowTestCase):
         twice, changed, _ = self.reflowed(once)
         self.assertEqual(once, twice)
         self.assertEqual(changed, 0)
+
+
+@contextlib.contextmanager
+def temp_repo(files):
+    """A throwaway repo root, `files` mapping relative path to content.
+
+    The script reports what it inherits and what it skips on stdout, which is
+    the point of it — captured here so a test run stays readable.
+    """
+    cwd = os.getcwd()
+    with tempfile.TemporaryDirectory() as root:
+        for name, content in files.items():
+            path = pathlib.Path(root) / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(content, encoding="utf-8")
+        os.chdir(root)
+        try:
+            with contextlib.redirect_stdout(io.StringIO()) as out:
+                yield out
+        finally:
+            os.chdir(cwd)
+
+
+class TestMarkdownlintPattern(unittest.TestCase):
+    """globby's dialect translated into this script's — see ADR-016."""
+
+    def test_zero_or_more_directories_becomes_a_bare_name(self):
+        # The load-bearing case: taken verbatim, "**/" would need at least one
+        # leading directory here and leave a top-level fixtures/ being rewritten.
+        self.assertEqual(reflow.markdownlint_pattern("**/fixtures/**"), "fixtures")
+
+    def test_each_affix_is_optional(self):
+        self.assertEqual(reflow.markdownlint_pattern("fixtures/**"), "fixtures")
+        self.assertEqual(reflow.markdownlint_pattern("**/fixtures"), "fixtures")
+        self.assertEqual(reflow.markdownlint_pattern("fixtures/"), "fixtures")
+        self.assertEqual(reflow.markdownlint_pattern("vendor"), "vendor")
+
+    def test_an_anchored_path_keeps_its_directories(self):
+        self.assertEqual(
+            reflow.markdownlint_pattern("docs/generated/**"), "docs/generated"
+        )
+
+
+class TestStripJsonc(unittest.TestCase):
+    def test_line_and_block_comments_go(self):
+        self.assertEqual(
+            reflow.strip_jsonc('{ // why\n"a": 1, /* and */ "b": 2 }'),
+            '{ \n"a": 1,  "b": 2 }',
+        )
+
+    def test_a_double_slash_inside_a_string_is_data(self):
+        """The reason this is scanned rather than regexed — a real config is
+        full of URLs, and truncating one silently loses the key after it."""
+        text = '{ "ignores": ["https://example.com/x"], "b": 1 }'
+        self.assertEqual(reflow.strip_jsonc(text), text)
+
+    def test_trailing_commas_are_removed(self):
+        self.assertEqual(reflow.strip_jsonc('{ "a": [1, 2, ], }'), '{ "a": [1, 2 ] }')
+
+
+class TestLoadMarkdownlintIgnores(unittest.TestCase):
+    def test_reads_ignores_through_the_comments(self):
+        with temp_repo({".markdownlint-cli2.jsonc": (
+            '{\n  // fixtures are reproduced verbatim\n'
+            '  "ignores": ["**/fixtures/**", "vendor/**"],\n}\n'
+        )}):
+            patterns, source, notes = reflow.load_markdownlint_ignores()
+        self.assertEqual(patterns, ["fixtures", "vendor"])
+        self.assertTrue(source.endswith(".markdownlint-cli2.jsonc"))
+        self.assertEqual(notes, [])
+
+    def test_no_config_is_silent(self):
+        """Most repos have none; saying so every run would be noise."""
+        with temp_repo({"README.md": "x\n"}):
+            self.assertEqual(reflow.load_markdownlint_ignores(), ([], None, []))
+
+    def test_a_config_named_but_absent_is_reported(self):
+        with temp_repo({"README.md": "x\n"}):
+            patterns, _, notes = reflow.load_markdownlint_ignores("nope.jsonc")
+        self.assertEqual(patterns, [])
+        self.assertIn("not found", notes[0])
+
+    def test_a_javascript_config_is_reported_rather_than_passed_over(self):
+        with temp_repo({".markdownlint-cli2.cjs": "module.exports = {}\n"}):
+            patterns, _, notes = reflow.load_markdownlint_ignores()
+        self.assertEqual(patterns, [])
+        self.assertIn("--exclude", notes[0])
+
+    def test_a_malformed_config_is_reported_rather_than_read_as_empty(self):
+        with temp_repo({".markdownlint-cli2.jsonc": "{ not json at all\n"}):
+            patterns, _, notes = reflow.load_markdownlint_ignores()
+        self.assertEqual(patterns, [])
+        self.assertIn("could not be read", notes[0])
+
+    def test_a_negated_pattern_is_skipped_and_flagged(self):
+        with temp_repo({".markdownlint-cli2.jsonc":
+                        '{"ignores": ["fixtures/**", "!fixtures/README.md"]}'}):
+            patterns, _, notes = reflow.load_markdownlint_ignores()
+        self.assertEqual(patterns, ["fixtures"])
+        self.assertIn("negated", notes[0])
+
+    def test_a_wildcard_inside_a_segment_is_applied_but_flagged(self):
+        with temp_repo({".markdownlint-cli2.jsonc":
+                        '{"ignores": ["plugins/*/evals/**"]}'}):
+            patterns, _, notes = reflow.load_markdownlint_ignores()
+        self.assertEqual(patterns, ["plugins/*/evals"])
+        self.assertIn("wildcard", notes[0])
+
+
+class TestYamlConfig(unittest.TestCase):
+    """The two PyYAML scenarios, both mocked — the result must not depend on
+    what happens to be installed where the tests run."""
+
+    CONFIG = {".markdownlint-cli2.yaml": "ignores:\n  - '**/fixtures/**'\n"}
+
+    def test_yaml_config_is_read_when_pyyaml_is_available(self):
+        fake = types.ModuleType("yaml")
+        fake.safe_load = lambda text: {"ignores": ["**/fixtures/**"]}
+        with temp_repo(self.CONFIG), mock.patch.dict(sys.modules, {"yaml": fake}):
+            patterns, _, notes = reflow.load_markdownlint_ignores()
+        self.assertEqual(patterns, ["fixtures"])
+        self.assertEqual(notes, [])
+
+    def test_missing_pyyaml_says_so_rather_than_reading_the_config_as_empty(self):
+        real_import = builtins.__import__
+
+        def no_yaml(name, *args, **kwargs):
+            if name == "yaml":
+                raise ImportError("no module named yaml")
+            return real_import(name, *args, **kwargs)
+
+        with temp_repo(self.CONFIG), mock.patch.dict(sys.modules, {}, clear=False):
+            sys.modules.pop("yaml", None)
+            with mock.patch.object(builtins, "__import__", no_yaml):
+                patterns, _, notes = reflow.load_markdownlint_ignores()
+        self.assertEqual(patterns, [])
+        self.assertIn("PyYAML", notes[0])
+
+
+class TestMatchesIgnore(unittest.TestCase):
+    def test_a_bare_name_matches_at_every_depth_including_the_top(self):
+        self.assertTrue(reflow.matches_ignore("node_modules/a/R.md", "node_modules"))
+        self.assertTrue(reflow.matches_ignore("x/node_modules/a/R.md", "node_modules"))
+
+    def test_a_pattern_with_a_slash_is_anchored_to_the_repo_root(self):
+        self.assertTrue(reflow.matches_ignore("docs/generated/a.md", "docs/generated"))
+        self.assertFalse(reflow.matches_ignore("x/docs/generated/a.md", "docs/generated"))
+
+    def test_an_unrelated_path_is_not_matched(self):
+        self.assertFalse(reflow.matches_ignore("docs/a.md", "fixtures"))
+
+
+class TestCollectFiles(unittest.TestCase):
+    def test_a_top_level_node_modules_is_excluded(self):
+        """The substring test this replaces ("/node_modules/" not in path) missed
+        a top-level one — the usual case when running from a repo root."""
+        with temp_repo({"node_modules/pkg/README.md": "x\n", "README.md": "x\n"}):
+            files, _, _ = reflow.collect_files(["**/*.md"], [])
+        self.assertEqual(files, ["README.md"])
+
+    def test_dot_directories_are_reached(self):
+        """The markdown-sembr check scans them, so a migration has to as well."""
+        with temp_repo({".github/CONTRIBUTING.md": "x\n", "README.md": "x\n"}):
+            files, _, _ = reflow.collect_files(["**/*.md"], [])
+        self.assertEqual(files, [".github/CONTRIBUTING.md", "README.md"])
+
+    def test_git_is_always_ignored(self):
+        with temp_repo({".git/COMMIT_EDITMSG.md": "x\n", "README.md": "x\n"}):
+            files, _, _ = reflow.collect_files(["**/*.md"], [])
+        self.assertEqual(files, ["README.md"])
+
+    def test_an_explicit_path_needs_no_glob(self):
+        with temp_repo({"docs/a.md": "x\n", "docs/b.md": "x\n"}):
+            files, _, _ = reflow.collect_files(["docs/a.md"], [])
+        self.assertEqual(files, ["docs/a.md"])
+
+    def test_an_excluded_path_comes_back_as_skipped_rather_than_vanishing(self):
+        with temp_repo({"fixtures/a.md": "x\n", "README.md": "x\n"}):
+            files, skipped, _ = reflow.collect_files(["**/*.md"], ["fixtures"])
+        self.assertEqual(files, ["README.md"])
+        self.assertEqual(skipped, ["fixtures/a.md"])
+
+    def test_a_directory_means_the_markdown_beneath_it(self):
+        """"reflow.py docs" has to mean what it looks like; matching nothing is
+        the silent no-op the reporting elsewhere exists to prevent."""
+        with temp_repo({"docs/a.md": "x\n", "docs/sub/b.md": "x\n", "top.md": "x\n"}):
+            for named in ("docs", "docs/"):
+                with self.subTest(named=named):
+                    files, _, unmatched = reflow.collect_files([named], [])
+                    self.assertEqual(files, ["docs/a.md", "docs/sub/b.md"])
+                    self.assertEqual(unmatched, [])
+
+    def test_an_absolute_glob_is_expanded_rather_than_refused(self):
+        """pathlib raises NotImplementedError on a non-relative pattern, so an
+        absolute one goes through `glob` instead."""
+        with temp_repo({"docs/a.md": "x\n"}) as _:
+            root = os.getcwd()
+            files, _, unmatched = reflow.collect_files([f"{root}/docs/*.md"], [])
+        self.assertEqual(files, ["docs/a.md"])
+        self.assertEqual(unmatched, [])
+
+    def test_a_path_matching_nothing_is_reported_not_swallowed(self):
+        with temp_repo({"README.md": "x\n"}):
+            files, _, unmatched = reflow.collect_files(["docs/nope.md"], [])
+        self.assertEqual(files, [])
+        self.assertEqual(unmatched, ["docs/nope.md"])
+
+
+class TestEndToEndFileSelection(unittest.TestCase):
+    """What the reported defect was: a repo-wide pass rewriting the fixtures its
+    own linter config excludes."""
+
+    REPO = {
+        ".markdownlint-cli2.jsonc": '{\n  "ignores": ["**/fixtures/**"]\n}\n',
+        "fixtures/recorded.md": "One. Two.\n",
+        "docs/guide.md": "One. Two.\n",
+    }
+
+    def test_a_repo_wide_apply_leaves_the_linters_exclusions_alone(self):
+        with temp_repo(self.REPO):
+            reflow.main(["--apply"])
+            self.assertEqual(
+                pathlib.Path("fixtures/recorded.md").read_text(), "One. Two.\n"
+            )
+            self.assertEqual(
+                pathlib.Path("docs/guide.md").read_text(), "One.\nTwo.\n"
+            )
+
+    def test_opting_out_of_the_config_reaches_them_again(self):
+        with temp_repo(self.REPO):
+            reflow.main(["--apply", "--no-markdownlint-config"])
+            self.assertEqual(
+                pathlib.Path("fixtures/recorded.md").read_text(), "One.\nTwo.\n"
+            )
+
+    def test_a_named_path_is_the_only_one_touched(self):
+        with temp_repo(self.REPO):
+            reflow.main(["--apply", "docs/guide.md"])
+            self.assertEqual(pathlib.Path("docs/guide.md").read_text(), "One.\nTwo.\n")
+
+    def test_dry_run_is_the_default(self):
+        with temp_repo(self.REPO):
+            reflow.main([])
+            self.assertEqual(pathlib.Path("docs/guide.md").read_text(), "One. Two.\n")
+
+    def test_naming_a_path_that_matches_nothing_says_so(self):
+        """A typo'd path and an excluded one fail the same way to a reader —
+        nothing happened — so neither may be silent."""
+        with temp_repo(self.REPO) as out:
+            reflow.main(["--apply", "docs/guied.md"])
+        self.assertIn("no Markdown files matched 'docs/guied.md'", out.getvalue())
+
+    def test_naming_an_excluded_path_says_why_nothing_happened(self):
+        """Skipping it is right; skipping it silently would look like a no-op
+        file, and the next move would be to hunt for a bug in the reflow."""
+        with temp_repo(self.REPO) as out:
+            reflow.main(["--apply", "fixtures/recorded.md"])
+            self.assertEqual(
+                pathlib.Path("fixtures/recorded.md").read_text(), "One. Two.\n"
+            )
+        self.assertIn("skipping fixtures/recorded.md", out.getvalue())
 
 
 if __name__ == "__main__":
