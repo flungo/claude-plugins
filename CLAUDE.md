@@ -111,8 +111,8 @@ The conventions themselves stay in `markdown-standards` (above); only repo-speci
 - **`.lycheeignore`** is populated only from this repo's own token-enabled `workflow_dispatch` runs, per the rules in its header.
 - **The pre-canned-data exclusion lands on `fixtures/`, not `evals/`, and is declared once.**
   `.markdownlint-cli2.jsonc` ignores `**/fixtures/**`, which is where a plugin's eval inputs live, so they are out of scope for the prose conventions entirely (`markdown-standards` carries why).
-  `markdown-sembr` reads that same `ignores` rather than repeating it, so the sembr caller carries no exclusions of its own and the two cannot diverge.
-  The enclosing `evals/README.md` is authored prose and stays under both checks — widening the pattern to `evals` would take it with them.
+  `markdown-sembr` and `markdown-standards`' own `reflow.py` both read that same `ignores` rather than repeating it, so the sembr caller carries no exclusions of its own and none of the three can diverge.
+  The enclosing `evals/README.md` is authored prose and stays under every one of them — widening the pattern to `evals` would take it with them.
 
 ## Active work
 

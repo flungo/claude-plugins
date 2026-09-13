@@ -45,7 +45,7 @@ That is the whole test, and it reaches further than top-level paragraphs:
   **Keep such data in a directory the checks can match** — `fixtures/`, `inputs/`, `testdata/`, whatever the repo calls it — rather than scattering it and excluding file by file.
   One directory pattern covers the files that do not exist yet; a list naming files goes stale the moment somebody adds another, and it goes stale silently, as a passing build.
   Exclude that directory rather than a parent that also holds authored prose, so a README explaining the data stays in scope.
-  Declare it once, in the repo's markdownlint config: the semantic-line-break check reads `ignores` from there too, so neither check can end up covering a tree the other skips.
+  Declare it once, in the repo's markdownlint config: the semantic-line-break check and the reflow script both read `ignores` from there, so no two of the three can end up covering a tree another skips.
 
 **Migrating an existing repo.**
 Because the convention is render-neutral, a migration can be **gated on render-equivalence**: reflow the source, render both versions to normalised HTML, and keep the change only where the HTML is byte-identical.
@@ -56,9 +56,16 @@ At runtime the script is at `${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py`; run it fr
 
 ```sh
 pip install markdown-it-py
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py"            # dry run — sample diffs + per-file gate result
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py" --apply    # write the render-verified reflow in place
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py"                     # dry run — sample diffs + per-file gate result
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py" --apply             # write the render-verified reflow in place
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py" --apply docs/a.md   # only these paths
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py" --apply docs/       # a directory means the Markdown beneath it
 ```
+
+Given no paths it takes every `**/*.md`, reaching into dot directories so `.github/` is covered — the same reach as the check, so what the script leaves behind is the check's judgement rather than a file it never opened.
+It skips whatever the repo's markdownlint config skips, reading `ignores` from there rather than taking its own list, so the pre-canned data above is excluded once for all three tools.
+`--exclude` adds a path that config does not cover, and `--no-markdownlint-config` opts out of inheriting altogether.
+A path named on the command line is reported rather than silently passed over whenever it produces no work — dropped by an exclusion, or matching nothing at all.
 
 It is a one-time best-effort migration pass, not repo CI — `markdown-sembr.yml` is the repeatable gate, and the two are meant to be adopted together.
 Run the check after the reflow and fix anything it still reports by hand: the script is deliberately conservative, and the gate is the arbiter of done.

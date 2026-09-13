@@ -27,12 +27,18 @@ rather than forfeiting the file.
 
 Usage:
     pip install markdown-it-py
-    python3 reflow.py            # dry-run: sample diffs + per-file result
-    python3 reflow.py --apply    # write the render-verified reflow in place
+    python3 reflow.py                    # dry-run: sample diffs + per-file result
+    python3 reflow.py --apply            # write the render-verified reflow in place
+    python3 reflow.py --apply docs/a.md  # only these paths (a file, glob or directory)
 
-Run from the repo root (globs '**/*.md', excluding node_modules).
+Run from the repo root. Given no paths it globs '**/*.md', reaching into dot
+directories so '.github/' is covered — the same reach as the markdown-sembr
+check, so a migration leaves a tree that check accepts. The repo's
+markdownlint-cli2 `ignores` are read and skipped too (see collect_files).
 """
-import sys, re, glob, difflib
+import argparse, re, json, os, glob as globlib, difflib
+from fnmatch import fnmatch
+from pathlib import Path
 from markdown_it import MarkdownIt
 
 md = MarkdownIt("commonmark").enable("table")
@@ -225,9 +231,245 @@ def reflow_text(src):
     return (out.replace("\n", "\r\n") if crlf else out), changed, rejected
 
 
-def main():
-    apply_changes = "--apply" in sys.argv
-    files = sorted(f for f in glob.glob("**/*.md", recursive=True) if "/node_modules/" not in f)
+# --- file selection -----------------------------------------------------------
+
+ALWAYS_IGNORED = (".git", "node_modules")
+
+# markdownlint-cli2 config files that can carry `ignores`, in its own precedence
+# order. The `.markdownlint.*` family holds only the `config` object, so there is
+# nothing in one of those to read.
+MARKDOWNLINT_CONFIGS = (
+    ".markdownlint-cli2.jsonc",
+    ".markdownlint-cli2.yaml",
+    ".markdownlint-cli2.cjs",
+    ".markdownlint-cli2.mjs",
+)
+
+
+def strip_jsonc(text):
+    """Remove comments and trailing commas so `json` can parse a JSONC file.
+
+    Scanned rather than regexed because a "//" inside a string literal is data,
+    not a comment — the rule paths and URLs in a real config are full of them.
+    """
+    out, i, n = [], 0, len(text)
+    while i < n:
+        ch = text[i]
+        if ch == '"':                                        # copy a string whole
+            out.append(ch)
+            i += 1
+            while i < n:
+                out.append(text[i])
+                if text[i] == "\\":
+                    i += 1
+                    if i < n:
+                        out.append(text[i])
+                elif text[i] == '"':
+                    i += 1
+                    break
+                i += 1
+            continue
+        if text.startswith("//", i):
+            i = text.find("\n", i)
+            if i == -1:
+                break
+            continue
+        if text.startswith("/*", i):
+            end = text.find("*/", i + 2)
+            i = n if end == -1 else end + 2
+            continue
+        out.append(ch)
+        i += 1
+    return re.sub(r",(\s*[}\]])", r"\1", "".join(out))       # trailing commas
+
+
+def markdownlint_pattern(pattern):
+    """Translate one markdownlint-cli2 `ignores` glob into this script's dialect.
+
+    globby reads "**/" as ZERO or more directories, so "**/fixtures/**" covers a
+    top-level "fixtures/" as well as a nested one. This script spells "at any
+    depth" as a bare name instead (see matches_ignore), and its "**/…" requires
+    at least one leading directory — so importing a pattern verbatim would leave
+    the top-level copy in scope, rewriting the very files the linter skips.
+    Stripping the wildcard prefix and the "everything beneath" suffix makes the
+    two agree; the markdown-sembr check translates the same way (ADR-016).
+    """
+    result = pattern.strip()
+    while result.startswith("**/"):
+        result = result[3:]
+    while result.endswith("/**"):
+        result = result[:-3]
+    return result.rstrip("/")
+
+
+def load_markdownlint_ignores(path=None, root="."):
+    """Read `ignores` from a markdownlint-cli2 config: (patterns, source, notes).
+
+    `notes` carries what the caller should be told rather than left to infer from
+    a surprising set of rewritten files: a config that cannot be read, or a
+    pattern whose meaning may not survive translation. A missing config is not a
+    note — most repos have none.
+    """
+    notes = []
+    if path is None:
+        for candidate in MARKDOWNLINT_CONFIGS:
+            if os.path.isfile(os.path.join(root, candidate)):
+                path = os.path.join(root, candidate)
+                break
+        else:
+            return [], None, notes
+    elif not os.path.isfile(path):
+        return [], None, [f"markdownlint config not found: {path}"]
+
+    name = os.path.basename(path)
+    if name.endswith((".cjs", ".mjs")):
+        return [], path, [
+            f"{path} is JavaScript and cannot be read here — "
+            "pass its exclusions with --exclude"
+        ]
+    try:
+        text = Path(path).read_text(encoding="utf-8")
+        if name.endswith((".yaml", ".yml")):
+            try:
+                import yaml
+            except ImportError:
+                return [], path, [
+                    f"{path} needs PyYAML to read — install it, switch to "
+                    ".markdownlint-cli2.jsonc, or pass --exclude"
+                ]
+            data = yaml.safe_load(text) or {}
+        else:
+            data = json.loads(strip_jsonc(text))
+    except Exception as error:                               # malformed, unreadable
+        return [], path, [f"{path} could not be read ({error}) — ignoring it"]
+
+    raw = data.get("ignores") if isinstance(data, dict) else None
+    if not isinstance(raw, list):
+        return [], path, notes
+
+    patterns = []
+    for entry in raw:
+        if not isinstance(entry, str) or not entry.strip():
+            continue
+        if entry.lstrip().startswith("!"):                   # a re-inclusion
+            notes.append(f"{path}: ignoring negated pattern {entry!r}")
+            continue
+        translated = markdownlint_pattern(entry)
+        if translated:
+            if "*" in translated.replace("**", ""):
+                notes.append(
+                    f"{path}: {entry!r} has a wildcard inside a path segment, "
+                    "which may exclude more here than in markdownlint"
+                )
+            patterns.append(translated)
+    return patterns, path, notes
+
+
+def matches_ignore(path, pattern):
+    """fnmatch, with gitignore's anchoring rule and directory shorthand.
+
+    A pattern naming a directory covers everything beneath it. A pattern
+    CONTAINING A SLASH is relative to the repo root, while a bare name matches at
+    any depth — so "node_modules" catches every one, top-level included, and
+    "docs/generated" catches only the top-level one.
+    """
+    pattern = pattern.rstrip("/")
+    candidates = [pattern, pattern + "/*", pattern + "/**"]
+    if "/" not in pattern:
+        candidates += ["**/" + pattern, "**/" + pattern + "/*"]
+    return any(fnmatch(path, candidate) for candidate in candidates)
+
+
+def expand(pattern):
+    """Every Markdown file one command-line path or glob names.
+
+    A directory is taken as everything Markdown beneath it, so "reflow.py docs"
+    means what it looks like rather than matching nothing. An absolute pattern
+    goes through `glob`, because pathlib refuses one outright.
+    """
+    if os.path.isdir(pattern):
+        pattern = os.path.join(pattern.rstrip("/\\"), "**", "*.md")
+    if os.path.isfile(pattern):
+        return {os.path.relpath(pattern).replace(os.sep, "/")}
+    matches = (
+        globlib.glob(pattern, recursive=True)
+        if os.path.isabs(pattern)
+        else Path(".").glob(pattern)
+    )
+    return {
+        os.path.relpath(m).replace(os.sep, "/") for m in matches if os.path.isfile(m)
+    }
+
+
+def collect_files(patterns, ignores):
+    """Sort what the patterns name: (to reflow, ignored, matching nothing).
+
+    The second and third are returned rather than dropped so the caller can say
+    which of the paths it was given went nowhere, and why. A path that produces
+    no work and no explanation is the failure this whole option set exists to
+    remove — it reads as a file the reflow had nothing to do to.
+
+    `pathlib` rather than `glob` so that "**/*.md" reaches documentation under a
+    dot directory — ".github/" most of all, which the markdown-sembr check scans
+    and a migration must therefore cover. Every hidden directory is then in
+    scope, which is why ".git" is ignored unconditionally.
+
+    Pre-canned data — a fixture, a sample input, a recorded response — is out of
+    scope for the prose conventions ENTIRELY, not merely exempt from CI, so this
+    script has to skip whatever the repo's linter skips. Its `ignores` are read
+    for that rather than restated here, which is how the exclusion stays declared
+    once: the markdown-sembr check reads the same key (ADR-016), so all three
+    cover the same tree and no pair of them can drift apart.
+    """
+    paths, unmatched = set(), []
+    for pattern in patterns:
+        found = expand(pattern)
+        if not found:
+            unmatched.append(pattern)
+        paths |= found
+    ignores = list(ignores) + list(ALWAYS_IGNORED)
+    ignored = {p for p in paths if any(matches_ignore(p, i) for i in ignores)}
+    return sorted(paths - ignored), sorted(ignored), unmatched
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(
+        prog="reflow.py",
+        description="Reflow Markdown prose to one sentence per source line.",
+    )
+    parser.add_argument("paths", nargs="*", help="files or globs (default: **/*.md)")
+    parser.add_argument("--apply", action="store_true", help="write the changes")
+    parser.add_argument("--exclude", action="append", default=[], metavar="GLOB",
+                        help="path to skip, beyond the linter's; repeatable")
+    parser.add_argument("--markdownlint-config", metavar="PATH",
+                        help="markdownlint-cli2 config to inherit `ignores` from "
+                             "(default: whichever one is in the repo root)")
+    parser.add_argument("--no-markdownlint-config", dest="markdownlint_config",
+                        action="store_const", const=False,
+                        help="do not inherit `ignores` from a markdownlint-cli2 config")
+    args = parser.parse_args(argv)
+
+    apply_changes = args.apply
+    ignores = list(args.exclude)
+    if args.markdownlint_config is not False:
+        inherited, source, notes = load_markdownlint_ignores(args.markdownlint_config)
+        for note in notes:
+            print(f"reflow: {note}")
+        if inherited:
+            print(f"reflow: inheriting {len(inherited)} ignore(s) from {source}")
+            ignores += inherited
+
+    files, ignored, unmatched = collect_files(args.paths or ["**/*.md"], ignores)
+    # Every way a path can produce no work is said out loud. Skipping an excluded
+    # one is right — pre-canned data is out of scope by hand too — but in silence
+    # it reads as a file the reflow had nothing to do to, as does a typo.
+    named = {os.path.relpath(p).replace(os.sep, "/") for p in args.paths}
+    for f in sorted(named & set(ignored)):
+        print(f"reflow: skipping {f} — excluded (pass --no-markdownlint-config "
+              f"or drop --exclude to reflow it anyway)")
+    for pattern in unmatched:
+        print(f"reflow: no Markdown files matched {pattern!r}")
+
     reflowed, unchanged, partial = [], [], []
     shown = 0
     for f in files:
