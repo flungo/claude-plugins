@@ -60,6 +60,30 @@ A short flat `## Consequences` paragraph or list is perfectly correct when the c
   When a new ADR replaces an old one, the old ADR stays in place with its `**Status:**` changed to `Superseded by ADR-MMM`, and the new ADR notes what it supersedes.
   Never edit the superseded decision away — the chain is the audit trail.
 
+## Amending an accepted ADR
+
+An ADR records a decision at a point in time, so what it says stays true *of that moment* even once the world has moved past it.
+Three different things can happen to an accepted record, and each takes its own mechanism:
+
+| What changed | Mechanism |
+| --- | --- |
+| The text was wrong when written — a typo, a broken link, a mis-stated number | Edit in place, unmarked: it was never true, so there is nothing to date. |
+| The text was true when written, and something since has overtaken it | **Amend** — add, never rewrite (below). |
+| The decision itself no longer holds | **Supersede** — a new ADR, and a status change on the old one (above). |
+
+**An amendment adds; it does not edit the original away.**
+Leave the sentence or bullet as written and put the new fact immediately beneath it, dated:
+
+> **Amended YYYY-MM-DD:** \<what has changed, and what changed it\>
+
+Immediately beneath, rather than at the top of the file or in a trailing section, because a reader meets the overtaken statement at one particular place and that is where the correction has to be.
+A log at the end leaves it reading as current everywhere but the last screen, which is the failure of an errata page.
+
+The `**Date:**` line stays the date of the *decision* — never bump it for an amendment, which carries its own.
+
+**Several amendments on one ADR are a signal rather than a milestone.**
+A record accumulating corrections has usually stopped describing a decision anyone would make today, and the amendments are the evidence for superseding it.
+
 ## Index maintenance
 
 `docs/decisions/README.md` is the ADR index.

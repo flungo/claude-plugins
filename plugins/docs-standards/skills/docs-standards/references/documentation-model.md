@@ -76,6 +76,9 @@ A `> **🤖 Agent**` is a *standing* instruction: carried out on every use and n
 So anything that inherently **drifts** — a pinned dependency version, a workflow's default, any value the doc can't state a stable answer for — is an agent instruction to *read the live value each time*, **not** a `Verify`, even though the word "check" tempts you toward `Verify`.
 Never collapse one into the other.
 
+These two are the vocabulary for docs that state current truth.
+ADRs, which state what was true when a decision was taken, carry one marker of their own — `> **Amended YYYY-MM-DD:** …` — for a record overtaken by something that happened afterwards; `adr-template.md` has the rule it belongs to.
+
 ## Plan lifecycle — ephemeral, retired in two PRs
 
 Plans are short-lived working documents.
