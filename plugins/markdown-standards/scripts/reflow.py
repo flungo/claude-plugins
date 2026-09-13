@@ -234,7 +234,8 @@ def main():
         # newline="" throughout: without it Python's universal-newline handling
         # hands us a CRLF file as LF and writes it back as LF, rewriting every
         # line ending in a file we may not have changed a word of.
-        orig = open(f, encoding="utf-8", newline="").read()
+        with open(f, encoding="utf-8", newline="") as handle:
+            orig = handle.read()
         new, changed, rejected = reflow_text(orig)
         if rejected:
             partial.append(f"{f} ({rejected} block(s) left)")
@@ -246,7 +247,8 @@ def main():
             continue
         reflowed.append(f)
         if apply_changes:
-            open(f, "w", encoding="utf-8", newline="").write(new)
+            with open(f, "w", encoding="utf-8", newline="") as handle:
+                handle.write(new)
         elif shown < 2:
             shown += 1
             print(f"\n----- SAMPLE DIFF: {f} -----")
