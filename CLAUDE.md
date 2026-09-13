@@ -82,6 +82,7 @@ In brief:
 - **Diátaxis split** — `docs/decisions/` (ADRs), `docs/plans/` (one-time, retired when done), and — when there is content — `docs/runbooks/` (repeatable) and `docs/reference/` (lookup).
   Each directory has a `README.md` index kept current **in the same commit** as any change to its documents.
 - **ADRs** use the Nygard format (template in [`docs/decisions/README.md`](docs/decisions/README.md)); numbered sequentially, never deleted or renumbered.
+  One overtaken by later work is **amended** — a dated note beneath what changed — rather than rewritten; a new ADR supersedes only when the decision itself no longer holds.
 - **Plans** are ephemeral — never referenced from permanent docs — and retired in a second PR once complete.
   Only § Active work below may link a live plan.
 - **Two callouts, kept distinct** — `> **🤖 Agent** — …` for an instruction to an agent (one action per callout), and `> **Verify:** …` for uncertainty that can't be checked without live access.
