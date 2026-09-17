@@ -100,7 +100,7 @@ A web session carries the harness's own MCP server, **Claude Code Remote** (`mcp
 Beside it sit `get_session`, `list_sessions`, `set_session_title`, `set_session_tags`, and `archive_session` for the sessions that exist, plus `add_repo`, `send_later`, and the Routine tools.
 The server is part of the web surface; a session elsewhere has these tools only if something configured that server for it, so read your own tool list rather than assuming either way, and treat a server missing on this turn as not yet connected (see § MCP servers can be unavailable at first — this one was seen to drop in the same turn a `create_session` call returned, and to be back for the next call).
 
-What a spawned session gets, *verified 2026-09-17 across five sessions spawned from one*:
+What a spawned session gets, *verified 2026-09-17 across six sessions spawned from one*:
 
 - **A full session, not a subagent.**
   Its own container, its own context window, and its own usage on the account; `get_session` reports its cost like any other session's.
@@ -108,6 +108,7 @@ What a spawned session gets, *verified 2026-09-17 across five sessions spawned f
   It records the caller as `parent_session_id`.
 - **The environment, the model, and the permission mode — not the repositories.**
   All three are inherited when omitted, so the new session has the same allowlist, variables, setup script, and therefore the same plugins.
+  The model it inherits is the caller's **current** one, not the one the caller was created with: a session switched mid-conversation spawns onto the switched model, while `get_session` goes on reporting its creation-time model separately.
   With no `source_url` it has **no repository at all**: `get_session` shows an empty `sources`.
   `source_url` takes one repository and `source_revision` a branch, tag, or commit on it, defaulting to the default branch; a second repository is the new session's to attach with `add_repo`, under the same-owner rule above.
 - **The revision must already be on the remote.**
