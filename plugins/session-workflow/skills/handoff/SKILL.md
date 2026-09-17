@@ -1,6 +1,6 @@
 ---
 name: handoff
-description: Fabrizio's "/handoff" command — produces a session handoff document so a fresh Claude session can pick up exactly where this one left off. Use it whenever he says "handoff", "create a handoff", "session handoff", "new session", "summarise for next session", or anything else suggesting he wants to continue this work in a different conversation, including wanting to share context with a new agent, start fresh, or resume later. If in doubt and the conversation holds meaningful work, lean toward triggering.
+description: Fabrizio's "/handoff" command — produces a session handoff document so a fresh Claude session can pick up exactly where this one left off, and where the session can start another session, offers to open the receiving one from it directly. Use it whenever he says "handoff", "create a handoff", "session handoff", "new session", "summarise for next session", or anything else suggesting he wants to continue this work in a different conversation, including wanting to share context with a new agent, start fresh, or resume later. If in doubt and the conversation holds meaningful work, lean toward triggering.
 ---
 
 # /handoff
@@ -24,12 +24,48 @@ The two differ in more than emphasis, so decide which one you're in before writi
 ## Output
 
 Emit the document as a **single fenced markdown block** in the reply, with nothing else inside the fence.
-That gives a one-click copy straight into a new session's opening message.
+That gives a one-click copy straight into a new session's opening message, and it is the one form that works on every surface.
 
 Not an artifact and not a file.
 Both reach the same place by a longer route — open it, download it, re-upload it — when the destination is a paste into a text box.
 
 Use a fence long enough to hold whatever is inside it: four backticks if the document itself quotes fenced code, so the block doesn't terminate early and split the document in half.
+
+## Offer to open the receiving session
+
+Where the session has a **`create_session`** tool, the receiving session can be started from here, with the document as its opening message, and the fenced block is then a review copy rather than something to paste.
+
+The tool is the surface's, not this command's: Claude Code Web carries it on the harness's own MCP server, and a session elsewhere has it only if something configured that server for it.
+So check the tools you actually have rather than assuming either way, and treat a server missing on this turn as not yet connected rather than absent.
+
+**Offer it; never call it unasked.**
+Put the fenced document in the reply as above, and beneath it one line offering to start the session from it.
+The document is what the user reviews before it goes anywhere, and a session is theirs to start: it runs on their account like one they open themselves, and they may want the work continued in chat or on the local CLI instead.
+
+On a yes, call the tool with:
+
+- **`prompt`** — the document, verbatim.
+  Exactly what they reviewed, with no wrapper around it; the document is already written to be a session's opening message.
+- **`title`** — the handoff's title.
+- **`source_url`** and **`source_revision`** — the repository the work is in, and the branch it is on.
+  A spawned session inherits the calling session's environment, not its repositories, so with no source it starts with no repository at all; and the revision has to exist on the remote, since a branch that was never pushed fails the session's start.
+  Push first.
+  The tool takes one source, so where the work spans several repositories, pass the one the next steps are in and say in the document which others to add.
+- **`outcome_branch`** — the branch the work continues on, normally the same one.
+  It is what the receiving session's system prompt names as the branch to develop on and push to; without it the session is told only of an unnamed "designated branch" and picks its own.
+- **`model`** — chosen for the work the document describes, per the **`delegation-conventions`** skill, a declared dependency.
+  Omitted, it inherits this session's, which makes the receiving session's model an accident of where the work started.
+
+Leave `environment_id` and `permission_mode` alone: inherited, they give the receiving session the same allowlist, plugins, and permissions as this one.
+
+The tool returns the new session's id; report it as a link, `https://claude.ai/code/<id>`, so the user can open it.
+Then confirm the session started: `get_session` on the id shows a `last_init_error` when the checkout failed, and a session that failed there never sees its prompt.
+Fix the cause — usually the unpushed branch — archive the failed session, and create it again.
+
+A session created this way is a **confirmed** handoff; see § After a scoped handoff.
+
+In scoped mode the two sessions run at the same time.
+Where both will push to the same repository, say in the document which branch is the receiving session's, so that neither session works on the other's.
 
 ## Document structure
 
@@ -106,10 +142,12 @@ Never say more than that in either direction.**
 Not "still outstanding", not "done" — neither is yours to assert, and both are wrong in a way the user can't easily catch.
 This binds every later turn, not just the one that produced the document: end-of-session summaries, wrap-ups, PR descriptions, and `/session-clean` reports all inherit it.
 
-**Until the user confirms, the handoff is only *offered*.**
+**Until it lands, the handoff is only *offered*.**
 A fenced block that is never pasted leaves nothing behind — no new session, no issue, no record.
-So treat the work as transferred once the user says it landed, and as still in the air until then.
-Confirmation is worth asking for explicitly, in one line, when the handoff covers something that matters: it is the difference between a thread that has an owner and a thread that has quietly evaporated.
+So treat the work as transferred once it has landed, and as still in the air until then.
+It lands in one of two ways: the user says they pasted it into a new session, or this session created that session with `create_session` and saw it start.
+The second is confirmation in itself — the session exists, with the document as its first message — so there is nothing to ask.
+The first is worth asking for explicitly, in one line, when the handoff covers something that matters: it is the difference between a thread that has an owner and a thread that has quietly evaporated.
 
 **A confirmed handoff needs no further capture from you.**
 The receiving session follows the same hygiene, so whatever must outlive it will be recorded there.
@@ -120,6 +158,6 @@ These are the two halves of ending a session.
 `/handoff` carries unfinished work into a fresh conversation; [`/session-clean`](../session-clean/SKILL.md) checks whether closing this one would lose anything that ought to be recorded durably instead.
 
 The division that matters: **a handoff transfers work to a session that is about to start, while durable capture makes work survive whether that session ever happens.**
-A handoff document is not durable capture — it exists only in a chat reply until someone pastes it.
+A handoff document is not durable capture — it exists only in a chat reply until someone pastes it or a session is created from it.
 So work that must not be lost wants both: a handoff to carry it now, and an issue or a `CLAUDE.md` entry so it still exists if the handoff is never used.
 Neither command is sufficient alone for that case.

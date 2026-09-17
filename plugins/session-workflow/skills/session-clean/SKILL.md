@@ -34,7 +34,7 @@ A session that doesn't, and whose remaining work is better continued than record
 Where several threads want continuing, they usually want *one* new session between them rather than one each; the procedure's grouping step is where that gets decided.
 
 **A handoff is not durable capture.**
-It exists only in a chat reply until someone pastes it, so a thread that was handed off but never carried has evaporated rather than moved.
+It exists only in a chat reply until someone pastes it or a session is created from it, so a thread that was handed off but never carried has evaporated rather than moved.
 That is why the sweep treats a confirmed handoff and an unconfirmed one differently, and asks about the second rather than assuming either way.
 
 ## Tooling
