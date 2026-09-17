@@ -13,7 +13,7 @@ A session is clean when every thread it opened is in one of these states:
 - **Answered** — a question posed to the user got a real answer, not left hanging.
 - **Durably deferred** — anything still open is captured somewhere a future agent could find *without this chat's context*: a `CLAUDE.md`, a code comment, an ADR, a commit message, or a GitHub issue.
   A decision that only lives in this conversation doesn't count, however clearly it was stated at the time.
-- **Handed off, confirmed** — the user has said a `/handoff` for that thread landed in a new session.
+- **Handed off, confirmed** — a `/handoff` for that thread landed in a new session: the user said so, or this session created that session from the document and saw it start.
   It has an owner and that session applies the same hygiene, so whatever must outlive it gets recorded there rather than here.
 
 Not everything from the session needs a durable record.
@@ -51,10 +51,10 @@ For each thread found in step 1:
   Needs a destination (step 4).
 - **Handed off** — a `/handoff` was produced for this thread during the session.
   Which of two states it is in decides everything:
-  - **Confirmed** (the user said it landed in a new session): it has an owner.
+  - **Confirmed** (the user said it landed in a new session, or this session created that session from the document with `create_session` and saw it start): it has an owner.
     Report it as handed off and nothing more — not as outstanding, not as done.
     Neither is yours to assert.
-  - **Unconfirmed** (a document was produced and nothing was said afterwards): **ask whether it was ever handed off.**
+  - **Unconfirmed** (a document was produced and nothing was said or created afterwards): **ask whether it was ever handed off.**
     A handoff block that was never pasted leaves no new session, no issue, and no record, so the work has quietly evaporated rather than moved.
     If the answer is no, it drops back to *needs durable capture* and takes a destination like anything else.
 - **Fine to drop** — resolved in a way that genuinely doesn't need a record (see step 0).
@@ -112,8 +112,8 @@ A general go-ahead on the whole list is enough — don't demand a separate confi
   Don't restate history the file already implies, and don't paste in raw chat quotes — write it the way the rest of the file is written.
 - **GitHub issues**: check for an existing near-duplicate first — the GitHub MCP's search, or `gh issue list --search …` — before filing a new one.
 - **Anything the user chose to finish now** instead of deferring: do that work, then re-check it against step 0 before including it in the verdict.
-- **A handoff they accepted**: produce it in scoped mode — the threads it groups and nothing else, not the session — and then treat it as *handed off, unconfirmed* for the rest of this session.
-  It becomes confirmed only when they say it landed.
+- **A handoff they accepted**: produce it in scoped mode — the threads it groups and nothing else, not the session — with the `/handoff` command's offer to open the receiving session where the tool for that exists.
+  A session created that way is confirmed on the spot; otherwise treat the thread as *handed off, unconfirmed* for the rest of this session, confirmed only when they say it landed.
 
 ## 7. Final report
 
