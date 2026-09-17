@@ -70,6 +70,7 @@ At 103 characters and below it stores verbatim.
 - Where the closing backticks land varies with length — inside the link's parentheses around 104 to 130, outside them and swallowing the `)` from about 148 up.
 
 *Verified 2026-09-17 in [flungo/github-workflows#51](https://github.com/flungo/github-workflows/issues/51), stepping the length by twos and then by ones across the boundary, with each result read back through `curl` against `api.github.com` rather than through the connector.*
+*Reported upstream as [github/github-mcp-server#3299](https://github.com/github/github-mcp-server/issues/3299), open when filed — read it before assuming the threshold still holds, or that it is still there at all.*
 
 **Do:** keep a URL under 104 characters — for `docs.github.com` a shorter canonical path usually exists.
 Rewriting the body does not repair it, because the same write re-applies the wrap; shorten the URL instead.
