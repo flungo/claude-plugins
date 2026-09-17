@@ -24,7 +24,8 @@ All three surfaces are covered — the local Claude Code CLI, cloud sessions, an
   Installing this one plugin is therefore the whole cloud-session setup.
 - **[connector-conventions](plugins/connector-conventions)** — conventions for working through connectors (user scope): both the rules a connected store carries in its own content and the rules an agent should follow when using it.
   `google-drive` covers Drive, where a `CONVENTIONS` document governs its own folder and everything beneath it, discovered by walking a file's parent chain, cached for the session, and applied deepest-first — plus the connector's verified behaviours and how to write such a document.
-  `github` covers the GitHub MCP, whose read path silently mangles issue and pull request text and omits `reviewDecision`, so a description that looks truncated must never be "fixed" on the strength of that read.
+  `github` covers the GitHub MCP, whose read path silently mangles issue and pull request text and omits `reviewDecision`, and whose write path corrupts a URL of 104 characters or more.
+  So a description that looks truncated must never be "fixed" on the strength of that read, while a long URL is genuinely broken and wants shortening rather than editing around.
   `data-boundaries` is cross-cutting, for information crossing between sources — a connector, another connector, and the local repo.
   The mechanism ships here; the rules themselves stay in the store, beside the content they describe.
   A connector's behaviour lives here rather than with whichever plugin first met it, so it loads wherever that connector is used ([ADR-008](docs/decisions/008-connector-behaviour-belongs-to-the-connector.md)).

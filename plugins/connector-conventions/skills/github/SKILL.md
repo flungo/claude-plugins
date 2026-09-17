@@ -1,6 +1,6 @@
 ---
 name: github
-description: Working rules for GitHub through the MCP connector — what its read path silently mangles, and which fields it does not hand back. Consult this whenever reading or writing issue, pull request, review, or release text through the GitHub MCP tools, before acting on a body that looks truncated or malformed, before rewriting a description or comment because a read looked wrong, and before concluding that a field is absent from a pull request. Covers the sanitising that deletes tag-shaped tokens and silently truncates bodies, how to read the real text instead, and the verified behaviours behind each rule.
+description: Working rules for GitHub through the MCP connector — what its read path silently mangles, what its write path actually corrupts, and which fields it does not hand back. Consult this whenever reading or writing issue, pull request, review, or release text through the GitHub MCP tools, before acting on a body that looks truncated or malformed, before rewriting a description or comment because a read looked wrong, before posting a body containing a long URL, and before concluding that a field is absent from a pull request. Covers the sanitising that deletes tag-shaped tokens and silently truncates bodies, the long-URL corruption that breaks a link on the page as well as in the read, how to check what GitHub actually stored, and the verified behaviours behind each rule.
 ---
 
 # GitHub
@@ -21,6 +21,21 @@ The text on GitHub itself is intact.
 It renders correctly on the page, arrives whole in a webhook payload, and comes back unaltered through `get_file_contents`.
 
 So a description or comment that reads as mangled, malformed, or cut short is **evidence about the read path, not about the text** — never edit one to "fix" it, and never reword what you are about to post to survive a path that is not the problem.
+
+There is one exception, and it does not change that rule.
+A **URL of 104 characters or more is genuinely corrupted on write**: it is stored wrapped in a double-backtick code span, so the link really is broken, on the page as well as in the read.
+Rewriting the body still does not repair it — the same write re-applies the wrap — so shorten the URL rather than editing around it.
+
+## Check the store before believing either
+
+The two cases look identical in a read, and the difference decides whether there is anything to fix.
+Neither is settled by reading the body again through the connector.
+
+- **Ask for "Copy Markdown"** from the `…` menu on the issue, pull request or comment.
+  It needs no tooling, no credential and no repository scope, and it hands back the source exactly as stored.
+- **`curl https://api.github.com/repos/<owner>/<repo>/issues/<n>`** returns the stored markdown in `body`.
+  In a Claude Code Web session this goes through the agent proxy, which gates on the session's repository scope and answers an out-of-scope repository with a `403` that says so.
+- **`WebFetch` on the rendered page** shows what renders, which answers "does this display correctly" but not "what is stored" — for the backtick case the rendered page is wrong too, so it cannot distinguish the two.
 
 ## Treat a truncated body as unread, not as incomplete
 
