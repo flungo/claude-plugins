@@ -92,8 +92,8 @@
     {
       "name": "claude-plugin-standards",
       "source": "./plugins/claude-plugin-standards",
-      "description": "Conventions for authoring plugins — the directory and manifest layout, composing via first-party dependencies and declaring every one you reference, whether a plugin is ambient or on-demand and what may depend on it, filing a fact by what it is a property of, skill naming in single- and multi-skill plugins, keeping cross-references current by basename, the reserved word that silently breaks a skill on claude.ai, YAML frontmatter hazards, validating before committing, and when to bump which part of the version. Depends on writing-styles and markdown-standards.",
-      "version": "0.1.0"
+      "description": "Conventions for authoring plugins — the directory and manifest layout, composing via first-party dependencies and declaring every one you reference, whether a plugin is ambient or on-demand and what may depend on it, filing a fact by what it is a property of, skill naming in single- and multi-skill plugins, keeping cross-references current by basename, the reserved word that silently breaks a skill on claude.ai, YAML frontmatter hazards, editing a JSON manifest without mangling it, validating before committing, and when to bump which part of the version. Depends on writing-styles and markdown-standards.",
+      "version": "0.2.0"
     },
     {
       "name": "scaffolding",
