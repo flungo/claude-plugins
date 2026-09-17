@@ -1,7 +1,7 @@
 {
   "name": "personal-defaults",
-  "description": "Fabrizio's always-on personal conventions as one install — a dependency-only bundle carrying git-conventions, contributor-workflow, session-workflow, upstream-research, scaffolding, and connector-conventions. Contributes no skills of its own.",
-  "version": "0.3.0",
+  "description": "Fabrizio's always-on personal conventions as one install — a dependency-only bundle carrying git-conventions, contributor-workflow, session-workflow, delegation-conventions, upstream-research, scaffolding, and connector-conventions. Contributes no skills of its own.",
+  "version": "0.4.0",
   "author": {
     "name": "flungo"
   },
@@ -9,6 +9,7 @@
     "git-conventions",
     "contributor-workflow",
     "session-workflow",
+    "delegation-conventions",
     "upstream-research",
     "scaffolding",
     "connector-conventions"

@@ -1,0 +1,8 @@
+{
+  "name": "delegation-conventions",
+  "description": "Fabrizio's conventions for handing work to another agent or session — currently which model to give it, and why the choice is made rather than inherited.",
+  "version": "0.1.0",
+  "author": {
+    "name": "flungo"
+  }
+}
