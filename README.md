@@ -7,7 +7,7 @@ All three surfaces are covered — the local Claude Code CLI, cloud sessions, an
 ## Plugins
 
 - **[personal-defaults](plugins/personal-defaults)** — the always-on personal set as a single install (user scope).
-  A dependency-only bundle carrying `git-conventions`, `contributor-workflow`, `session-workflow`, `upstream-research`, `scaffolding`, and `connector-conventions`; it contributes no skills of its own and costs no context.
+  A dependency-only bundle carrying `git-conventions`, `contributor-workflow`, `session-workflow`, `delegation-conventions`, `upstream-research`, `scaffolding`, and `connector-conventions`; it contributes no skills of its own and costs no context.
   The Claude Code Web plugins stay outside it, being useful only there — `personal-cloud-environment` picks them up instead.
 - **[git-conventions](plugins/git-conventions)** — standing git/PR hygiene conventions (branch management, Conventional Commits, linear history, squash-vs-rebase, no fixup commits, force-push policy, and which commit signature warnings to ignore).
   Applies to all git work, not just a named command.
@@ -42,6 +42,8 @@ All three surfaces are covered — the local Claude Code CLI, cloud sessions, an
   checks whether closing the session would lose anything and proposes where each loose end should be recorded, and `/handoff` produces a document that carries unfinished work into a fresh session.
   The two halves of the same moment — record it, or carry it.
   Depends on `connector-conventions`, since filing an issue means reading existing ones through the GitHub MCP first.
+- **[delegation-conventions](plugins/delegation-conventions)** — personal, always-on conventions (user scope) for handing work to another agent or session: a session started from this one, a Routine, or a subagent.
+  The model is chosen for the work rather than inherited from the caller — the latest Opus by default, Sonnet where the task is both simple and fully specified, and Fable only where the user picks it over Opus after hearing the case for it.
 - **[scaffolding](plugins/scaffolding)** — personal, always-on guide (user scope) for setting up, building out, and extending repos across the fleet: gated on verified ownership (an owned repo adopts the conventions and standards plugins; a fork or third-party repo gets nothing without explicit consent), routing to the shared CI and the helper repos (`github-workflows`, `claude-plugins`, `terraform-github`) added as needed.
 
 ## Install in Claude Code (local CLI)

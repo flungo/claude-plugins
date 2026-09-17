@@ -8,8 +8,8 @@
     {
       "name": "personal-defaults",
       "source": "./plugins/personal-defaults",
-      "description": "Fabrizio's always-on personal conventions as one install — a dependency-only bundle carrying git-conventions, contributor-workflow, session-workflow, upstream-research, scaffolding, and connector-conventions. Contributes no skills of its own.",
-      "version": "0.3.0"
+      "description": "Fabrizio's always-on personal conventions as one install — a dependency-only bundle carrying git-conventions, contributor-workflow, session-workflow, delegation-conventions, upstream-research, scaffolding, and connector-conventions. Contributes no skills of its own.",
+      "version": "0.4.0"
     },
     {
       "name": "connector-conventions",
@@ -70,6 +70,12 @@
       "source": "./plugins/markdown-standards",
       "description": "Markdown authoring conventions — unambiguous cross-references and link hygiene, semantic line breaks, unique cross-referenced headings, adjacent-blockquote handling, compact tables (delimiter rows included), handling lint rules a linter bump introduces, fix-the-target-never-suppress remediation for markdownlint/link-check failures, and the /adopt-markdown-ci onboarding command.",
       "version": "0.13.0"
+    },
+    {
+      "name": "delegation-conventions",
+      "source": "./plugins/delegation-conventions",
+      "description": "Conventions for handing work to another agent or session — a session started from this one, a Routine, or a subagent: choose the model rather than inheriting the caller's, prefer the latest Opus, keep Sonnet for a task that is both simple and fully specified, put the case to the user rather than choosing Fable yourself, and name a model by the short identifier the surface offers.",
+      "version": "0.1.0"
     },
     {
       "name": "session-workflow",
