@@ -82,31 +82,31 @@ The rule that matters more than the PR boundary is the **commit** boundary.
 For each check introduced:
 
 1. **Introduce the check** (workflow / config) in one commit, with **no fixes**.
-2. **Push it and confirm CI shows the expected failure** — this proves the check catches what it should.
-   Seeing the red is the point; never fix pre-emptively.
+2. **Push it and let CI report** — whatever it finds is the to-do list for the next commit, so never fix pre-emptively.
+   A first run that comes back green needs nothing manufactured: a repo that already follows a rule has nothing to fix, and proving the check works is not worth breaking the tree on purpose.
 3. **Apply the fixes in a separate, later commit** — always distinct from, and after, the check that surfaced them; never squashed into it.
    A separate commit per logical fix group aids review (e.g. one per reverted markdownlint override).
 
-Work through the checks in this order, each as its own commit pair:
+Work through the checks in this order, each as its own commits:
 
 1. **Internal links + anchors** — offline, blocking.
-   Confirm it goes red on a genuinely broken link/anchor before fixing.
 2. **markdownlint** — expect many findings on a repo adopting it for the first time.
-3. **Semantic line breaks** — the render-gated reflow below, then the `markdown-sembr` caller that keeps it that way.
+3. **Semantic line breaks** — the `markdown-sembr` caller, then the render-gated reflow below as its fix commit.
 4. **External URLs** — verify **in GitHub via `workflow_dispatch`**, not from a sandbox with limited egress, and only after the token exists (the runbook explains why a tokenless dispatch floods the issue with false 404s).
 
 Adopting may be a **single PR**, provided it still contains those distinct commits.
 
-## The reflow pass, and the gate that follows it
+## The reflow pass, as the sembr check's fix commit
 
 Applying semantic line breaks to a repo's *existing* Markdown is a pure source-whitespace change with identical rendered output.
 Use this plugin's render-gated [`reflow.py`](../../../scripts/reflow.py) (`${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py`) from the target repo's root — see `prose-conventions.md § Semantic line breaks` for what it does and does not touch, and for the paths and exclusions it accepts.
 Run it **after** the `ignores` above are in the config, so the pass it makes is the one the checks will grade.
 Land it as its own commit; it is best-effort, and any file it reports as gate-failed is left untouched by design.
 
-**Then run the check, and only add the caller once it is green.**
-`markdown-sembr.yml` is a gate, not a migration: adopting it before the reflow inherits a finding per sentence pair on the next pull request.
-Fix anything the check still reports after the reflow by hand — the script is conservative by design, and the check is the arbiter of done.
+It is the fix commit for `markdown-sembr.yml`, so it lands **after** the caller, exactly as the other checks' fixes land after theirs.
+A repo that has never been reflowed will therefore show a finding per sentence pair on the caller's first run.
+That is the same shape as a first markdownlint run, and it resolves in the reflow commit within the same pull request.
+Fix anything the check still reports afterwards by hand — the script is conservative by design, and the check is the arbiter of done.
 Expect little, and expect no particular shape.
 **Residue you can describe is a defect, not a caveat**: if a kind of finding recurs often enough to name, fix it instead — in `reflow.py` where the script is blind to something, or in the source where the prose is doing by hand what a better structure would do for it.
 Naming one here would only date this file: the shape is fixed, and the example outlives the defect it described.
@@ -119,7 +119,7 @@ The caller needs no exclusions of its own: it inherits the linter's, as § In a 
    Match the local `markdownlint-cli2` to the version CI is *currently* running and install `lychee` with `cargo install --locked` — both in `validating-locally.md`, which also explains why that version must be read from a CI run rather than copied from a note.
    And never curate `.lycheeignore` from a tokenless dispatch, whose cross-repo 404s are token artifacts rather than dead links.
 1. **Add the caller workflows**, pinned to the current major: `markdown-lint.yml`, and `markdown-links.yml` with the `permissions:` block its external job needs.
-   Add `markdown-sembr.yml` too in a repo on semantic line breaks — which is any repo adopting this plugin — but only once the reflow has landed (see above).
+   Add `markdown-sembr.yml` too in a repo on semantic line breaks — which is any repo adopting this plugin — with the reflow following it as its fix commit (see above).
    Also add the (highly recommended) `flungo-workflows.yml` caller if the repo lacks it.
 2. **Add repo-specific config — regenerate, never copy another repo's:** `.markdownlint-cli2.jsonc` from the defaults above, and a seeded `.lycheeignore` populated from this repo's own token-enabled runs.
 3. **Provision `LYCHEE_GITHUB_TOKEN`** per the runbook, **before** curating `.lycheeignore`.

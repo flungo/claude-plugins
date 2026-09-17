@@ -36,7 +36,7 @@ See `references/prose-conventions.md` for when and how to run it.
 
 ### `/adopt-markdown-ci` (aliases: "adopt markdown CI", "add markdown validation")
 
-Onboards a repo to the Markdown validation CI: adds the two caller workflows pinned to the current major, the per-repo config (`.markdownlint-cli2.jsonc`, `.lycheeignore`, `LYCHEE_GITHUB_TOKEN`), works through the checks in check-then-fix commit order, runs the render-gated semantic-line-break reflow, and adopts this plugin at project scope so the conventions travel with the repo.
+Onboards a repo to the Markdown validation CI: adds the caller workflows pinned to the current major, the per-repo config (`.markdownlint-cli2.jsonc`, `.lycheeignore`, `LYCHEE_GITHUB_TOKEN`), works through the checks in check-then-fix commit order, runs the render-gated semantic-line-break reflow, and adopts this plugin at project scope so the conventions travel with the repo.
 Enabling this plugin in a repo *is* the opt-in, so the command has no further gate: run it wherever the plugin is enabled.
 
 Full procedure: `references/adopt-markdown-ci.md`.
