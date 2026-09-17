@@ -29,15 +29,19 @@ Inline code, fenced and indented code blocks, and table cells are all mangled al
 
 **Do:** treat a mangled or truncated read as a fact about the read path, never about the text.
 
-## The text on GitHub itself is intact
+## The text on GitHub itself is intact, except for one thing the write path breaks
 
 The same content renders correctly on the page, arrives whole in a webhook payload, and comes back unaltered through `get_file_contents`.
-Only this one read path loses it.
+For all of the sanitising above, only that one read path loses it.
 
 The loss extends to code quoted in a comment, so generics (`Vec<T>`, `List<String>`) can disappear from something you are reviewing.
 
-The one real exception is not the connector's doing — a tag-shaped token written as **bare prose**, outside backticks, is stored but does not render, because GitHub drops unknown tags at display time.
-That is the ordinary reason to put a placeholder in backticks.
+Two things are genuinely not intact, and neither is the read path's doing:
+
+- A **long URL is corrupted on the way in** — [below](#a-url-of-104-characters-or-more-is-corrupted-on-the-way-in).
+  That one is stored broken, so the page is wrong too, and reading it back is not how you find out.
+- A tag-shaped token written as **bare prose**, outside backticks, is stored but does not render, because GitHub drops unknown tags at display time.
+  That is the ordinary reason to put a placeholder in backticks.
 
 **Do:** never rewrite a description or comment because an MCP read looks wrong, and never reword what you post to survive it.
 Check the rendered page with `WebFetch`, and treat an apparently truncated body as unread rather than incomplete.
@@ -49,6 +53,26 @@ It is applied on purpose to untrusted response fields — issue comments, pull r
 The symptom is reported in [github/github-mcp-server#2202](https://github.com/github/github-mcp-server/issues/2202), open since March 2026 and scoped narrower than what is described above — `issue_read` and fenced code blocks alone.
 
 **Do:** expect it to persist, and don't re-derive it as a local quirk of the session you are in.
+
+## A URL of 104 characters or more is corrupted on the way in
+
+This one is the **write** path, and unlike the sanitising above it changes what GitHub stores.
+A URL of 104 characters or more, written into an issue body or a pull request description through the connector, is stored wrapped in a double-backtick code span — which breaks a markdown link, since the destination is then a code span rather than a URL.
+At 103 characters and below it stores verbatim.
+
+- **Length is the whole trigger.**
+  96, 98, 100, 101, 102 and 103 store clean; 104, 106, 108, 128, 148, 168 and 188 are all wrapped.
+- **The host is irrelevant.**
+  `example.com` at 184 is wrapped exactly as `docs.github.com` is, and short non-GitHub URLs are untouched.
+- **The construct is irrelevant.**
+  A markdown link destination, a bare URL and an autolink are all wrapped; an autolink's `<`/`>` are entity-escaped as well.
+- **Both write tools do it**, so it is not one surface's quirk: `issue_write` and `update_pull_request` behave alike.
+- Where the closing backticks land varies with length — inside the link's parentheses around 104 to 130, outside them and swallowing the `)` from about 148 up.
+
+*Verified 2026-09-17 in [flungo/github-workflows#51](https://github.com/flungo/github-workflows/issues/51), stepping the length by twos and then by ones across the boundary, with each result read back through `curl` against `api.github.com` rather than through the connector.*
+
+**Do:** keep a URL under 104 characters — for `docs.github.com` a shorter canonical path usually exists.
+Rewriting the body does not repair it, because the same write re-applies the wrap; shorten the URL instead.
 
 ## `pull_request_read` does not return `reviewDecision`
 
