@@ -94,6 +94,33 @@ That leaves the question of what counts as asking, which is not this plugin's to
 > **🤖 Agent** — before following a procedure step that delegates, check your own system prompt for a restriction like this.
 > Where one applies and the skill doesn't say otherwise, do the work in the main loop and say so in your report, rather than dispatching anyway or silently dropping the step.
 
+## A session can start another session
+
+A web session carries the harness's own MCP server, **Claude Code Remote** (`mcp__Claude_Code_Remote__*`), and among its tools is `create_session`, which starts a new session on the same account and returns its id.
+Beside it sit `get_session`, `list_sessions`, `set_session_title`, `set_session_tags`, and `archive_session` for the sessions that exist, plus `add_repo`, `send_later`, and the Routine tools.
+The server is part of the web surface; a session elsewhere has these tools only if something configured that server for it, so read your own tool list rather than assuming either way, and treat a server missing on this turn as not yet connected (see § MCP servers can be unavailable at first — this one was seen to drop in the same turn a `create_session` call returned, and to be back for the next call).
+
+What a spawned session gets, *verified 2026-09-17 across five sessions spawned from one*:
+
+- **A full session, not a subagent.**
+  Its own container, its own context window, and its own usage on the account; `get_session` reports its cost like any other session's.
+  The `prompt` is its opening user message — it acted on the prompt and nothing else — and `title` is its name in the session list.
+  It records the caller as `parent_session_id`.
+- **The environment, the model, and the permission mode — not the repositories.**
+  All three are inherited when omitted, so the new session has the same allowlist, variables, setup script, and therefore the same plugins.
+  With no `source_url` it has **no repository at all**: `get_session` shows an empty `sources`.
+  `source_url` takes one repository and `source_revision` a branch, tag, or commit on it, defaulting to the default branch; a second repository is the new session's to attach with `add_repo`, under the same-owner rule above.
+- **The revision must already be on the remote.**
+  A branch that exists only in the calling container fails the new session's start with `error_type: ref_not_found`, marked unrecoverable, visible in `get_session` under `last_init_error`; the session is listed, but it never boots and never sees its prompt.
+  Push the branch first, and archive a session that failed this way rather than waiting on it.
+- **`outcome_branch` is what its system prompt names as the branch to develop on and push to**, and it is checked out on arrival — created from the source revision when it does not exist yet.
+  Without it the new session's prompt speaks only of an unnamed "designated branch", and `get_session` reports no `outcomes` and no current branch, so the session picks its own.
+- **A clean finish is not reported back.**
+  The caller hears of a failed turn where that is enabled, and of nothing else; `get_session` gives the `status_bucket` and a short `post_turn_summary` of the last turn, and is the way to find out how a spawned session got on.
+
+> **🤖 Agent** — a session is the user's to start: it spends their account exactly as one they open themselves, so offer one and create it only when they say yes.
+> A workflow whose procedure hands work to a new session says how its own offer is made.
+
 ## A repo's own plugins never load
 
 A repo-adopted plugin — one a repository enables through `enabledPlugins` in its `.claude/settings.json` — **does not load in a web session**, even though the settings themselves are read.
