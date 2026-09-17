@@ -67,9 +67,10 @@ It skips whatever the repo's markdownlint config skips, reading `ignores` from t
 `--exclude` adds a path that config does not cover, and `--no-markdownlint-config` opts out of inheriting altogether.
 A path named on the command line is reported rather than silently passed over whenever it produces no work — dropped by an exclusion, or matching nothing at all.
 
-It is a one-time best-effort migration pass, not repo CI — `markdown-sembr.yml` is the repeatable gate, and the two are meant to be adopted together.
-Run the check after the reflow and fix anything it still reports by hand: the script is deliberately conservative, and the gate is the arbiter of done.
-The gate is applied **per block against the whole file**: a paragraph's reflow is kept only if the entire file still renders identically with it changed, so an awkward paragraph costs only itself rather than forfeiting the file.
+It is a one-time best-effort migration pass, not repo CI — `markdown-sembr.yml` is the repeatable check, and the two are meant to be adopted together.
+The script is not a hand-fixing pass, and aims to leave output the check accepts without guaranteeing it — residue is expected rather than a defect in the run.
+Where the check still reports something the reflow did not fix, fix that by hand until it passes: the check is the arbiter of done.
+The script's own **render gate** is applied per block against the whole file: a paragraph's reflow is kept only if the entire file still renders identically with it changed, so an awkward paragraph costs only itself rather than forfeiting the file.
 Anything it reports as left behind is deliberate — reflow those by hand or leave them.
 
 > **🤖 Agent** — write new prose one sentence per line from the start, in list items and blockquotes as well as top-level paragraphs; don't hard-wrap and leave it for a later reflow pass.
