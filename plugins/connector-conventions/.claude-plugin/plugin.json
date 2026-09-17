@@ -1,7 +1,7 @@
 {
   "name": "connector-conventions",
   "description": "Conventions for working through connectors — both the rules a connected store carries in its own content and the rules an agent should follow when using it. A skill per connector (Google Drive, where a CONVENTIONS document governs its own folder and everything beneath it; GitHub, whose MCP read path silently mangles issue and pull request text and whose write path corrupts a long URL), plus cross-cutting skills for rules that span sources.",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "author": {
     "name": "flungo"
   }
