@@ -47,6 +47,12 @@ Each index does two jobs: it lists the directory's contents, and it documents th
 The decisions index carries the ADR template (see `references/adr-template.md`) and one summary row per ADR; the plans index describes a plan's shape (a status row plus numbered checkbox steps) and carries one status row per plan; a runbooks or reference index likewise states what a runbook or reference doc should contain.
 Don't update a doc without also updating its parent README row.
 
+**A row is a pointer, not a précis.**
+It says what the doc settles — for an ADR, what was decided and the one thing that made the decision go that way — and what a reader will find on opening it.
+That is enough to choose whether to open it, and it is the whole job.
+Two to four sentences is the working ceiling.
+A row that carries the document's reasoning has moved that reasoning to the place everyone scanning the directory reads and nobody maintains, and it grows with every later decision it has to account for; the document it points at is where the reasoning survives being revised.
+
 **Ordering.**
 Unless a doc type has a clear chronology, order pages — and their index rows — alphabetically.
 ADRs look like the exception, but they use zero-padded monotonic numbers (`001`, `002`, …) precisely so that alphabetical order *is* chronological order — so ADRs sort alphabetically too.
