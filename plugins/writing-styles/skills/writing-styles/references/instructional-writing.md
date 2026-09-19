@@ -1,10 +1,13 @@
 # Instructional writing
 
-The style for text a reader acts on as **instruction** rather than reads as background: a `SKILL.md` and the reference files beside it, a Diátaxis reference doc, a runbook, a `CLAUDE.md`.
+The style for text a reader acts on as **instruction** rather than reads as background: a `SKILL.md` and the reference files beside it, a Diátaxis reference doc, a runbook, a `CLAUDE.md`, and the explanatory comments in code and configuration.
 
 A reader acts on what the text says.
 They hold no memory of an earlier draft, have no way to adjudicate between two sentences that contradict each other, and — where the reader is an agent — cannot step outside the session to carry out an instruction meant for someone else.
 The rules below all follow from that.
+
+A comment in code or configuration is this kind of text.
+Whoever reads it is about to change the line beneath it, and acts on what the comment says about why that line is as it is — so these rules govern a comment exactly as they govern a runbook.
 
 ## State the current truth, never the document's own history
 
@@ -24,6 +27,11 @@ Replace it; do not keep it with a note attached.
 
 The test is whether a sentence states a fact about **the world** or a fact about **this file's past**.
 The second never survives the edit.
+
+In code the same test lands on the line: a comment saying why the code around it is shaped as it is states a fact about the world, while one saying what that code used to be states a fact about its past — which the commit that changed it already records.
+
+- **As history:** `// One step for both outcomes rather than the two near-identical scripts this file used to carry.`
+- **As fact:** `// One step builds the issue for either outcome: they differ in marker, title and opening sentence, and in nothing else.`
 
 That test keeps three things which can look like history but are not:
 
