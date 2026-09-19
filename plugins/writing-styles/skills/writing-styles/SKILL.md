@@ -19,7 +19,7 @@ How the Markdown itself is written — semantic line breaks, cross-references, h
 
 ## The styles
 
-- **instructional-writing** (`references/instructional-writing.md`) — text a reader acts on as instruction, wherever it lives: a `SKILL.md` and the reference files beside it, a Diátaxis reference doc, a runbook, a `CLAUDE.md`.
+- **instructional-writing** (`references/instructional-writing.md`) — text a reader acts on as instruction, wherever it lives: a `SKILL.md` and the reference files beside it, a Diátaxis reference doc, a runbook, a `CLAUDE.md`, and the explanatory comments in code and configuration.
   Covers stating the current truth rather than the document's own history, converging on plain fact over time, fixing wrong guidance at its source instead of annotating it, and never directing an agent to do what only the user can do.
   Read it before writing or revising any of those, and particularly before revising one because you have just learned something that changes it.
 
