@@ -33,7 +33,7 @@
       "name": "docs-standards",
       "source": "./plugins/docs-standards",
       "description": "Repo-adopted documentation conventions — Diátaxis docs, Nygard ADRs, ephemeral-plan lifecycle, README-index and staleness discipline, agent/verify callouts, and a session-end doc-maintenance checklist hook. Depends on markdown-standards and writing-styles.",
-      "version": "0.4.0"
+      "version": "0.5.0"
     },
     {
       "name": "claude-code-web",

@@ -1,7 +1,7 @@
 {
   "name": "docs-standards",
   "description": "Fabrizio's documentation conventions for a repo's docs/ tree — the Diátaxis split (decisions/plans/runbooks/reference), Nygard ADRs, the ephemeral-plan lifecycle, README-index and staleness discipline, the agent and verify callouts, and a session-end doc-maintenance checklist hook. Builds on markdown-standards for the underlying Markdown authoring conventions, and on writing-styles for the instructional-writing style a reference doc is written in.",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "author": {
     "name": "flungo"
   },
