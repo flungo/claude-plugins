@@ -22,7 +22,11 @@ Only capture what a future agent, or the user in three weeks, would actually nee
 
 ## 1. Sweep the session
 
-Review the full conversation, start to end — not just the last few turns.
+**Sweep the transcript, not the conversation left in context.**
+Compaction drops turns from the context window and leaves them in the transcript on disk, so on a session that compacted, what you can still see is a summary written to keep the work moving — and the loose ends this step hunts for are the first thing such a summary discards.
+[`transcript-digest.md`](transcript-digest.md) covers the digest script, what it carries, and what to do on a surface that has no transcript file.
+
+Review the digest start to end — not just the last few turns.
 For each distinct thread of work or discussion, check for:
 
 - **Open questions**: anything posed, by either side, that never got resolved.
@@ -31,6 +35,10 @@ For each distinct thread of work or discussion, check for:
   These are easy to lose because they don't read as open questions — they read as progress.
 - **Silent assumptions**: a call made without flagging it, that the user might want to weigh in on, or that's worth recording so it isn't re-litigated later.
 - **Useful facts or decisions with nowhere to live**: anything discovered or decided in-session that future work in this repo or area would benefit from knowing, but that currently only exists in this chat.
+
+Two of these never appear in the reply text at all.
+A choice the user made between options put to them, and a tool call they denied or interrupted, both reach the transcript through tool results — and a denial carrying "not that, park it" is a soft deferral like any other.
+The digest surfaces both as their own entries.
 
 ## 2. Classify each item
 
@@ -102,6 +110,7 @@ Before touching anything, present the user a list:
   For each: what it covers, why each thread in it meets all three tests, and what holds them together.
   Say plainly that they can decline and have any of it finished in-session or captured durably instead — a handoff is a proposal about how to move work, not a verdict on it.
 - **Needs durable capture**: the fact, decision, or task; the proposed destination (which `CLAUDE.md`, or which repo's issue tracker); and a draft of what you'd actually write — not just "I'll note this somewhere".
+- **Digest improvements**: anything this sweep showed the transcript filter getting wrong, per [`transcript-digest.md` § Feed a bad filter back into the plugin](transcript-digest.md#feed-a-bad-filter-back-into-the-plugin) — what it did, the record shape behind it, and the change you would make.
 
 Nothing gets written, committed, or filed until the user confirms.
 A general go-ahead on the whole list is enough — don't demand a separate confirmation per item unless their response leaves it unclear which items they meant.

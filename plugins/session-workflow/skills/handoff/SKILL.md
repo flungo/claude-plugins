@@ -21,6 +21,14 @@ Where the scope is several threads, say so in the document — what it covers an
 
 The two differ in more than emphasis, so decide which one you're in before writing anything.
 
+## Read the session from its transcript
+
+Build the document from the session's transcript rather than the conversation left in context.
+Compaction drops turns from the context window and leaves them on disk, so a document written from context omits whatever compaction discarded — which on a long session is most of the early work, and a handoff exists because the session is long.
+
+[`transcript-digest.md`](../session-clean/references/transcript-digest.md) covers the digest script, what it carries, and what to do on a surface that has no transcript file.
+Scoped mode needs it just as much: you are after the named threads' full history, and a thread's earliest turns — where it was framed and bounded — are the ones least likely to still be in context.
+
 ## Output
 
 Emit the document as a **single fenced markdown block** in the reply, with nothing else inside the fence.
