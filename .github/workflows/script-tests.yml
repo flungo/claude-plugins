@@ -1,6 +1,7 @@
 # Repo-specific (not a reusable workflow — this marketplace is its only
 # consumer): run the unit tests for scripts shipped inside plugins, so a
-# regression in one can't merge. Currently markdown-standards' reflow.py.
+# regression in one can't merge. Every plugins/*/tests/ suite runs, each from
+# its own plugin root.
 name: Script tests
 
 on:

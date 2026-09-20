@@ -11,6 +11,9 @@ It sweeps the whole session for anything left undone, unanswered, or decided onl
 Full procedure: `references/session-clean.md`.
 Read it before starting — classifying each thread, grouping whatever is better handed off, and picking a destination for the rest are what make the verdict trustworthy.
 
+The sweep reads the session's **transcript**, not the conversation left in context: `references/transcript-digest.md`.
+Compaction drops turns from the context window and leaves them on disk, so sweeping what is still in context misses precisely the threads that have been open longest.
+
 ## Never write anything unprompted
 
 This command **proposes and waits**.
