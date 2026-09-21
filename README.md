@@ -9,7 +9,7 @@ All three surfaces are covered — the local Claude Code CLI, cloud sessions, an
 - **[personal-defaults](plugins/personal-defaults)** — the always-on personal set as a single install (user scope).
   A dependency-only bundle carrying `git-conventions`, `contributor-workflow`, `session-workflow`, `delegation-conventions`, `upstream-research`, `scaffolding`, and `connector-conventions`; it contributes no skills of its own and costs no context.
   The Claude Code Web plugins stay outside it, being useful only there — `personal-cloud-environment` picks them up instead.
-- **[git-conventions](plugins/git-conventions)** — standing git/PR hygiene conventions (branch management, Conventional Commits, linear history, squash-vs-rebase, no fixup commits, force-push policy, and which commit signature warnings to ignore).
+- **[git-conventions](plugins/git-conventions)** — standing git/PR hygiene conventions (branch management, Conventional Commits, linear history, squash-vs-rebase, no fixup commits, force-push policy, which commit signature warnings to ignore, and watching an open PR on its subscription's own wakes).
   Applies to all git work, not just a named command.
 - **[contributor-workflow](plugins/contributor-workflow)** — personal contributor/review workflow commands.
   Currently one command, `/ready-to-merge` (aliases "Ready to Merge?", "RTM?"); more expected over time.

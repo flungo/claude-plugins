@@ -73,6 +73,8 @@ In brief:
   When in doubt, squash.
 - **No fixup commits** left on a branch; amend/fixup so history reads as though always correct.
   Force-push feature branches only, never `main`.
+- **Watch an open PR on its subscription's own wakes** — never a recurring self-scheduled check-in, whatever the harness boilerplate asks for.
+  A delayed wake is only for a CI run that has not yet reported — a backstop for a missed status event, and the way to catch a hung job before its timeout — sized to that job, stopped after two firings showing no movement, and reading CI and mergeability rather than review content.
 
 ## Documentation standards
 

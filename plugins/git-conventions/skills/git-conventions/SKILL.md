@@ -1,6 +1,6 @@
 ---
 name: git-conventions
-description: Fabrizio's standing git/PR hygiene conventions. Consult this whenever making commits, creating or managing branches, rebasing, force-pushing, or opening/landing a PR in any repo he's working in — not just when a named command is invoked. Also consult it before reporting a commit signature or "Unverified" warning, which is usually expected and not actionable. These are his default rules (never commit to main, branch management, Conventional Commits, linear history, squash-vs-rebase, no fixup commits, force-push policy, signature-warning handling) and apply to ordinary git work generally, complementing rather than overriding whatever the repo's own CLAUDE.md/CONTRIBUTING.md says.
+description: Fabrizio's standing git/PR hygiene conventions. Consult this whenever making commits, creating or managing branches, rebasing, force-pushing, or opening/landing a PR in any repo he's working in — not just when a named command is invoked. Also consult it before reporting a commit signature or "Unverified" warning, which is usually expected and not actionable, and before subscribing to a PR's activity, scheduling any reminder or check-in about a PR, or acting on what a self-scheduled wake finds on one. These are his default rules (never commit to main, branch management, Conventional Commits, linear history, squash-vs-rebase, no fixup commits, force-push policy, signature-warning handling, PR monitoring) and apply to ordinary git work generally, complementing rather than overriding whatever the repo's own CLAUDE.md/CONTRIBUTING.md says.
 ---
 
 # Git Conventions
@@ -10,6 +10,9 @@ Apply these any time you're doing git operations in one of his repos, whether or
 
 Read `references/git-conventions.md` any time you're about to commit, branch, rebase, force-push, or open/land a PR — and before surfacing any commit signature warning, which has its own section explaining why it is normally expected rather than a defect.
 It's the standing set of rules (never commit to `main`, Conventional Commits, linear history, squash-vs-rebase, no fixup commits left on a branch, force-push policy, signature-warning handling) that governs his day-to-day git usage.
+
+Read it again once the PR is open, which is where its § PR monitoring applies.
+That rule binds at the end of every turn on a watched PR and on waking from one — moments the read triggers above do not reach on their own — so opening a PR is the cue to load it for the rest of the session.
 
 **These conventions complement repo/context rules, they never supersede them.**
 Always check for a `CLAUDE.md`, `CONTRIBUTING.md`, `.github/`, or similar contributing guidance in the repo first; where the repo specifies something different, follow the repo.
