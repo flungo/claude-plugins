@@ -13,6 +13,7 @@ Read it before starting — classifying each thread, grouping whatever is better
 
 The sweep reads the session's **transcript**, not the conversation left in context: `references/transcript-digest.md`.
 Compaction drops turns from the context window and leaves them on disk, so sweeping what is still in context misses precisely the threads that have been open longest.
+The filter it runs is this plugin's **`scripts/transcript-digest.py`**, at `${CLAUDE_PLUGIN_ROOT}/scripts/transcript-digest.py`.
 
 ## Never write anything unprompted
 

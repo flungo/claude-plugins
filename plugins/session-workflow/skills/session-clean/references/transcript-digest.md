@@ -24,11 +24,11 @@ There the sweep reads the conversation in context, because that is all there is,
 
 ## Run the digest
 
-This plugin ships `scripts/transcript-digest.py`, which needs only Python 3.
-Locate it rather than assuming a path — a plugin is copied into its own cache directory at install, and `${CLAUDE_PLUGIN_ROOT}` is substituted into hook and MCP configuration rather than exported to a shell:
+This plugin ships [`transcript-digest.py`](../../../scripts/transcript-digest.py), which needs only Python 3.
+Resolve that path against the path this file was read from, then bind it once:
 
 ```bash
-DIGEST=$(find ~/.claude/plugins -name transcript-digest.py -path '*session-workflow*' -print -quit)
+DIGEST=<../../../scripts/transcript-digest.py, resolved against this file>
 python3 "$DIGEST" --stats
 ```
 
