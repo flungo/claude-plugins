@@ -52,14 +52,15 @@ Because the convention is render-neutral, a migration can be **gated on render-e
 This plugin ships [`reflow.py`](../../../scripts/reflow.py), which implements exactly that — never do a blind unwrap instead.
 It covers everything the rule covers: top-level paragraphs, list items at any nesting level and marker width, and blockquotes including nested ones, carrying each continuation line's indent or `>` prefix, and leaving hard-break blocks alone.
 Leading YAML frontmatter is split off before any of that and carried through byte-identically — it is metadata, not prose, and the render gate cannot protect it, because a CommonMark parser reads the delimiters as a thematic break and the key lines as an ordinary paragraph, so YAML mangled into one line renders to exactly the same `<p>`.
-At runtime the script is at `${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py`; run it from the target repo's root:
+Resolve [`reflow.py`](../../../scripts/reflow.py) against the path this file was read from, then run it from the target repo's root:
 
 ```sh
 pip install markdown-it-py
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py"                     # dry run — sample diffs + per-file gate result
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py" --apply             # write the render-verified reflow in place
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py" --apply docs/a.md   # only these paths
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py" --apply docs/       # a directory means the Markdown beneath it
+REFLOW=<../../../scripts/reflow.py, resolved against this file>
+python3 "$REFLOW"                     # dry run — sample diffs + per-file gate result
+python3 "$REFLOW" --apply             # write the render-verified reflow in place
+python3 "$REFLOW" --apply docs/a.md   # only these paths
+python3 "$REFLOW" --apply docs/       # a directory means the Markdown beneath it
 ```
 
 Given no paths it takes every `**/*.md`, reaching into dot directories so `.github/` is covered — the same reach as the check, so what the script leaves behind is the check's judgement rather than a file it never opened.

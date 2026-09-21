@@ -1,6 +1,6 @@
 ---
 name: plugin-authoring
-description: Fabrizio's conventions for authoring Claude Code plugins and the marketplace that carries them. Consult this whenever adding a plugin, adding or renaming a skill, editing a plugin.json or marketplace.json, declaring a dependency, or deciding what to bump a version to. Covers the directory and manifest layout, composing via first-party dependencies and declaring every one you reference, whether a plugin is ambient or on-demand and what may depend on it, filing a fact by what it is a property of, skill naming in single- and multi-skill plugins, keeping cross-references current by basename, the reserved word that makes a skill silently fail to load on claude.ai, YAML frontmatter hazards in SKILL.md, editing a JSON manifest without mangling it, validating and test-installing before committing, and the minor-versus-patch test. The prose inside a plugin follows the instructional-writing style in the writing-styles skill, a declared dependency.
+description: Fabrizio's conventions for authoring Claude Code plugins and the marketplace that carries them. Consult this whenever adding a plugin, adding or renaming a skill, editing a plugin.json or marketplace.json, declaring a dependency, or deciding what to bump a version to. Covers the directory and manifest layout, how a skill points at a script the plugin ships, composing via first-party dependencies and declaring every one you reference, whether a plugin is ambient or on-demand and what may depend on it, filing a fact by what it is a property of, skill naming in single- and multi-skill plugins, keeping cross-references current by basename, the reserved word that makes a skill silently fail to load on claude.ai, YAML frontmatter hazards in SKILL.md, editing a JSON manifest without mangling it, validating and test-installing before committing, and the minor-versus-patch test. The prose inside a plugin follows the instructional-writing style in the writing-styles skill, a declared dependency.
 ---
 
 # Plugin Authoring
@@ -30,6 +30,12 @@ plugins/<name>/
 ```
 
 A plugin ships a script it owns under `scripts/`, and a hook under `hooks/`, beside `skills/`.
+
+## Pointing at a script the plugin ships
+
+`SKILL.md` names the runnable path with the `CLAUDE_PLUGIN_ROOT` placeholder, which resolves there.
+A reference gives a path relative to itself instead, because it is read from disk unsubstituted and no command may carry a placeholder.
+Full rule, and why this file cannot spell that placeholder out: `references/shipped-scripts.md`.
 
 ## Composition
 

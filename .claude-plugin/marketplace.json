@@ -69,7 +69,7 @@
       "name": "markdown-standards",
       "source": "./plugins/markdown-standards",
       "description": "Markdown authoring conventions — unambiguous cross-references and link hygiene, semantic line breaks, unique cross-referenced headings, adjacent-blockquote handling, compact tables (delimiter rows included), handling lint rules a linter bump introduces, fix-the-target-never-suppress remediation for markdownlint/link-check failures, and the /adopt-markdown-ci onboarding command.",
-      "version": "0.13.0"
+      "version": "0.13.1"
     },
     {
       "name": "delegation-conventions",
@@ -81,7 +81,7 @@
       "name": "session-workflow",
       "source": "./plugins/session-workflow",
       "description": "Named commands for ending a Claude session well — /session-clean to confirm nothing durable is left only in the chat, and /handoff to carry an unfinished session into a fresh one, opening that session directly where the surface can start one. Depends on connector-conventions and delegation-conventions.",
-      "version": "0.5.0"
+      "version": "0.5.1"
     },
     {
       "name": "writing-styles",
@@ -93,7 +93,7 @@
       "name": "claude-plugin-standards",
       "source": "./plugins/claude-plugin-standards",
       "description": "Conventions for authoring plugins — the directory and manifest layout, composing via first-party dependencies and declaring every one you reference, whether a plugin is ambient or on-demand and what may depend on it, filing a fact by what it is a property of, skill naming in single- and multi-skill plugins, keeping cross-references current by basename, the reserved word that silently breaks a skill on claude.ai, YAML frontmatter hazards, editing a JSON manifest without mangling it, validating before committing, and when to bump which part of the version. Depends on writing-styles and markdown-standards.",
-      "version": "0.2.0"
+      "version": "0.3.0"
     },
     {
       "name": "scaffolding",
