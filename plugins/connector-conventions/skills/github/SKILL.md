@@ -1,6 +1,6 @@
 ---
 name: github
-description: Working rules for GitHub through the MCP connector — what its read path silently mangles, what its write path actually corrupts, and which fields it does not hand back. Consult this whenever reading or writing issue, pull request, review, or release text through the GitHub MCP tools, before acting on a body that looks truncated or malformed, before rewriting a description or comment because a read looked wrong, before posting a body containing a long URL, and before concluding that a field is absent from a pull request. Covers the sanitising that deletes tag-shaped tokens and silently truncates bodies, the long-URL corruption that breaks a link on the page as well as in the read, how to check what GitHub actually stored, and the verified behaviours behind each rule.
+description: Working rules for GitHub through the MCP connector — what its read path silently mangles, what its write path actually corrupts, and which fields it does not hand back. Consult this whenever reading or writing issue, pull request, review, or release text through the GitHub MCP tools, before acting on a body that looks truncated or malformed, before rewriting a description or comment because a read looked wrong, before posting a body containing a long URL, before concluding that a field is absent from a pull request, and before deciding how long to leave a running workflow job before looking again. Covers the sanitising that deletes tag-shaped tokens and silently truncates bodies, the long-URL corruption that breaks a link on the page as well as in the read, how to check what GitHub actually stored, the run and job timings a wait can be sized from, and the verified behaviours behind each rule.
 ---
 
 # GitHub
@@ -53,6 +53,11 @@ The connector does not surface everything the API has.
 
 So absence in a connector response is not absence on GitHub.
 Before concluding that a repository doesn't set something, or that a state can't be read, check whether the field is one the connector simply doesn't return — `references/behaviours.md` records the ones met so far, and another source (a `gh` CLI where the session has one, the rendered page, or a related field) will usually have it.
+
+## A job's own history is what sizes a wait on it
+
+The Actions tools return start and end timestamps per run, per job, and per step, so how long a given job usually takes is one lookup against previous runs of the same workflow rather than a guess.
+Reach for it whenever you are deciding how long to leave a running job before looking again; `references/behaviours.md` names the fields.
 
 ## References
 

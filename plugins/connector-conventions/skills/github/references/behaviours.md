@@ -90,3 +90,12 @@ A run can be triggered through `actions_run_trigger` with an explicit `ref`, and
 This is GitHub's own behaviour rather than the connector's, recorded here because the connector is where you meet it — and because the common assumption is the opposite, that a workflow must land on the default branch before it can be dispatched at all.
 
 **Do:** dispatch against the feature branch to test a new workflow, instead of merging it first to find out whether it works.
+
+## The Actions tools carry the timings a job's duration is read from
+
+`actions_list` with `list_workflow_runs` returns `run_started_at` and `updated_at` per run; with `list_workflow_jobs` it returns `started_at` and `completed_at` per job, and the same pair per step within it.
+A baseline for how long a given job usually takes is therefore one lookup against previous runs of the same workflow.
+
+*Verified 2026-09-20 against `flungo/claude-plugins`, where the Markdown checks come in at 8 to 12 seconds and `Plugin validate` at around 20.*
+
+**Do:** size any wait on a running job from its own history rather than from a round number picked without looking — the two differ by orders of magnitude as often as not.
