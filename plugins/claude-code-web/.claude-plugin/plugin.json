@@ -1,11 +1,12 @@
 {
   "name": "claude-code-web",
   "description": "Working preferences and hard constraints for Claude Code Web — the browser/cloud sandbox — so a session works with its egress, tooling, repo-scoping, and CI-delegation realities instead of fighting them. Environment-agnostic; what any one environment is configured with belongs in a companion skill.",
-  "version": "0.12.1",
+  "version": "0.13.0",
   "author": {
     "name": "flungo"
   },
   "dependencies": [
-    "connector-conventions"
+    "connector-conventions",
+    "git-conventions"
   ]
 }

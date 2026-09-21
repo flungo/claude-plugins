@@ -14,14 +14,14 @@
     {
       "name": "connector-conventions",
       "source": "./plugins/connector-conventions",
-      "description": "Conventions for working through connectors — the rules a connected store carries in its own content, and the rules an agent should follow when using it. A skill per connector (Google Drive, where a CONVENTIONS document governs its folder and everything beneath it; GitHub, whose MCP read path silently mangles issue and pull request text, whose write path corrupts a long URL, and which omits reviewDecision), plus cross-cutting skills such as handling information that crosses between sources.",
-      "version": "0.3.1"
+      "description": "Conventions for working through connectors — the rules a connected store carries in its own content, and the rules an agent should follow when using it. A skill per connector (Google Drive, where a CONVENTIONS document governs its folder and everything beneath it; GitHub, whose MCP read path silently mangles issue and pull request text, whose write path corrupts a long URL, which omits reviewDecision, and whose Actions tools carry the run and job timings a wait can be sized from), plus cross-cutting skills such as handling information that crosses between sources.",
+      "version": "0.4.0"
     },
     {
       "name": "git-conventions",
       "source": "./plugins/git-conventions",
-      "description": "Standing git/PR hygiene conventions (Conventional Commits, linear history, squash-vs-rebase, no fixup commits, force-push policy, and which commit signature warnings to ignore).",
-      "version": "0.3.0"
+      "description": "Standing git/PR hygiene conventions (Conventional Commits, linear history, squash-vs-rebase, no fixup commits, force-push policy, which commit signature warnings to ignore, and watching a PR on its subscription's own wakes rather than a recurring self-check-in).",
+      "version": "0.4.0"
     },
     {
       "name": "contributor-workflow",
@@ -38,8 +38,8 @@
     {
       "name": "claude-code-web",
       "source": "./plugins/claude-code-web",
-      "description": "Working preferences and hard constraints for Claude Code Web — the egress proxy and CA bundle, the GitHub MCP as the only route to the API here, containers that reboot around every turn while their disk persists, repo scoping and add_repo's cross-owner rule, project config in a multi-repo session, why repo-adopted plugins never load, why user-scope ones lag the marketplace and how a session updates them for its own next turn, starting another session from inside one and what it does and doesn't inherit, and delegating unrunnable steps to CI. Environment-agnostic; how the connectors themselves behave lives in connector-conventions, a dependency.",
-      "version": "0.12.1"
+      "description": "Working preferences and hard constraints for Claude Code Web — the egress proxy and CA bundle, the GitHub MCP as the only route to the API here, containers that reboot around every turn while their disk persists, repo scoping and add_repo's cross-owner rule, project config in a multi-repo session, why repo-adopted plugins never load, why user-scope ones lag the marketplace and how a session updates them for its own next turn, starting another session from inside one and what it does and doesn't inherit, the PR-subscription boilerplate's standing check-in request and why it is declined, and delegating unrunnable steps to CI. Environment-agnostic; how the connectors themselves behave lives in connector-conventions, a dependency.",
+      "version": "0.13.0"
     },
     {
       "name": "personal-cloud-environment",
