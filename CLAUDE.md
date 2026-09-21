@@ -28,7 +28,7 @@ Plugins are split by **enablement boundary, not by topic** (ADR-001): a plugin i
 
 Reusable CI (markdownlint, lychee, `terraform` plan/apply) is **not** a plugin — it lives in `flungo/github-workflows` and is referenced by `scaffolding`.
 
-This repo adopts those Markdown workflows and `flungo-workflows` itself (see § Markdown validation CI), plus a repo-specific plugin-validate workflow.
+This repo adopts those Markdown workflows and `flungo-workflows` itself, plus two workflows of its own (see § CI).
 
 > **🤖 Agent** — `terraform-provider-standards` is deliberately scoped to conventions common to *any* provider; single-provider specifics (the coverage ratchet, container-based acceptance tests, and env-fallback provider config) stay in each provider's own `CLAUDE.md`.
 > When a **second** Terraform provider exists, revisit extracting whatever the two genuinely share into the plugin.
@@ -99,10 +99,23 @@ In brief:
 - **Unique headings for link targets** — give any heading you cross-reference a unique name, so an anchor can't silently redirect.
 - **Fix the link or its target, never suppress the check** — for markdownlint findings, link/anchor failures, and the external-URL sweep alike.
 
-## Markdown validation CI
+## CI
 
-The checks those conventions pair with, adopted from [flungo/github-workflows](https://github.com/flungo/github-workflows) and pinned `@v2`: markdownlint (`.markdownlint-cli2.jsonc`), a blocking offline check of relative links and heading anchors on every PR, and a daily external-URL sweep that reports through a single auto-updated issue, and `markdown-sembr` — blocking on every PR — for the one semantic-line-break MUST rule, two sentences never sharing a source line.
-A repo-specific `plugin-validate` workflow runs `claude plugin validate` on the marketplace and every plugin, so a broken manifest can't merge.
+Six workflows run here: four adopted from [flungo/github-workflows](https://github.com/flungo/github-workflows) and pinned `@v2`, plus `plugin-validate` and `script-tests`, which exist only in this repo.
+
+| Workflow | Check | Runs on | Fails when |
+| --- | --- | --- | --- |
+| Markdown lint | `markdown-lint / lint` | PR, push to `main` | markdownlint-cli2 finds anything over `**/*.md`, configured by `.markdownlint-cli2.jsonc` |
+| Markdown links | `markdown-links / internal` | PR, push to `main` | a relative link or heading anchor doesn't resolve, checked offline |
+| Markdown links | `markdown-links / external` | daily 06:00 UTC, manual | an external URL is dead — reported through a single auto-updated issue, never blocking, and skipped on a PR |
+| Markdown semantic line breaks | `markdown-sembr / sembr` | PR, push to `main` | two sentences share a source line, the one semantic-line-break MUST rule |
+| Plugin validate | `claude plugin validate` | PR, push to `main`, under `.claude-plugin/` or `plugins/` | the marketplace manifest or any plugin manifest is broken |
+| Script tests | `python unittest` | PR, push to `main`, under `plugins/*/scripts/` or `plugins/*/tests/` | a case fails in any `plugins/*/tests/` suite, each run from its own plugin root |
+| flungo/github-workflows | — | weekly Monday 07:00 UTC, manual | never — it raises and auto-closes an issue if this repo pins a frozen `@vN` major |
+
+The three Markdown callers take no path filter, while the two repo-specific workflows do.
+A path filter stops the check run being created at all on a PR that touches nothing it covers, so a filtered workflow can never be a required context — a cost the Markdown checks decline and these two accept.
+
 The conventions themselves stay in `markdown-standards` (above); only repo-specific facts belong here:
 
 - **Tool version — read it from a CI run, don't trust this note.**
