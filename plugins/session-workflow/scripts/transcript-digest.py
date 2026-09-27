@@ -132,7 +132,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     ap.add_argument("--include-thinking", action="store_true", help="include the agent's thinking")
     ap.add_argument("--include-tools", action="store_true", help="include one line per tool call")
     ap.add_argument("--include-sidechains", action="store_true", help="include subagent turns")
-    ap.add_argument("--include-meta", action="store_true", help="include synthetic and hook turns")
+    ap.add_argument("--include-meta", action="store_true", help="include synthetic, hook, and harness-notification turns")
     ap.add_argument("--keep-reminders", action="store_true", help="keep <system-reminder> blocks")
     ap.add_argument("--no-decisions", action="store_true", help="omit question answers and denials")
     ap.add_argument("--max-chars", type=int, default=0, metavar="N",
@@ -221,6 +221,13 @@ def render(path: Path, args: argparse.Namespace) -> str:
                     if not args.include_meta:
                         continue
                     tags.append("meta")
+                elif (rec.get("origin") or {}).get("kind") == "task-notification":
+                    # A harness notice (queued notifications, a fired check-in)
+                    # arrives as a user turn; its content reaches the session
+                    # through a tool result, which is dropped anyway.
+                    if not args.include_meta:
+                        continue
+                    tags.append("notification")
                 if not args.keep_reminders:
                     body = REMINDER_RE.sub("", body)
             else:
