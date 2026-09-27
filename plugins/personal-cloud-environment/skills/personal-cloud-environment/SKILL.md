@@ -57,6 +57,7 @@ The domains are as applied; the *why* column is inferred from each host's role r
 | --- | --- |
 | `*.githubusercontent.com` | Public file reads over `raw.githubusercontent.com` and the other `githubusercontent` hosts, without needing repo scope. |
 | `flungo.grafana.net` | The Grafana Cloud stack the Grafana MCP server talks to. |
+| `grafana.com` | Grafana's docs and the Grafana Cloud API (`grafana.com/api`), including the plugin catalog the Grafana MCP server's plugin search calls. `flungo/terraform-grafana-cloud` requires checking every new access-policy scope against the official scope reference on this host; added 2026-09-27 at a session's request, after that check was blocked. |
 | `oncall-prod-us-central-0.grafana.net` | The OnCall API for that same stack. |
 | `pkg-containers.githubusercontent.com` | Blob storage behind GitHub's container registry, so a `ghcr.io` pull can fetch layers. |
 | `production.cloudfront.docker.com` | The CDN Docker Hub serves image layers from, so `docker pull` completes once the daemon is up. |
