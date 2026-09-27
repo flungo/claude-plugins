@@ -58,7 +58,7 @@ Included by default, in transcript order:
 - **`COMPACTION`** — each boundary, its trigger, and the token count it discarded.
 - **`COMPACTION SUMMARY`** — the summary compaction injected in place of what it dropped.
 
-Left out: tool calls, tool results, injected context and attachments, subagent turns, thinking blocks, and synthetic turns.
+Left out: tool calls, tool results, injected context and attachments, subagent turns, thinking blocks, synthetic turns, and harness notices that arrive as user turns (queued-notification and check-in alerts).
 
 ## Read it for the sweep
 

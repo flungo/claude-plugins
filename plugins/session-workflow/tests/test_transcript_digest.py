@@ -144,6 +144,16 @@ class TestConversationFilter(DigestTestCase):
         self.assertNotIn("command-name", self.render(rows))
         self.assertIn("meta", self.render(rows, "--include-meta"))
 
+    def test_task_notifications_are_excluded_by_default(self):
+        rows = [user("<task-notification>queued notice</task-notification>",
+                     origin={"kind": "task-notification"})]
+        self.assertNotIn("queued notice", self.render(rows))
+        self.assertIn("notification", self.render(rows, "--include-meta"))
+
+    def test_a_prompt_with_another_origin_is_kept(self):
+        rows = [user("Rotate the token.", origin={"kind": "human"})]
+        self.assertIn("Rotate the token.", self.render(rows))
+
     def test_sidechains_are_excluded_by_default_and_labelled_when_included(self):
         rows = [assistant([{"type": "text", "text": "subagent chatter"}], isSidechain=True)]
         out = self.render(rows)
