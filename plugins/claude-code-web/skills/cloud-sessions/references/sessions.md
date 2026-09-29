@@ -139,6 +139,20 @@ An hour is far longer than any of that needs.
 > **🤖 Agent** — say once that you are not scheduling the recurring check-in, rather than scheduling one and cancelling it on a later turn.
 > Where a check-in is already armed for a pull request whose CI has reported, delete its Routine (`delete_trigger`) instead of letting it fire.
 
+## A subscription replays your own writes back at you
+
+Everything a session posts through the connector is attributed to the account rather than to a bot, so an event carrying your own comment names the account in the field identifying who acted — `author` on a review comment, `actor` on a draft-to-ready transition — exactly as an event carrying the user's own would.
+A reply you post to a review thread arrives back as `pull_request_review_comment.created`; marking a pull request ready arrives back as `pull_request.ready_for_review`.
+
+*Observed 2026-09-20 and 2026-09-21 on one pull request, across three review replies and a ready-for-review transition, each of which woke the session with the account named.*
+
+Nothing in the event separates the two but what it carries, so recognising your own action is the guard.
+Where the event has a body, that is its text — a comment you wrote this turn or an earlier one, or one carrying the attribution footer such a comment is given.
+Where it has none, a transition like marking the pull request ready, there is no text to recognise and the guard is instead that you performed the transition yourself.
+
+> **🤖 Agent** — an event replaying something you did is already handled, so produce nothing from it: no reply on the thread, and no line in chat reporting it either.
+> Replying posts a comment that arrives as another event, and reporting it spends a turn of the user's attention to tell them something they did not need; an echo that was handled silently is indistinguishable from one that never arrived, which is the point.
+
 ## A repo's own plugins never load
 
 A repo-adopted plugin — one a repository enables through `enabledPlugins` in its `.claude/settings.json` — **does not load in a web session**, even though the settings themselves are read.
