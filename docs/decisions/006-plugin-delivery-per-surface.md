@@ -92,6 +92,8 @@ The script is configuration held outside this repo, so the README carries its te
 `personal-cloud-environment` records the environment as applied, and what that environment carries is part of describing it — so it depends on `claude-code-web` and on `personal-defaults`, a dependency-only bundle of the surface-independent set with no skills and no measurable context cost.
 Installing that single plugin resolves all seven, so adding a plugin later is a change to this repo rather than an edit to configuration held in the environment where nothing can review or validate it.
 
+> **Amended 2026-10-04:** The dependency is now `cloud-sessions`, the plugin's new name; the script's install line is unaffected, since it names only `personal-cloud-environment` ([ADR-010](010-plugin-and-skill-names-avoid-reserved-words.md)).
+
 **Keep the claude.ai personal-plugin marketplace as the intended chat mechanism.**
 It is the only channel that would keep chat in sync by pulling rather than re-uploading, and the [help centre](https://support.claude.com/en/articles/13837440-use-plugins-in-claude) documents it for chat on the web, the Desktop Chat tab, and Cowork with no stated plan gate.
 The blocker was a front-end crash on a marketplace the backend had already accepted, so the response was to report it with the captures rather than design around it — filed upstream as [anthropics/claude-code#83139](https://github.com/anthropics/claude-code/issues/83139).

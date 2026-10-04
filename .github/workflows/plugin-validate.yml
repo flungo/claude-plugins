@@ -25,8 +25,12 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 'lts/*'
+      # Unpinned on purpose: a new validator rule should fail here, not at
+      # install time. The version step is what CLAUDE.md says to read.
       - name: Install Claude Code CLI
         run: npm install -g @anthropic-ai/claude-code
+      - name: Claude Code CLI version
+        run: claude --version
       - name: Validate marketplace manifest
         run: claude plugin validate .
       - name: Validate every plugin
