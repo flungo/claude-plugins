@@ -23,8 +23,8 @@ Plugins are split by **enablement boundary, not by topic** (ADR-001): a plugin i
 
 | Scope | Enabled how | Plugins |
 | --- | --- | --- |
-| **Personal (user)** | Installed + enabled in the claude.ai account; always on | `personal-defaults` (bundle) → `git-conventions`, `contributor-workflow`, `session-workflow`, `delegation-conventions`, `upstream-research`, `scaffolding`, `connector-conventions`; plus `personal-cloud-environment` → `claude-code-web` |
-| **Repo-adopted (project)** | Declared in a repo's `.claude/settings.json` | `docs-standards`, `markdown-standards`, `writing-styles`, `claude-plugin-standards`, `terraform-standards`, `terraform-provider-standards` |
+| **Personal (user)** | Installed + enabled in the claude.ai account; always on | `personal-defaults` (bundle) → `git-conventions`, `contributor-workflow`, `session-workflow`, `delegation-conventions`, `upstream-research`, `scaffolding`, `connector-conventions`; plus `personal-cloud-environment` → `cloud-sessions` |
+| **Repo-adopted (project)** | Declared in a repo's `.claude/settings.json` | `docs-standards`, `markdown-standards`, `writing-styles`, `agent-plugin-standards`, `terraform-standards`, `terraform-provider-standards` |
 
 Reusable CI (markdownlint, lychee, `terraform` plan/apply) is **not** a plugin — it lives in `flungo/github-workflows` and is referenced by `scaffolding`.
 
@@ -37,7 +37,7 @@ This repo adopts those Markdown workflows and `flungo-workflows` itself (see § 
 
 The authoritative conventions are two plugins this repo dogfoods at project scope via [`.claude/settings.json`](.claude/settings.json) ([ADR-009](docs/decisions/009-plugin-authoring-standards.md)):
 
-- **Structure** — `claude-plugin-standards` (`plugins/claude-plugin-standards/skills/plugin-authoring/SKILL.md`): the directory and manifest layout, declaring every dependency you reference, citing a dependency's skill or reference by name rather than by path, whether a plugin is ambient or on-demand and what may therefore depend on it, filing a fact by what it is a property of, skill naming in single- and multi-skill plugins, keeping cross-references current by basename, the reserved word that makes a skill silently fail to load on claude.ai, `SKILL.md` frontmatter hazards, editing a JSON manifest without mangling it, validating and test-installing before committing, and the minor-versus-patch test.
+- **Structure** — `agent-plugin-standards` (`plugins/agent-plugin-standards/skills/agent-plugin-standards/SKILL.md`): the directory and manifest layout, declaring every dependency you reference, citing a dependency's skill or reference by name rather than by path, whether a plugin is ambient or on-demand and what may therefore depend on it, filing a fact by what it is a property of, skill naming in single- and multi-skill plugins, keeping cross-references current by basename, the reserved words a plugin or skill name may not carry, `SKILL.md` frontmatter hazards, editing a JSON manifest without mangling it, validating and test-installing before committing, and the minor-versus-patch test.
 - **Prose** — the instructional-writing style in `writing-styles` (`plugins/writing-styles/skills/writing-styles/references/instructional-writing.md`): state the current truth rather than the document's own history, converge on plain fact over time, fix wrong guidance at its source instead of annotating it, and never direct an agent to do what only the user can do.
 
 Only what is specific to *this marketplace* stays here:
@@ -45,10 +45,8 @@ Only what is specific to *this marketplace* stays here:
 - **A new user-scope plugin must be reachable from a bundle.**
   `personal-defaults` carries the surface-independent set and `personal-cloud-environment` carries what a cloud session needs; between them they are the only things anything installs by name.
   A plugin in neither is one nobody installs, and nothing fails to say so.
-- **The user-scope-only plugins are `scaffolding`, `claude-code-web`, and `upstream-research`** ([ADR-003](docs/decisions/003-owned-vs-third-party-adoption.md)), so no repo-adopted plugin here may declare one as a dependency or point at it.
-- **Where each kind of fact goes here** ([ADR-008](docs/decisions/008-connector-behaviour-belongs-to-the-connector.md)): a connector's behaviour to its skill in `connector-conventions`, which tools exist at all to the surface plugin (`claude-code-web`), and platform behaviour an agent reasons about away from any tool to the domain plugin that owns the subject (`git-conventions`).
-- **Two skills here are not named after their plugin** — `claude-code-web` ships `cloud-sessions`, and `claude-plugin-standards` ships `plugin-authoring` — both because the plugin name carries the reserved word.
-  Deliberate, and not an inconsistency to tidy away.
+- **The user-scope-only plugins are `scaffolding`, `cloud-sessions`, and `upstream-research`** ([ADR-003](docs/decisions/003-owned-vs-third-party-adoption.md)), so no repo-adopted plugin here may declare one as a dependency or point at it.
+- **Where each kind of fact goes here** ([ADR-008](docs/decisions/008-connector-behaviour-belongs-to-the-connector.md)): a connector's behaviour to its skill in `connector-conventions`, which tools exist at all to the surface plugin (`cloud-sessions`), and platform behaviour an agent reasons about away from any tool to the domain plugin that owns the subject (`git-conventions`).
 
 ## Sensitive information
 
@@ -111,6 +109,10 @@ The conventions themselves stay in `markdown-standards` (above); only repo-speci
   The shared workflow tracks the action's major tag, so the linter version *floats*: it moved from `markdownlint-cli2-action@v19` (markdownlint-cli2 0.17.2 / markdownlint 0.37.4) to `@v24` (0.23.1 / 0.41.1) without any change here, and the new major added `MD060` — which failed CI on tables that had been clean for months (PR #31).
   Take the version from the first line of the markdownlint job's log and match it locally (`npx markdownlint-cli2@<version> "**/*.md" "!node_modules/**"`) before chasing findings; matching a *stale* pin gives a false pass, which is the failure mode this note exists to prevent.
   Last seen: **0.23.2** (markdownlint 0.41.1), 2026-09-20.
+- **`claude` CLI version — it floats too, deliberately.**
+  `plugin-validate` installs `@anthropic-ai/claude-code` unpinned, so a new validator rule fails CI here before it can fail an install: 2.1.289 began rejecting plugin names that start with `claude-`, failing `main` on content that had passed days earlier ([ADR-010](docs/decisions/010-plugin-and-skill-names-avoid-reserved-words.md)).
+  Take the version from the job's "Claude Code CLI version" step and validate with that one (`npx -y @anthropic-ai/claude-code@<version> plugin validate .`), since the CLI a session happens to have installed may be older or newer.
+  Last seen: **2.1.289**, 2026-10-04.
 - **`.lycheeignore`** is populated only from this repo's own token-enabled `workflow_dispatch` runs, per the rules in its header.
 - **The pre-canned-data exclusion lands on `fixtures/`, not `evals/`, and is declared once.**
   `.markdownlint-cli2.jsonc` ignores `**/fixtures/**`, which is where a plugin's eval inputs live, so they are out of scope for the prose conventions entirely (`markdown-standards` carries why).
@@ -129,8 +131,9 @@ In short:
 - Split plugins by enablement scope (personal user-scope vs repo-adopted project-scope); compose via first-party dependencies; reusable CI lives in `github-workflows`, not the marketplace ([ADR-001](docs/decisions/001-marketplace-structure.md)).
 - Diátaxis docs, Nygard ADRs, self-encoded rather than depending on a third-party ADR plugin ([ADR-002](docs/decisions/002-documentation-and-adr-model.md)).
 - Markdown authoring conventions ship as the `markdown-standards` plugin here, referenced from the `github-workflows` docs instead of being inlined there or copied into consumer `CLAUDE.md`s ([ADR-004](docs/decisions/004-markdown-standards-plugin.md)).
-- Generalisable guidance and Fabrizio's own applied configuration ship as separate plugins — `claude-code-web` holds for any user in any environment, `personal-cloud-environment` records his, and depends on it ([ADR-005](docs/decisions/005-generic-plugins-and-personal-configuration.md)).
+- Generalisable guidance and Fabrizio's own applied configuration ship as separate plugins — `cloud-sessions` holds for any user in any environment, `personal-cloud-environment` records his, and depends on it ([ADR-005](docs/decisions/005-generic-plugins-and-personal-configuration.md)).
 - Plugin delivery differs per surface — a cloud-environment setup script carries the user-scope plugins into every cloud session, chat installs from the marketplace as its own enablement decision, and repo-adopted plugins are left at project scope even though they don't load in cloud sessions ([ADR-006](docs/decisions/006-plugin-delivery-per-surface.md)).
 - Conventions for working through connectors ship as one plugin — `connector-conventions` — with a skill per connector plus cross-cutting skills, aspects within a connector split by reference file rather than by skill; its Drive skill finds a folder's `CONVENTIONS` document by walking the parent chain and applies the deepest one last, and the owner's actual rules stay in Drive rather than in a companion plugin ([ADR-007](docs/decisions/007-connector-carried-conventions.md)).
 - A fact is sorted by what it is a property of, not by where it was discovered — connector behaviour to `connector-conventions`, which tools exist at all to the surface plugin, platform behaviour reasoned about away from any tool to the domain plugin that owns the subject ([ADR-008](docs/decisions/008-connector-behaviour-belongs-to-the-connector.md)).
-- Prose styles ship as an on-demand `writing-styles` plugin that `claude-plugin-standards` and `docs-standards` both depend on, so the instructional-writing rules are stated once and cited by name; applying nothing until named is what makes it safe to depend on from either scope, and plugin *structure* conventions live in `claude-plugin-standards` ([ADR-009](docs/decisions/009-plugin-authoring-standards.md)).
+- Prose styles ship as an on-demand `writing-styles` plugin that `agent-plugin-standards` and `docs-standards` both depend on, so the instructional-writing rules are stated once and cited by name; applying nothing until named is what makes it safe to depend on from either scope, and plugin *structure* conventions live in `agent-plugin-standards` ([ADR-009](docs/decisions/009-plugin-authoring-standards.md)).
+- Plugin and skill names keep `claude` and `anthropic` out altogether — the `claude` CLI rejects a plugin name passing as Anthropic's own and claude.ai a skill name containing `claude` — which renamed `claude-code-web` to `cloud-sessions` and `claude-plugin-standards` to `agent-plugin-standards` ([ADR-010](docs/decisions/010-plugin-and-skill-names-avoid-reserved-words.md)).

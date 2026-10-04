@@ -11,7 +11,7 @@ Everything else (your memory, blog posts, Q&A sites, search summaries) is a *lea
 ## Reading a source without adding the repo
 
 You usually only need to *read* an upstream repo, not work in it.
-In the web sandbox `add_repo` can't add another owner's repo, and `api.github.com` is blocked (see the `claude-code-web` plugin), so:
+In the web sandbox `add_repo` can't add another owner's repo, and `api.github.com` is blocked (see the `cloud-sessions` plugin), so:
 
 - **Clone the source shallow** when you need to grep across it: `git clone --depth 1 https://github.com/<owner>/<repo>.git /tmp/<repo>-src`, then read the real files.
 - **Fetch a single file** with `WebFetch` on `https://raw.githubusercontent.com/<owner>/<repo>/<ref>/<path>` — unauthenticated, any public repo.

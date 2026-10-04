@@ -1,7 +1,7 @@
 # Helper repos
 
 Some of Fabrizio's work is achieved by pulling in a **helper repo** — a shared/infrastructure repo you don't normally have in a session, but `add_repo` when a task needs it, then **remove once the work is merged and validated**.
-(`add_repo` mechanics and the "added for as long as required" discipline live in `claude-code-web`; this file is about *which* helper repos exist and *what* each is for.)
+(`add_repo` mechanics and the "added for as long as required" discipline live in `cloud-sessions`; this file is about *which* helper repos exist and *what* each is for.)
 
 | Helper repo | For |
 | --- | --- |
