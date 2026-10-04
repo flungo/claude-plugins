@@ -25,6 +25,7 @@ Two things always enabled together at the same scope can be one plugin (as separ
 Enablement maps onto Claude Code's two scopes:
 
 - **Personal — user scope** (installed + enabled in the claude.ai account, always on): `git-conventions`, `contributor-workflow`, `claude-code-web`, `upstream-research`, `scaffolding`.
+  > **Amended 2026-10-04:** `claude-code-web` is now `cloud-sessions`, renamed because the `claude` CLI reserves the `claude-` prefix ([ADR-010](010-plugin-and-skill-names-avoid-reserved-words.md)).
 - **Repo-adopted — project scope** (declared in a repo's `.claude/settings.json`, so every session on that repo inherits it): `docs-standards`, `terraform-standards`, `terraform-provider-standards`.
 
 **Compose plugins via first-party marketplace dependencies.**

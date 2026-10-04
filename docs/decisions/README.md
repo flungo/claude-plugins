@@ -14,6 +14,7 @@ ADRs are numbered sequentially and **never deleted or renumbered** — a superse
 | [007](007-connector-carried-conventions.md) | Conventions for working through connectors, as one plugin with a skill per connector | Accepted |
 | [008](008-connector-behaviour-belongs-to-the-connector.md) | A connector's behaviour belongs to the connector plugin, not the surface or workflow that met it | Accepted |
 | [009](009-plugin-authoring-standards.md) | Authoring conventions ship as plugins, with shared styles cited on demand | Accepted |
+| [010](010-plugin-and-skill-names-avoid-reserved-words.md) | Plugin and skill names avoid Anthropic's reserved words | Accepted |
 
 ## Template
 

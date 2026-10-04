@@ -25,6 +25,7 @@ Split them anyway, on a second axis: **a plugin's content is either generalisabl
 
 - `claude-code-web` is written to hold for **any** Claude Code Web user in **any** environment.
   It describes the allowlist as user-controlled and extensible without claiming what any particular one contains, and points at the system prompt or a companion skill for those specifics.
+  > **Amended 2026-10-04:** `claude-code-web` is now `cloud-sessions`, and `personal-cloud-environment` depends on it under that name ([ADR-010](010-plugin-and-skill-names-avoid-reserved-words.md)).
 - `personal-cloud-environment` records **Fabrizio's applied environment** — its name, extra allowed domains and why each is there, environment variable names and their purpose, and its (absent) setup script — and declares `claude-code-web` as a dependency, so installing it brings the generic guidance with it.
 - The owner-specific plugin also carries the **round-trip rule**: an agent that wants the environment changed opens a PR against `flungo/claude-plugins` proposing the entry, and Fabrizio applies the change as he merges; when he says he has changed the environment, persisting it back into that skill is due in the same session.
 

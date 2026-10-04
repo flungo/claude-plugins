@@ -5,7 +5,7 @@ description: The manually-applied configuration of Fabrizio's own Claude Code We
 
 # The personal Claude Code Web environment
 
-`cloud-sessions` (in the `claude-code-web` plugin) describes how Claude Code Web behaves for **anyone**.
+`cloud-sessions` (its own plugin) describes how Claude Code Web behaves for **anyone**.
 This skill records what **Fabrizio has manually applied** on top of those defaults for his own environment, so a session can tell his choices apart from the platform's.
 
 Two things follow from that split:
@@ -35,7 +35,7 @@ Background on the policy and on what each level permits is in Anthropic's [netwo
 ### Setup script
 
 The script installs Fabrizio's always-on plugins into every cloud session, because plugins enabled at user scope on the account do not reach one — the environment's setup script is the only channel that does.
-It is a single install: `personal-cloud-environment` carries `claude-code-web` and the `personal-defaults` bundle through its dependencies, so adding a plugin to the marketplace needs no change here.
+It is a single install: `personal-cloud-environment` carries `cloud-sessions` and the `personal-defaults` bundle through its dependencies, so adding a plugin to the marketplace needs no change here.
 
 The authoritative copy of the script lives in [the `flungo/claude-plugins` README](https://github.com/flungo/claude-plugins#install-in-claude-code-web-and-other-cloud-sessions); this file records only that the environment runs it.
 Two consequences worth knowing in a session: the installed versions come from a filesystem snapshot and can lag the repo by up to about a week, and a plugin newly added to the marketplace does not arrive until the script is edited or the cache expires.

@@ -1,7 +1,7 @@
 {
   "name": "upstream-research",
   "description": "Fabrizio's method for researching and verifying facts about third-party and upstream components — go to the authoritative source (the project's own repo and docs), distrust training data and web-search summaries, and record provenance.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": {
     "name": "flungo"
   }

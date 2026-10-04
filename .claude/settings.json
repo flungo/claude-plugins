@@ -12,6 +12,6 @@
     "docs-standards@flungo-plugins": true,
     "markdown-standards@flungo-plugins": true,
     "writing-styles@flungo-plugins": true,
-    "claude-plugin-standards@flungo-plugins": true
+    "agent-plugin-standards@flungo-plugins": true
   }
 }
