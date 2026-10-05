@@ -59,4 +59,3 @@ Bumping a provider is then a **deliberate, reviewable commit of its own**: regen
 CI must never update the lockfile — a run that quietly rewrites it defeats the point.
 
 > If the environment can't run `init` at all (no binary, a blocked registry), fix *that* first — an un-committed lockfile is usually a symptom of it, not a decision.
-> For Claude Code Web specifically, the `claude-code-web` plugin's `egress-and-tooling.md` has the working recipe.

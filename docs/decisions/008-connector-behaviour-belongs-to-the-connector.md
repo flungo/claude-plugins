@@ -26,6 +26,7 @@ Three kinds of fact were being conflated, and only their common mention of "GitH
   It travels with the connector, so it must load wherever the connector is used.
 - **A property of the environment** — which tools exist at all, what the network reaches → the surface plugin (`claude-code-web`).
   Tool *choice* is environment business and stays there: in a web session the GitHub MCP is not the preferred option but the only one, since there is no `gh` CLI and `api.github.com` is blocked, and that is a stronger claim than a preference.
+  > **Amended 2026-10-04:** The surface plugin is now `cloud-sessions` ([ADR-010](010-plugin-and-skill-names-avoid-reserved-words.md)).
 - **A property of the platform, reasoned about away from any tool** — how a merge method rewrites commits, why merged commits report as unverified → the domain plugin that owns the subject (`git-conventions`).
 
 A connector skill therefore never tells a session to prefer its connector over another tool; it is consulted once the agent is already using it.

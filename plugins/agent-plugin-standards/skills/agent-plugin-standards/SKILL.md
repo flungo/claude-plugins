@@ -1,9 +1,9 @@
 ---
-name: plugin-authoring
-description: Fabrizio's conventions for authoring Claude Code plugins and the marketplace that carries them. Consult this whenever adding a plugin, adding or renaming a skill, editing a plugin.json or marketplace.json, declaring a dependency, or deciding what to bump a version to. Covers the directory and manifest layout, composing via first-party dependencies and declaring every one you reference, whether a plugin is ambient or on-demand and what may depend on it, filing a fact by what it is a property of, skill naming in single- and multi-skill plugins, keeping cross-references current by basename, the reserved word that makes a skill silently fail to load on claude.ai, YAML frontmatter hazards in SKILL.md, editing a JSON manifest without mangling it, validating and test-installing before committing, and the minor-versus-patch test. The prose inside a plugin follows the instructional-writing style in the writing-styles skill, a declared dependency.
+name: agent-plugin-standards
+description: Fabrizio's conventions for authoring Claude Code plugins and the marketplace that carries them. Consult this whenever adding a plugin, adding or renaming a skill, editing a plugin.json or marketplace.json, declaring a dependency, or deciding what to bump a version to. Covers the directory and manifest layout, composing via first-party dependencies and declaring every one you reference, whether a plugin is ambient or on-demand and what may depend on it, filing a fact by what it is a property of, skill naming in single- and multi-skill plugins, keeping cross-references current by basename, the reserved words a plugin or skill name may not carry, YAML frontmatter hazards in SKILL.md, editing a JSON manifest without mangling it, validating and test-installing before committing, and the minor-versus-patch test. The prose inside a plugin follows the instructional-writing style in the writing-styles skill, a declared dependency.
 ---
 
-# Plugin Authoring
+# Agent Plugin Standards
 
 How a plugin in this marketplace is **structured** — its directories, manifests, dependencies, names, and versions.
 
@@ -62,12 +62,16 @@ A plugin ships a script it owns under `scripts/`, and a hook under `hooks/`, bes
 
 ## Naming
 
-- **A skill's `name` must not contain `claude`.**
+- **A plugin's `name` must not pass as one of Anthropic's own.**
+  `claude plugin validate` rejects a name that starts with `claude-`, `anthropic-`, `anthropics-`, or `cc-plugin-`, that is `claude`, `anthropic`, `anthropics`, `claude-code`, or `claude-mods`, or that puts `official` beside `claude` or `anthropic`.
+  The marketplace manifest fails on the same name, so one such plugin fails validation for the whole marketplace.
+- **A skill's `name` must not contain `claude`** anywhere.
   claude.ai's marketplace ingestion rejects it outright — `plugin_upload_skill_upload_name_reserved_words`, *"Skill name in SKILL.md cannot contain the reserved word 'claude'"* — so the skill silently never loads on that surface.
-  Nothing local catches this: `claude plugin validate` passes, and Claude Code loads the skill normally, so the only signal is the marketplace's `sync_errors` after a sync.
-  The restriction binds **skills only**, on the evidence of a plugin whose name carries the word syncing while its own skill was rejected, so a plugin may keep such a name while its skill is named for what it governs.
-  Prefer a skill name that describes the domain without naming the product.
-- **A single-skill plugin names its skill after itself**, so a mismatch is a signal that something forced it — the reserved word above being the usual cause.
+  Nothing local catches this: `claude plugin validate` parses a skill's frontmatter but passes a skill named `claude` (checked on 2.1.289), and Claude Code installs and loads it normally, so the only signal is the marketplace's `sync_errors` after a sync.
+- **Keep `claude` and `anthropic` out of a plugin or skill name altogether**, not only out of the positions the rules above name.
+  Both rules are enforced by the platform rather than by this marketplace, and a newer CLI or ingestion can extend them, so a name with neither word anywhere in it stays valid when they do.
+  Naming another product where it is the domain is unaffected — `terraform-standards`, `google-drive`.
+- **A single-skill plugin names its skill after itself.**
   A **multi-skill** plugin names each skill for the axis that varies within it instead, the plugin name supplying the rest: a `connector-conventions` plugin carries `google-drive`, not `drive-conventions`, which would say "conventions" twice in `<plugin>:<skill>`.
 - **Name for the domain, not the initial slice** — plugin names are install identifiers, so a rename is breaking.
   A name that fits only the first skill will sit wrong as soon as a second arrives.

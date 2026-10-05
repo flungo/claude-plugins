@@ -26,6 +26,7 @@ The same rules govern a Diátaxis reference doc under `docs/reference/`, which `
 - **`writing-styles`** owns the prose conventions, one reference file per style.
   The first is `references/instructional-writing.md`, the style for text a reader acts on as instruction.
 - **`claude-plugin-standards`** owns plugin *structure*, in a `plugin-authoring` skill, and depends on `writing-styles` and `markdown-standards`.
+  > **Amended 2026-10-04:** The plugin and its skill are now both `agent-plugin-standards` ([ADR-010](010-plugin-and-skill-names-avoid-reserved-words.md)).
 - **`docs-standards`** depends on `writing-styles` too, alongside its existing `markdown-standards` dependency.
 
 This repository adopts all three through [`.claude/settings.json`](../../.claude/settings.json).
@@ -72,6 +73,8 @@ That is what rules out user scope for it, which would apply a personal house sty
 `claude-plugin-standards` is named for the domain rather than the first slice, per the rule it now carries itself; `skill-standards` would have fitted only its initial content.
 Its skill is `plugin-authoring` because a skill name may not contain "claude" — claude.ai's ingestion rejects it — the same constraint that makes `claude-code-web` ship `cloud-sessions`.
 `writing-styles` is plural because the plugin is the home for styles as a category, with room for a second.
+
+> **Amended 2026-10-04:** The skill-only reading of the reserved word did not hold: `claude` CLI 2.1.289 rejects a plugin name starting `claude-`, so both plugins named here were renamed — `claude-plugin-standards` to `agent-plugin-standards`, `claude-code-web` to `cloud-sessions` — and each skill now carries its plugin's name, leaving `CLAUDE.md` no mismatched skills to explain ([ADR-010](010-plugin-and-skill-names-avoid-reserved-words.md)).
 
 **The structural conventions move out of `CLAUDE.md` into `claude-plugin-standards`.**
 Without them that plugin would hold nothing but a dependency edge.
