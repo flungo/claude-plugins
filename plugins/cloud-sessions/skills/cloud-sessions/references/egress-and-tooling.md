@@ -73,7 +73,7 @@ $S/terraform validate
 - **`plan` is generally not possible** — it needs both the backend credentials and the provider's own credentials.
   Leave `plan` to CI and treat the PR-posted plan as the authority; see `ci-iteration.md`.
 - **Afterwards, delete `.terraform/`** (large, and gitignored by the standard Terraform `.gitignore`) but **keep `.terraform.lock.hcl`, which is committed** — if `init` changed it, that is a real change to review and commit, not an artifact to discard.
-  Generating that lockfile is a repo-level convention; see the `terraform-standards` plugin.
+  How to generate that lockfile is the repo's own convention, so follow its `CLAUDE.md`.
 
 ## `sleep` is blocked
 
