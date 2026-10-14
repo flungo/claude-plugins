@@ -27,7 +27,7 @@ A variable added mid-session was visible to a later turn of that session, but th
 | Default allowed domains included | Yes |
 | Extra allowed domains | Listed below |
 | API credentials | Listed below |
-| Setup script | Installs the user-scope plugins — see below |
+| Setup script | Writes the auto-mode classifier rules and installs the user-scope plugins — see below |
 
 "Custom" network access with the [default allowed domains](https://code.claude.com/docs/en/claude-code-on-the-web#default-allowed-domains) still included means the common package-manager hosts work as documented, **plus** the extras below — it is an extension of the default policy, not a replacement for it.
 Background on the policy and on what each level permits is in Anthropic's [network access documentation](https://code.claude.com/docs/en/claude-code-on-the-web#network-access) and its [access levels](https://code.claude.com/docs/en/claude-code-on-the-web#access-levels) section.
@@ -37,7 +37,11 @@ Background on the policy and on what each level permits is in Anthropic's [netwo
 The script installs Fabrizio's always-on plugins into every cloud session, because plugins enabled at user scope on the account do not reach one — the environment's setup script is the only channel that does.
 It is a single install: `personal-cloud-environment` carries `cloud-sessions` and the `personal-defaults` bundle through its dependencies, so adding a plugin to the marketplace needs no change here.
 
-The authoritative copy of the script lives in [the `flungo/claude-plugins` README](https://github.com/flungo/claude-plugins#install-in-claude-code-web-and-other-cloud-sessions); this file records only that the environment runs it.
+It also writes Fabrizio's auto-mode classifier rules into `~/.claude/settings.json`, the only scope a cloud session can carry them in.
+The one rule today is a `soft_deny` named **Self-Scheduled PR Check-In**: it blocks a scheduled wake into this session that checks a pull request's reviews, comments, or general status, or re-arms such a check-in, and lets through a single short wait on CI.
+A block citing that name comes from this environment rather than the platform, and backs the PR-monitoring policy in `git-conventions` — rely on the PR subscription's events instead, and treat Fabrizio naming a timer as what clears it.
+
+The authoritative copy of the script lives in [the `flungo/claude-plugins` README](https://github.com/flungo/claude-plugins#install-in-claude-code-web-and-other-cloud-sessions); this file records only what a session needs to know of it.
 Two consequences worth knowing in a session: the installed versions come from a filesystem snapshot and can lag the repo by up to about a week, and a plugin newly added to the marketplace does not arrive until the script is edited or the cache expires.
 
 > **🤖 Agent** — a **missing** user-scope plugin needs adding to the script, and the way to ask for that is a PR editing the README copy linked above, per § Keeping this record in step.
