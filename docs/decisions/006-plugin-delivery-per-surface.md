@@ -88,6 +88,8 @@ The script adds this marketplace and installs each user-scope plugin at user sco
 Because one environment serves every cloud surface and the script is repo-independent, this covers every Claude Code Web session in every repo, not only repos that adopt the marketplace.
 The script is configuration held outside this repo, so the README carries its text verbatim as the authoritative copy.
 
+> **Amended 2026-10-14:** the script now also writes auto-mode classifier rules into user settings, because the classifier reads `autoMode` only from user settings, managed settings, and `--settings`, so neither a plugin nor a repo can supply one; the README carries the rules with the script.
+
 **Name one bundle in the script rather than enumerating plugins.**
 `personal-cloud-environment` records the environment as applied, and what that environment carries is part of describing it — so it depends on `claude-code-web` and on `personal-defaults`, a dependency-only bundle of the surface-independent set with no skills and no measurable context cost.
 Installing that single plugin resolves all seven, so adding a plugin later is a change to this repo rather than an edit to configuration held in the environment where nothing can review or validate it.
