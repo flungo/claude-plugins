@@ -1,6 +1,6 @@
 ---
 name: agent-plugin-standards
-description: Fabrizio's conventions for authoring Claude Code plugins and the marketplace that carries them. Consult this whenever adding a plugin, adding or renaming a skill, editing a plugin.json or marketplace.json, declaring a dependency, or deciding what to bump a version to. Covers the directory and manifest layout, how a skill points at a script the plugin ships, composing via first-party dependencies and declaring every one you reference, whether a plugin is ambient or on-demand and what may depend on it, filing a fact by what it is a property of, skill naming in single- and multi-skill plugins, keeping cross-references current by basename, the reserved words a plugin or skill name may not carry, YAML frontmatter hazards in SKILL.md, editing a JSON manifest without mangling it, validating and test-installing before committing, and the minor-versus-patch test. The prose inside a plugin follows the instructional-writing style in the writing-styles skill, a declared dependency.
+description: Fabrizio's conventions for authoring Claude Code plugins. Consult this whenever adding a plugin, adding or renaming a skill, shipping a script or a hook, editing a plugin.json or marketplace.json, declaring a dependency, or deciding what to bump a version to. Covers the directory and manifest layout, how a skill points at a script the plugin ships and the tests it comes with, composing via first-party dependencies and declaring every one you reference, whether a plugin is ambient or on-demand and what may depend on it, filing a fact by what it is a property of, skill naming in single- and multi-skill plugins, keeping cross-references current by basename, the reserved words a plugin or skill name may not carry, SKILL.md frontmatter hazards, editing a JSON manifest without mangling it, validating and test-installing before committing, and the minor-versus-patch test. The prose inside a plugin follows the instructional-writing style in the writing-styles skill, a declared dependency.
 ---
 
 # Agent Plugin Standards
@@ -32,6 +32,9 @@ plugins/<name>/
 ├── tests/                       dev-time tests for scripts/; never loaded at runtime
 └── evals/                       dev-time fixtures; never loaded at runtime
 ```
+
+**A script the plugin ships comes with tests**, under `tests/`, run from the plugin root.
+A skill's instructions reach an agent that can read around them; a script either does what it claims or silently does not, so its behaviour is the part worth pinning down.
 
 ## Pointing at a script the plugin ships
 
@@ -97,6 +100,8 @@ Use that same basename everywhere the file is referred to, in other plugins and 
 ## `SKILL.md` frontmatter
 
 - **The frontmatter is YAML** — keep `name` and `description` on single lines, and **avoid a colon followed by a space (`:` + space) inside an unquoted value**, which parses as a mapping and silently drops the frontmatter.
+- **`description` has a maximum of 1024 characters and `name` 64**, and neither may contain an XML tag — [the Agent Skills overview](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview) carries the field requirements.
+  Count the description before committing: `claude plugin validate` passes an over-length one.
 - The `description` is what drives skill triggering; write it for that.
   For an on-demand plugin, write it to trigger on *being named* rather than on the work itself, and say in it that the skill applies nothing on its own.
 
@@ -110,6 +115,7 @@ Nothing rejects the result — it is valid JSON, and validation passes because t
 
 - **Validate:** `claude plugin validate .` for the marketplace and `claude plugin validate plugins/<name>` for each plugin.
 - **Test-install from the local path** and confirm the skill loads and any dependency resolves.
+- **Run its tests:** `python3 -m unittest discover -s tests` from the plugin root, for a plugin that ships a script.
 
 A local-path install skips any symlink whose target lies outside the plugin's own directory, while the same symlink is dereferenced and copied for a plugin installed from the marketplace's git source.
 Content shared that way is therefore present in production and absent under test, which is why sharing runs through a dependency here.
