@@ -51,7 +51,7 @@
       "name": "upstream-research",
       "source": "./plugins/upstream-research",
       "description": "Researching and verifying facts about third-party/upstream components — go to the authoritative source (the project's own repo and docs), distrust training data, web-search summaries, and generated docs, and record provenance.",
-      "version": "0.1.1"
+      "version": "0.1.2"
     },
     {
       "name": "terraform-standards",
