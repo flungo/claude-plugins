@@ -35,6 +35,11 @@ A connector skill therefore never tells a session to prefer its connector over a
 **Where a plugin references another, it declares the dependency** — including where the reference is expected to be satisfied some other way, such as through the `personal-defaults` bundle.
 The bundle is a convenience, not a guarantee, and a stated reference with no declared dependency is a dangling one wherever the plugin is installed alone.
 
+> **Amended 2026-10-17:** The rule now turns on reliance rather than mention.
+> A plugin declares what its guidance cannot be followed without; naming another to mark where its own scope ends, as an example, or as something to install needs no dependency, since nothing dangles when that plugin is absent.
+> Read as written, the rule would have had `terraform-standards` declare `terraform-provider-standards` for a one-line pointer between siblings, imposing a provider repo's conventions on every configuration repo.
+> Where reliance cannot be declared because the plugin relied on is ambient in another scope, the guidance is made to hold without it instead.
+
 **A connector skill carries a convention-discovery half only where the store holds rules that nothing else loads.**
 Google Drive needs one because nothing there is read automatically; a repository does not, because its own files already load and the harness understands them.
 [ADR-007](007-connector-carried-conventions.md)'s shared reference filenames are therefore a naming convention for the files a connector skill *does* have, not a requirement that every connector have all three.
