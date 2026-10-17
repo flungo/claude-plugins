@@ -155,6 +155,7 @@ User settings are the only place a cloud session can get classifier rules from: 
 The cloud launcher passes its own `autoMode` rules with `--settings`, and the two merge rather than one replacing the other — `claude auto-mode config` in a session shows both.
 The one rule today backs the PR-monitoring policy in `git-conventions` — no self-scheduled check-in on a pull request beyond a short wait on CI — so a session that follows the harness's instruction to keep one scheduled is stopped by the classifier rather than relying on the skill alone.
 Run `claude auto-mode critique` against a changed rule before it goes in; it flags the conflicts with the built-in rules that make the classifier ignore one.
+Then run the [auto-mode evals](plugins/personal-cloud-environment/evals/auto-mode/README.md), which check each case the rule is meant to block or allow against the classifier itself.
 
 Every step is deliberately non-fatal, because a setup script that exits non-zero stops the session from starting at all.
 But a bare `|| true` hides a failed install behind a session that starts perfectly and is simply missing a plugin, so each step announces its own failure instead.
