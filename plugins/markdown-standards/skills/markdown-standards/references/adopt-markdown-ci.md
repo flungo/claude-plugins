@@ -99,7 +99,7 @@ Adopting may be a **single PR**, provided it still contains those distinct commi
 ## The reflow pass, as the sembr check's fix commit
 
 Applying semantic line breaks to a repo's *existing* Markdown is a pure source-whitespace change with identical rendered output.
-Use this plugin's render-gated [`reflow.py`](../../../scripts/reflow.py) (`${CLAUDE_PLUGIN_ROOT}/scripts/reflow.py`) from the target repo's root — see `prose-conventions.md § Semantic line breaks` for what it does and does not touch, and for the paths and exclusions it accepts.
+Use this plugin's render-gated [`reflow.py`](../../../scripts/reflow.py), resolved against the path this file was read from, from the target repo's root — see `prose-conventions.md § Semantic line breaks` for what it does and does not touch, and for the paths and exclusions it accepts.
 Run it **after** the `ignores` above are in the config, so the pass it makes is the one the checks will grade.
 Land it as its own commit; it is best-effort, and any file it reports as gate-failed is left untouched by design.
 
