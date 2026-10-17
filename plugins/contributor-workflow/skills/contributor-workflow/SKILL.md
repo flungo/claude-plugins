@@ -25,7 +25,7 @@ Full procedure: `references/ready-to-merge.md`.
 If neither is available, ask.
 
 **Tooling**: use whichever GitHub tooling the session actually has — some environments offer only the MCP, others a `gh` CLI alongside it, and which to reach for is the environment's business rather than this command's.
-Review thread state needs a GraphQL call either way.
+Review thread state comes from the MCP's thread read, or from a GraphQL call where `gh` is all there is.
 Where you are working through the MCP, **`connector-conventions:github`** (a declared dependency of this plugin) covers what its reads mangle and omit — both of which bite a command that reads PR descriptions and review threads and then rewrites them.
 
 **Tests**: `evals/` holds regression fixtures for the commit-history and thread-triage logic in this command — see `evals/README.md`.
