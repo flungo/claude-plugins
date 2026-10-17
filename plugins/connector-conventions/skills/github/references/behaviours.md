@@ -79,9 +79,17 @@ Rewriting the body does not repair it, because the same write re-applies the wra
 
 `reviewDecision` is the field that says whether a pull request is approved, and the connector does not surface it.
 
-**Do:** read it another way rather than concluding it is unset — `gh pr view --json reviewDecision` where the session has a `gh` CLI, or infer it from `mergeable_state` being `clean` while unapproved, together with the reviews list showing no `APPROVED`.
+**Do:** read it another way rather than concluding it is unset — `gh pr view --json reviewDecision` where the session can reach GitHub's GraphQL API, which is the only API that carries it, or else infer it from `mergeable_state` being `clean` while unapproved, together with the reviews list showing no `APPROVED`.
 
 Its only values are `APPROVED`, `CHANGES_REQUESTED`, and `REVIEW_REQUIRED`; **null means the repository doesn't require approval**, which is the usual case on a solo repo.
+
+## `get_review_comments` carries each thread's resolution state
+
+`pull_request_read` with `get_review_comments` returns review *threads*, not loose comments, and each thread carries `is_resolved`, `is_outdated` and its GraphQL node `id`.
+`resolve_review_thread` and `unresolve_review_thread` take that `id`.
+So the connector alone covers review-thread triage, with no GraphQL call of your own.
+
+*Verified 2026-10-17 against `flungo/claude-plugins#77`, whose one thread came back with `is_resolved: true` and a `PRRT_…` ID.*
 
 ## `workflow_dispatch` accepts a ref the workflow is not yet on
 
