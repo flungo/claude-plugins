@@ -55,6 +55,8 @@ Included by default, in transcript order:
   These are choices the user made that appear nowhere in the reply text.
 - **`USER INTERVENTION`** — a tool call the user denied or interrupted, with whatever they typed alongside it.
   A denial carrying "not that, park it" is a deferral the sweep must catch.
+  Finding one rests on the wording the CLI currently writes a denial or an interrupt in, so a change upstream makes these stop appearing rather than fail.
+  A session in which you know the user refused a call, whose digest carries none, is signal the digest dropped — take it to § Feed a bad filter back into the plugin.
 - **`COMPACTION`** — each boundary, its trigger, and the token count it discarded.
 - **`COMPACTION SUMMARY`** — the summary compaction injected in place of what it dropped.
 
