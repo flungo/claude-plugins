@@ -12,6 +12,7 @@ Full procedure: `references/session-clean.md`.
 Read it before starting — classifying each thread, grouping whatever is better handed off, and picking a destination for the rest are what make the verdict trustworthy.
 
 The sweep reads the session's **transcript**, not the conversation left in context: `references/transcript-digest.md`.
+The filter it runs is this plugin's **`scripts/transcript-digest.py`**, at `${CLAUDE_PLUGIN_ROOT}/scripts/transcript-digest.py`.
 Compaction drops turns from the context window and leaves them on disk, so sweeping what is still in context misses precisely the threads that have been open longest.
 
 ## Never write anything unprompted
