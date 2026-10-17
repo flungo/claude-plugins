@@ -28,6 +28,11 @@ This is a distinct failure from the multi-repo caveat already recorded in the `c
 `SKIP_PLUGIN_MARKETPLACE=true` was the obvious suspect, but it cannot be turned off: setting it empty in the environment's variables leaves it reading `true` in the session, while a canary variable added alongside arrives intact — so the platform sets it after copying yours, and no amount of configuration reaches it.
 The behaviour is therefore a property of cloud sessions rather than something to work around.
 
+> **Amended 2026-10-17:** The one-launch delay no longer occurs.
+> On Claude Code v2.1.302, a session in Fabrizio's environment, whose setup script adds the marketplace, loaded `docs-standards`, `markdown-standards`, `writing-styles` and `agent-plugin-standards` from this repo's `.claude/settings.json` in its only launch, as a session on v2.1.289 had on 2026-10-04.
+> The first finding still holds: the same check in an environment with no setup script found no marketplace configured and none of those plugins loaded.
+> So a repo-adopted plugin loads in a cloud session when the environment's setup script has added its marketplace, and not otherwise.
+
 **Both load behaviours were then confirmed end to end** in an independent session started against a cloud environment carrying the setup script, on 2026-08-01.
 All five user-scope plugins loaded, namespaced as `<plugin>:<skill>`, from the snapshot alone.
 `docs-standards` and `markdown-standards` — enabled by this repo's own `.claude/settings.json` — were reported by `claude plugin list` as installed, project scope, **enabled**, while their skills were absent from that session entirely.
@@ -122,6 +127,8 @@ Reach for it only as an explicitly dated, explicitly temporary measure.
 Promoting them to user scope would make them always-on everywhere and collapse the enablement-scope split that ADR-001 is built on.
 Repos that adopt them continue to summarise their rules in their own `CLAUDE.md`, which is part of the clone and therefore always present.
 
+> **Amended 2026-10-17:** They are no longer absent where the environment's setup script adds their marketplace, as Fabrizio's does; they stay at project scope, and the `CLAUDE.md` summary remains what reaches every other environment.
+
 ## Consequences
 
 ### Positive
@@ -138,6 +145,7 @@ Repos that adopt them continue to summarise their rules in their own `CLAUDE.md`
   Editing the setup script forces a rebuild.
 - Chat is a third enablement decision to maintain, not a free consequence of the other two: these plugins are written for repo work, so what belongs there has to be chosen deliberately rather than mirrored from user scope.
 - A repo's adopted conventions still do not load in cloud sessions, which keeps the pressure on each repo's `CLAUDE.md` to restate them.
+  > **Amended 2026-10-17:** They now load wherever the environment's setup script has added their marketplace, as Fabrizio's does; the pressure on `CLAUDE.md` remains for every environment that does not.
 
 **Settled 2026-08-04: the snapshot does carry them, and no added marker was needed.**
 `claude plugin install` already records an `installedAt` timestamp and the marketplace `gitCommitSha` per plugin in `/root/.claude/plugins/installed_plugins.json`, and the snapshot preserves both.

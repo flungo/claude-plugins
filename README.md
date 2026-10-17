@@ -16,7 +16,7 @@ All three surfaces are covered — the local Claude Code CLI, cloud sessions, an
   Depends on `git-conventions`, and on `connector-conventions` for what the GitHub MCP mangles and omits.
 - **[docs-standards](plugins/docs-standards)** — repo-adopted documentation conventions (project scope): the Diátaxis `docs/` split, Nygard ADRs, the ephemeral-plan lifecycle, README-index and staleness discipline, the agent and verify callouts, and a session-end doc-maintenance checklist hook.
   Depends on `markdown-standards`.
-- **[cloud-sessions](plugins/cloud-sessions)** — always-on working preferences for Claude Code Web (user scope): the egress proxy and CA bundle, the GitHub MCP as the *only* route to the API there, containers replaced across idle periods, repo scoping and `add_repo`'s cross-owner rule, project config in a multi-repo session, why repo-adopted plugins never load and how the user-scope ones arrive, starting another session from inside one and what it does and doesn't inherit, the PR-subscription boilerplate's standing check-in request and why it is declined, why a subscription replays the session's own writes back at it, and delegating unrunnable steps to CI.
+- **[cloud-sessions](plugins/cloud-sessions)** — always-on working preferences for Claude Code Web (user scope): the egress proxy and CA bundle, the GitHub MCP as the *only* route to the API there, containers replaced across idle periods, repo scoping and `add_repo`'s cross-owner rule, project config in a multi-repo session, which marketplace repo-adopted plugins need before they load and how the user-scope ones arrive, starting another session from inside one and what it does and doesn't inherit, the PR-subscription boilerplate's standing check-in request and why it is declined, why a subscription replays the session's own writes back at it, and delegating unrunnable steps to CI.
   Written to hold for any Claude Code Web user, in any environment.
   Which tools the sandbox leaves you with is its subject; how those connectors then behave is `connector-conventions`', which it depends on.
 - **[personal-cloud-environment](plugins/personal-cloud-environment)** — the record of Fabrizio's own Claude Code Web environment (user scope): the domains, environment variables, and setup he has applied on top of the platform defaults, and the round-trip rule that keeps that record and the live environment in step.
@@ -70,7 +70,7 @@ To pull in updates later:
 
 ## Install in Claude Code Web and other cloud sessions
 
-Cloud sessions install no plugins of their own, and a repo's `.claude/settings.json` declaration has no effect in one — see [ADR-006](docs/decisions/006-plugin-delivery-per-surface.md).
+Cloud sessions add no marketplace of their own, so a repo's `.claude/settings.json` declaration takes effect only once something else has added the marketplace it draws on — see [ADR-006](docs/decisions/006-plugin-delivery-per-surface.md).
 The working channel is the **setup script** on the cloud environment, which runs before Claude Code launches.
 
 Set it at [claude.ai/code](https://claude.ai/code) → the environment selector above the message box → the environment's settings icon → **Setup script**:
