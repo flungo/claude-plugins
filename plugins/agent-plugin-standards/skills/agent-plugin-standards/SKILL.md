@@ -1,6 +1,6 @@
 ---
 name: agent-plugin-standards
-description: Fabrizio's conventions for authoring Claude Code plugins and the marketplace that carries them. Consult this whenever adding a plugin, adding or renaming a skill, editing a plugin.json or marketplace.json, declaring a dependency, or deciding what to bump a version to. Covers the directory and manifest layout, how a skill points at a script the plugin ships, composing via first-party dependencies and declaring every one you reference, whether a plugin is ambient or on-demand and what may depend on it, filing a fact by what it is a property of, skill naming in single- and multi-skill plugins, keeping cross-references current by basename, the reserved words a plugin or skill name may not carry, YAML frontmatter hazards in SKILL.md, editing a JSON manifest without mangling it, validating and test-installing before committing, and the minor-versus-patch test. The prose inside a plugin follows the instructional-writing style in the writing-styles skill, a declared dependency.
+description: Fabrizio's conventions for authoring Claude Code plugins and the marketplace that carries them. Consult this whenever adding a plugin, adding or renaming a skill, editing a plugin.json or marketplace.json, declaring a dependency, or deciding what to bump a version to. Covers the directory and manifest layout, how a skill points at a script the plugin ships, composing via first-party dependencies and declaring every one you rely on, whether a plugin is ambient or on-demand and what may depend on it, filing a fact by what it is a property of, skill naming in single- and multi-skill plugins, keeping cross-references current by basename, the reserved words a plugin or skill name may not carry, YAML frontmatter hazards in SKILL.md, editing a JSON manifest without mangling it, validating and test-installing before committing, and the minor-versus-patch test. The prose inside a plugin follows the instructional-writing style in the writing-styles skill, a declared dependency.
 ---
 
 # Agent Plugin Standards
@@ -42,7 +42,10 @@ Full rule, and why this file cannot spell that placeholder out: `references/ship
 - **Compose via first-party dependencies.**
   Where a plugin builds on another, list it in the plugin's `dependencies` array (bare string = latest in the same marketplace).
   Installing the dependent auto-installs the dependency.
-  **Where a plugin references another, it declares the dependency** — including where a bundle is expected to supply it anyway, since a bundle is a convenience rather than a guarantee and any plugin can be installed on its own.
+  **Where a plugin relies on another, it declares the dependency** — including where a bundle is expected to supply it anyway, since a bundle is a convenience rather than a guarantee and any plugin can be installed on its own.
+  A plugin relies on another where its own guidance cannot be followed without the other's content: an instruction to follow it, or a step carried out according to it.
+  Naming another plugin to mark where this one's scope ends, as an example, or as something to install or adopt is not relying on it, and needs no dependency, because the guidance is complete with that plugin absent.
+  Where the dependency cannot be declared, because the plugin relied on is ambient and belongs to another scope, make the guidance hold without it: say where its content can be read, or restate what the step needs.
   Do not depend on third-party marketplaces ([ADR-001](https://github.com/flungo/claude-plugins/blob/main/docs/decisions/001-marketplace-structure.md), [ADR-002](https://github.com/flungo/claude-plugins/blob/main/docs/decisions/002-documentation-and-adr-model.md)).
 - **Cite a dependency's skill or reference by name, never by path, and share through a dependency rather than a symlink.**
   Each plugin is copied into its own cache directory at install, so a path reaching outside it does not resolve at runtime.
@@ -58,8 +61,8 @@ Full rule, and why this file cannot spell that placeholder out: `references/ship
 - **Never reference a user-scope-only plugin from a project-scope one.**
   A plugin that is never repo-adopted cannot be declared as a dependency by one that is ([ADR-003](https://github.com/flungo/claude-plugins/blob/main/docs/decisions/003-owned-vs-third-party-adoption.md)), and pointing at it anyway leaves a reference that dangles wherever the dependent is enabled.
   This holds however the plugin is written: being scope-*only* is a designation about where a plugin may be adopted at all, so it binds even where being on-demand would otherwise have made the dependency safe.
-  Where both need the same rule, put it in an **on-demand** plugin they both depend on and cite it by name.
-  Where it cannot be made on-demand, cite the **ADR** that records it (by full URL, since an installed plugin has no `docs/` tree beside it), or state the rule locally.
+  It is stricter than the reliance rule above: a project-scope plugin does not mention a user-scope-only one at all, not even as a pointer the reliance rule would allow, because a contributor working in that repository may never have it installed.
+  Where it needs what that plugin says, it takes it one of three ways instead: from an **on-demand** plugin both depend on, cited by name; from the **ADR** that records it, cited by full URL, since an installed plugin has no `docs/` tree beside it; or by stating it locally.
 - **File a fact by what it is a property of, not by where you found it.**
   A connector's behaviour — what a tool returns, mangles, or omits — belongs to the connector's own plugin, so it loads wherever that connector is used; which tools exist at all belongs to the surface plugin; platform behaviour an agent reasons about away from any tool stays with the domain plugin that owns the subject ([ADR-008](https://github.com/flungo/claude-plugins/blob/main/docs/decisions/008-connector-behaviour-belongs-to-the-connector.md)).
   A connector skill never tells a session to prefer its connector over some other tool — that is the environment's call, and the skill is consulted once the agent is already using it.
@@ -84,7 +87,7 @@ Full rule, and why this file cannot spell that placeholder out: `references/ship
 
 ## Keeping cross-references current
 
-A skill or reference is cited by **basename** — `cloud-sessions`, `instructional-writing` — never by path, so the basename is what a search can find.
+A skill or reference is cited by **basename** — `markdown-standards`, `instructional-writing` — never by path, so the basename is what a search can find.
 Use that same basename everywhere the file is referred to, in other plugins and in a repo's own docs, or the search stops working.
 
 - **After editing a skill or a reference**, search the repo for its basename and read each hit.
