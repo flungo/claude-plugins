@@ -147,6 +147,9 @@ plugins/<plugin-name>/
   .claude-plugin/plugin.json        — plugin manifest
   skills/<skill-name>/SKILL.md      — the skill Claude loads
   skills/<skill-name>/references/   — supporting reference docs
+  scripts/                          — scripts the plugin ships, run by a skill or a hook
+  hooks/hooks.json                  — the hooks the plugin registers
+  tests/                            — dev-time tests for scripts/ (not loaded at runtime)
   evals/                            — dev-time test fixtures (not loaded at runtime)
 ```
 

@@ -26,10 +26,12 @@ plugins/<name>/
 │   └── <skill-name>/
 │       ├── SKILL.md             the skill — frontmatter plus a short router
 │       └── references/          the detail SKILL.md points at, one file per area
+├── scripts/                     scripts the plugin ships, run by a skill or a hook
+├── hooks/
+│   └── hooks.json               the hooks the plugin registers
+├── tests/                       dev-time tests for scripts/; never loaded at runtime
 └── evals/                       dev-time fixtures; never loaded at runtime
 ```
-
-A plugin ships a script it owns under `scripts/`, and a hook under `hooks/`, beside `skills/`.
 
 ## Pointing at a script the plugin ships
 
