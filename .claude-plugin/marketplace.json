@@ -69,7 +69,7 @@
       "name": "markdown-standards",
       "source": "./plugins/markdown-standards",
       "description": "Markdown authoring conventions — unambiguous cross-references and link hygiene, semantic line breaks, unique cross-referenced headings, adjacent-blockquote handling, compact tables (delimiter rows included), handling lint rules a linter bump introduces, fix-the-target-never-suppress remediation for markdownlint/link-check failures, and the /adopt-markdown-ci onboarding command.",
-      "version": "0.13.1"
+      "version": "0.13.2"
     },
     {
       "name": "delegation-conventions",
@@ -92,14 +92,14 @@
     {
       "name": "agent-plugin-standards",
       "source": "./plugins/agent-plugin-standards",
-      "description": "Conventions for authoring plugins — the directory and manifest layout, how a skill points at a script the plugin ships, composing via first-party dependencies and declaring every one you reference, whether a plugin is ambient or on-demand and what may depend on it, filing a fact by what it is a property of, skill naming in single- and multi-skill plugins, keeping cross-references current by basename, the reserved words a plugin or skill name may not carry, YAML frontmatter hazards, editing a JSON manifest without mangling it, validating before committing, and when to bump which part of the version. Depends on writing-styles and markdown-standards.",
-      "version": "1.1.0"
+      "description": "Conventions for authoring plugins — the directory and manifest layout, how a skill points at a script the plugin ships, composing via first-party dependencies and declaring every one you rely on, whether a plugin is ambient or on-demand and what may depend on it, filing a fact by what it is a property of, skill naming in single- and multi-skill plugins, keeping cross-references current by basename, the reserved words a plugin or skill name may not carry, YAML frontmatter hazards, editing a JSON manifest without mangling it, validating before committing, and when to bump which part of the version. Depends on writing-styles and markdown-standards.",
+      "version": "1.2.0"
     },
     {
       "name": "scaffolding",
       "source": "./plugins/scaffolding",
       "description": "Setting up, building out, and extending repos across the fleet — gated on verified ownership (an owned repo adopts the conventions and standards plugins; a fork or third-party repo gets nothing without explicit consent), routing to the shared CI and the helper repos (github-workflows, claude-plugins, terraform-github) added as needed.",
-      "version": "0.3.2"
+      "version": "0.4.0"
     }
   ]
 }

@@ -128,4 +128,4 @@ The caller needs no exclusions of its own: it inherits the linter's, as § In a 
    Keep only repo-specific facts in `CLAUDE.md` — the repo's own rule overrides and their justifications, not how to run the checks, which is `validating-locally.md`.
    In particular **do not record a markdownlint version to pin to**: it floats with the action's major tag, so the note goes stale silently and yields a false local pass.
    If the repo carries an inlined `## Cross-references` block or paired-convention sections from an earlier adoption, remove them in favour of the plugin.
-6. **Feature branch, never `main`; land via PR** — follow `git-conventions` and the repo's own `CLAUDE.md`/`CONTRIBUTING.md` where they differ.
+6. **Feature branch, never `main`; land via PR** — following the repo's own git conventions, as its `CLAUDE.md`/`CONTRIBUTING.md` set them out.
