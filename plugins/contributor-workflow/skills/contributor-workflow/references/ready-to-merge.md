@@ -29,7 +29,8 @@ gh pr view <number> --json title,body,state,isDraft,headRefName,baseRefName,revi
 gh pr diff <number>
 ```
 
-Unresolved review threads aren't exposed by `gh pr view`; use the GraphQL API (via MCP if it supports thread queries, otherwise `gh api graphql`):
+Unresolved review threads aren't exposed by `gh pr view`.
+Through the MCP, `pull_request_read` with `get_review_comments` returns each thread with its resolution state (see `connector-conventions:github`); with `gh` alone, use the GraphQL API through `gh api graphql`:
 
 ```graphql
 query($owner:String!, $repo:String!, $number:Int!) {
@@ -43,7 +44,7 @@ query($owner:String!, $repo:String!, $number:Int!) {
 }
 ```
 
-Resolving a thread is the `resolveReviewThread(threadId: ...)` mutation.
+Resolving a thread is the MCP's `resolve_review_thread`, or the `resolveReviewThread(threadId: ...)` mutation.
 
 ## 1. Sync with base branch
 
@@ -159,7 +160,7 @@ This skill doesn't wait on or retrigger CI — it checks current state once, at 
 **`reviewDecision` is the signal to gate on**, and it also tells you whether the repo requires approval at all.
 Its only values are `APPROVED`, `CHANGES_REQUESTED`, and `REVIEW_REQUIRED`; **null means the repo doesn't require approval** — the usual case on a solo repo.
 `COMMENTED` is *not* among them — that is a state of an individual review, so comment-only reviews leave the decision untouched however many of them there are.
-The GitHub MCP doesn't return it at all (see `connector-conventions:github`), so read it with `gh pr view --json reviewDecision` where the session has a `gh` CLI, or infer it from `mergeable_state` being `clean` while unapproved together with the reviews list showing no `APPROVED`.
+The GitHub MCP doesn't return it at all (see `connector-conventions:github`), so read it with `gh pr view --json reviewDecision` where the session can reach GitHub's GraphQL API, or else infer it from `mergeable_state` being `clean` while unapproved together with the reviews list showing no `APPROVED`.
 
 **Then scan the individual review states for `PENDING`.**
 A pending review is one someone has started and not yet submitted — they are mid-review, so the PR is not yours to declare ready.

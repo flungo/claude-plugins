@@ -52,7 +52,7 @@ The connector does not surface everything the API has.
 `pull_request_read` returns no `reviewDecision`, which is the field that says whether a pull request is approved.
 
 So absence in a connector response is not absence on GitHub.
-Before concluding that a repository doesn't set something, or that a state can't be read, check whether the field is one the connector simply doesn't return — `references/behaviours.md` records the ones met so far, and another source (a `gh` CLI where the session has one, the rendered page, or a related field) will usually have it.
+Before concluding that a repository doesn't set something, or that a state can't be read, check whether the field is one the connector simply doesn't return — `references/behaviours.md` records the ones met so far, and another source (`gh` where the session can reach GitHub's GraphQL API, the rendered page, or a related field) will usually have it.
 
 ## A job's own history is what sizes a wait on it
 
