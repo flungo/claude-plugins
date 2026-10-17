@@ -28,14 +28,23 @@ Take it from the system prompt, from a companion skill that records that environ
 
 ## GitHub access
 
-*Last verified 2026-07-24: `api.github.com` → `403`, `raw.githubusercontent.com` → `200`, CA bundle present at the path above.
+*Last verified 2026-10-17, through both `curl` and `gh api`: REST for an in-scope repository → `200`; `/graphql`, `search/issues`, and an out-of-scope repository → `403`; `GET …/pulls/<n>/ccr/review_threads` → `200`; `POST …/ccr/ready_for_review` → `{"draft":false}`; `POST …/ccr/comments/<id>/resolve` → `"resolved":true`; a job's log download → refused at its blob-storage redirect; `raw.githubusercontent.com` → `200`; CA bundle present at the path above.
 Re-probed 2026-07-29 for the download shapes: `/releases/download/…` → `200` (a real 9 MB asset), while `/archive/refs/tags/…` and `codeload.github.com` → `403`.*
 
-- **The GitHub MCP (`mcp__github__*`) is the only way to reach anything API-shaped** — PRs, issues, review threads, checks, workflow runs and dispatch.
-  This is not a preference between two options: there is no `gh` CLI in web sessions, and `api.github.com` returns `403` through the proxy, so nothing else here can make an API call at all.
-  A procedure written around `gh` has to be translated to the MCP rather than followed, and a script that shells out to it will fail.
+- **The proxy serves GitHub's REST API for the repositories in the session's scope, and attaches the credential itself.**
+  `curl https://api.github.com/repos/<owner>/<repo>/…` needs no token, and the image's `gh` — GitHub's own CLI — works the same way through `gh api repos/<owner>/<repo>/…`.
+  Everything else is refused with a `403` whose body names the alternative: GraphQL, any path not under `repos/<owner>/<repo>/` (such as `search/issues`), and a repository outside the session's scope.
+- **Most `gh` subcommands fail here, because they run on GraphQL.**
+  `gh pr view`, `gh pr list`, `gh pr checks` and `gh issue list` all get the GraphQL `403`, while REST-backed ones such as `gh run list` and `gh run view` work.
+  Translate a procedure written around `gh` into `gh api` calls on REST paths, or into the GitHub MCP; a field that exists only in GraphQL, such as `reviewDecision`, cannot be read here at all.
+- **Job logs are out of reach on REST, though the endpoint is in scope.**
+  `…/actions/jobs/<id>/logs` redirects to a `*.blob.core.windows.net` host that the proxy refuses, so read a job's log through the GitHub MCP's `get_job_logs` instead.
+- **The proxy adds REST routes for what GraphQL would otherwise be needed for**, under `api.github.com/repos/<owner>/<repo>/pulls/<n>/ccr/`: `GET review_threads` returns each thread's `resolved` and `outdated` state with its comment IDs, `POST ready_for_review` takes a draft out of draft, and `POST comments/<comment_id>/resolve` resolves the thread that comment belongs to, taking the ID of any comment in it.
+  The GraphQL `403` body names the rest — `POST comments/<comment_id>/unresolve`, `PUT` or `DELETE auto_merge`, and `POST convert_to_draft`.
+  > **Verify:** `unresolve`, `auto_merge` and `convert_to_draft` are known from the `403` body alone; none has been exercised.
+- **The GitHub MCP (`mcp__github__*`) reaches the same repositories**, and is the route that needs no translation.
 - **How that connector then behaves is `connector-conventions:github`'s subject, not this plugin's** — most importantly that the text it returns for issues and pull requests is sanitised and lossy, so a description that reads as mangled or truncated must never be "fixed" on the strength of that read.
-  Those properties belong to the MCP server and hold wherever it is used; only the fact that it is the *sole* route belongs here.
+  Those properties belong to the MCP server and hold wherever it is used; only the fact that it is one of the routes belongs here.
 - **`git` over `github.com` works** for repositories in the session's scope (clone, fetch, push).
 - **Read public files with `WebFetch` against `raw.githubusercontent.com`** (`https://raw.githubusercontent.com/<owner>/<repo>/<branch>/<path>`) — this works unauthenticated, even for repositories outside the session's scope.
 - **Source archives for an out-of-scope repo are blocked; published release assets are not**.
@@ -79,4 +88,4 @@ $S/terraform validate
 
 The harness blocks `sleep`.
 To wait, block on a backgrounded command or a Monitor loop that watches for the condition — never a foreground `sleep`.
-A Monitor loop only covers conditions *this container* can observe, though — a CI run is not one of them, since the script would need a `gh` CLI the session doesn't have (see `ci-iteration.md`).
+A Monitor loop can watch a CI run as well, by polling the REST check-runs path with `gh api` (see `ci-iteration.md`).
