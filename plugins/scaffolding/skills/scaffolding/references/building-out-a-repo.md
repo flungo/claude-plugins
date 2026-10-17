@@ -8,6 +8,7 @@ The repo itself is often created and configured through the `terraform-github` h
 
 1. **Adopt the core plugins** — commit `.claude/settings.json` enabling `git-conventions` and `docs-standards`, plus the standards plugin(s) for the repo's type (`terraform-standards` / `terraform-provider-standards`), with `extraKnownMarketplaces` pointing at `flungo/claude-plugins`.
    These are on before any real content lands, so the content is written to standard the first time.
+   Enabling a plugin does not necessarily load it into the session that enables it, so where a later step relies on one that is not among your skills, read its `SKILL.md` and `references/` under `plugins/<name>/` in the `flungo/claude-plugins` helper repo (`helper-repos.md`) rather than writing to it from memory.
 2. **Write an initial `CLAUDE.md`** — repo purpose, structure, "Active work", and "Key decisions", **pointing at** the standards plugins and the `github-workflows` CI contract rather than restating them (`docs-standards` owns the doc conventions; the shared-CI reference owns the CI contract).
 3. **Create the `docs/` skeleton** — per `docs-standards` (its Diátaxis model and per-directory indexes; don't restate it here), plus the founding **ADR-001** recording why the repo exists and its core structural choices.
 4. **Seed a build-out plan** — a `docs/plans/` plan following `docs-standards`' plan lifecycle, tracking the onboarding to completion.
