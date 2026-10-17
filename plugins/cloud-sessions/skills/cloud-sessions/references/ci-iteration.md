@@ -26,8 +26,8 @@ What's reachable is set by the environment's network policy (see the SKILL's not
 
   So container-based work runs here once the daemon is up.
   A more restrictive environment policy could still block registry egress — if a pull fails after the daemon is up, that's the policy, not a universal rule.
-- **`api.github.com` returns `403`; `raw.githubusercontent.com` returns `200`.**
-  Use the GitHub MCP for API work and `WebFetch` on `raw.githubusercontent.com` for public files (see `egress-and-tooling.md`).
+- **`api.github.com` serves REST for the session's own repositories and refuses GraphQL; `raw.githubusercontent.com` returns `200`.**
+  Use `gh api` on a REST path or the GitHub MCP for API work, and `WebFetch` on `raw.githubusercontent.com` for public files (see `egress-and-tooling.md`, last verified 2026-10-17).
 - **Installing a toolchain** depends on how it ships: a registry-installable tool (npm/pip/cargo) works once the CA bundle is set; a binary that only ships as a blocked `github.com` release download does not.
 - **Long compiles** (e.g. `cargo install lychee`, a few minutes) work but are slow — background them, or move them to CI.
 
@@ -35,7 +35,8 @@ Reproduce the network checks:
 
 ```sh
 curl -sS -m 20 -o /dev/null -w '%{http_code}\n' https://registry-1.docker.io/v2/   # 401 = reachable (needs auth)
-curl -sS -m 20 -o /dev/null -w '%{http_code}\n' https://api.github.com/            # 403 = blocked here
+curl -sS -m 20 -o /dev/null -w '%{http_code}\n' https://api.github.com/repos/<owner>/<repo>   # 200 = in scope
+curl -sS -m 20 -o /dev/null -w '%{http_code}\n' https://api.github.com/graphql                 # 403 = GraphQL refused
 ```
 
 If a host is genuinely blocked but you'll need it repeatedly, extending the **user-controlled allowlist** is an option too — see `egress-and-tooling.md` — not only offloading to CI.
@@ -48,10 +49,10 @@ When a step genuinely can't run here, or is heavy enough to be worth offloading:
   Trigger a run through the GitHub MCP (`actions_run_trigger`), which can dispatch a workflow that is not on the default branch yet — so a new workflow is testable from here without merging it first (see `connector-conventions:github`).
 - **Provision required tokens/secrets before a verification run**, or its findings are noise.
   (A tokenless lychee dispatch, for instance, floods the auto-issue with false `404`s on private cross-repo links — token artifacts, not dead links.)
-- **Watch the run through the GitHub MCP, not a Monitor script.**
-  The Monitor tool's polling examples all shell out to a `gh` CLI that a web session doesn't have, and `api.github.com` is blocked through the proxy, so a watch script can't observe check status at all — it will sit silent rather than fail loudly.
-  Instead background a timer and re-check `pull_request_read` with `get_check_runs` on a later turn.
-  Foreground `sleep` is blocked, so the timer itself has to be a backgrounded loop (see `egress-and-tooling.md`).
+- **Watch the run on a REST path, never through `gh pr checks`.**
+  `gh pr checks` runs on GraphQL, which the proxy refuses, so a watch script built on it fails on every poll.
+  Poll `gh api repos/<owner>/<repo>/commits/<sha>/check-runs` instead, or re-check `pull_request_read` with `get_check_runs` through the GitHub MCP on a later turn.
+  Foreground `sleep` is blocked, so a timer has to be a backgrounded loop (see `egress-and-tooling.md`).
 
 ## Probe, don't assume
 
