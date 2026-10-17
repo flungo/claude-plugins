@@ -153,23 +153,23 @@ Where it has none, a transition like marking the pull request ready, there is no
 > **🤖 Agent** — an event replaying something you did is already handled, so produce nothing from it: no reply on the thread, and no line in chat reporting it either.
 > Replying posts a comment that arrives as another event, and reporting it spends a turn of the user's attention to tell them something they did not need; an echo that was handled silently is indistinguishable from one that never arrived, which is the point.
 
-## A repo's own plugins never load
+## A repo's own plugins load only from a marketplace the environment adds
 
-A repo-adopted plugin — one a repository enables through `enabledPlugins` in its `.claude/settings.json` — **does not load in a web session**, even though the settings themselves are read.
-Two mechanisms cause this, and neither can be fixed from inside the session.
+A repo-adopted plugin — one a repository enables through `enabledPlugins` in its `.claude/settings.json` — loads in a web session only when the marketplace it comes from is already configured as Claude Code launches (last verified 2026-10-17, Claude Code v2.1.302).
 
-**No marketplace is configured at session start** (last verified 2026-08-01, Claude Code v2.1.220).
-`claude plugin marketplace list` reports none and `claude plugin list` reports nothing installed, with `SKIP_PLUGIN_MARKETPLACE=true` set in the session environment.
-A repo's `extraKnownMarketplaces` declaration is not acted on, so its plugins have no source to install from.
+**The session adds no marketplace itself.**
+At start `claude plugin marketplace list` reports none, and a repo's `extraKnownMarketplaces` declaration is not acted on, with `SKIP_PLUGIN_MARKETPLACE=true` set in the session environment.
 That flag cannot be turned off: setting it empty in the environment's variables leaves it reading `true`, while a canary variable added alongside arrives intact.
+In an environment whose setup script adds no marketplace, a repo's plugins therefore have no source, and none of them load.
 
-**Even with a marketplace configured, project-scope plugins load one launch too late.**
-They are installed during one launch of Claude Code but only become available from the *next* one, and a web session gets exactly one launch.
-`claude plugin list` will report them installed and **enabled** in a session where their skills were never loaded — check your own available skills instead of trusting it.
+**A marketplace the setup script adds is enough.**
+The script runs before Claude Code launches, so the marketplace is already known when the repo's `enabledPlugins` are read, and those plugins are fetched and loaded in the same launch.
+Whether an environment's script adds a marketplace, and which one, is a property of that environment, so look to its own record rather than assuming.
 
-Neither mechanism depends on how many repositories the session started with; see the preceding section for what repo count does and doesn't affect.
+**`claude plugin list` does not say what loaded.**
+A repo plugin that loaded can be absent from it altogether, fetched into the plugin cache without an installed record, so check your own available skills instead of trusting it.
 
-> **🤖 Agent** — when a repo's adopted conventions matter to the work, read them from the repo's files rather than expecting the plugin to be loaded.
+> **🤖 Agent** — when a repo's adopted conventions matter to the work and its plugins are not among your skills, read the conventions from the repo's files rather than expecting the plugins to load.
 
 ## User-scope plugins arrive through the environment's setup script
 
