@@ -55,7 +55,7 @@ Never commit tokens, keys, or secret values; skills that mention a secret use it
 
 ## Working with this repo in Claude Code
 
-- GitHub interaction is via the **GitHub MCP** (`mcp__github__*`) — there is no `gh` CLI in web sessions.
+- GitHub interaction is via the **GitHub MCP** (`mcp__github__*`), or `gh api` on a REST path — in a web session the proxy refuses GraphQL, so `gh pr view` and most other `gh` subcommands fail there.
 - Use the `claude plugin` CLI (`validate`, `install`, `list`, `details`, `marketplace add`) to exercise changes; prefer a **local-path marketplace** when testing an in-flight branch.
 
 ## Branch management
