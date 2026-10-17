@@ -51,6 +51,14 @@ Re-probed 2026-07-29 for the download shapes: `/releases/download/…` → `200`
   `github.com/<owner>/<repo>/archive/…` and `codeload.github.com/…` return a `403` with an `"access not enabled"` JSON body, so repository *source* must come from `raw.githubusercontent.com` (or `add_repo` + clone).
   A **release asset** under `github.com/<owner>/<repo>/releases/download/…` does download, which is how a published binary or a Terraform provider zip can be fetched directly.
 
+## Interactive git commands work when nothing waits on a terminal
+
+*Last verified 2026-10-17 against a scratch repository with a two-hunk diff.*
+
+The shell has no terminal, but a git command that prompts still runs when its answers arrive some other way.
+`printf 'y\nn\n' | git add -p <file>` stages the first hunk and leaves the second, and `git rebase -i` completes with `GIT_SEQUENCE_EDITOR` set to a command that writes the todo list (`true` keeps it as generated).
+So a hunk-level split is done with `git add -p`, answered on standard input, rather than by reconstructing file contents by hand.
+
 ## Terraform
 
 *Last verified 2026-07-29, in an environment whose allowlist had been extended with `registry.terraform.io`: `releases.hashicorp.com` → `200`, `registry.terraform.io` → `200`, `checkpoint-api.hashicorp.com` → `403`; a full `terraform init` in a real repo installed a provider and wrote a lockfile.*
