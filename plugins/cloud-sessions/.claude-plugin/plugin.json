@@ -1,7 +1,7 @@
 {
   "name": "cloud-sessions",
-  "description": "Working preferences and hard constraints for Claude Code Web — the browser/cloud sandbox — so a session works with its egress, tooling, repo-scoping, and CI-delegation realities instead of fighting them. Environment-agnostic; what any one environment is configured with belongs in a companion skill.",
-  "version": "1.2.0",
+  "description": "Working preferences and hard constraints for Claude Code Web — the browser/cloud sandbox — so a session works with its egress, tooling, repo-scoping, and CI-delegation realities instead of fighting them, plus a startup hook naming any dependency claude.ai chat is missing. Environment-agnostic; what any one environment is configured with belongs in a companion skill.",
+  "version": "1.3.0",
   "author": {
     "name": "flungo"
   },

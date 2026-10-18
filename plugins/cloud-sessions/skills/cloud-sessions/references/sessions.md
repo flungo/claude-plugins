@@ -173,9 +173,26 @@ A repo plugin that loaded can be absent from it altogether, fetched into the plu
 
 ## User-scope plugins arrive through the environment's setup script
 
-Plugins enabled at user scope on the account do **not** reach a web session; only account *Skills* do.
-What does reach one is whatever the **cloud environment's setup script** installs, because that runs as root before Claude Code launches — typically `claude plugin marketplace add <owner>/<repo>` followed by `claude plugin install <name>@<marketplace> --scope user`.
+What reliably reaches a web session is whatever the **cloud environment's setup script** installs, because that runs as root before Claude Code launches — typically `claude plugin marketplace add <owner>/<repo>` followed by `claude plugin install <name>@<marketplace> --scope user`.
 Which plugins a given environment installs is a property of that environment, so look to its own record rather than assuming.
+
+Account *Skills*, as distinct from plugins, are synced into `~/.claude/skills/` and load in every web session.
+
+**Plugins installed on the claude.ai account can arrive too, but not in every session, so they cannot be relied on.**
+They are synced into `~/.claude/plugins/synced/` and listed under "Synced from claude.ai" in `claude plugin list`: the set installed for chat, at chat's own versions.
+The sync runs each time the session's container starts, seconds after boot, so a session picks up chat's current set on its next restart.
+A locally installed plugin of the same name takes precedence over the synced one.
+
+- **A session a person starts gets them; one another session creates does not.**
+  Two probes in the same environment, on the same CLI, on 2026-10-18: one started from the mobile app had nine plugins synced six seconds after boot, while one created through the session-creation tool had an empty synced folder at launch and again after a restart.
+  So a session one agent starts for another cannot count on the channel at all.
+- **What arrives is chat's set as it stands, dependencies included or not.**
+  Chat does not enforce a plugin's `dependencies`, but Claude Code does, so a synced plugin whose dependency is not also installed in chat arrives disabled, with `claude plugin list` naming the missing dependency.
+  A locally installed namesake hides the synced copy and its error, so this plugin's `SessionStart` hook, [synced-dependencies.py](../../../scripts/synced-dependencies.py), reads the synced folder itself and names each gap; only the user can install the missing plugin in claude.ai.
+- **It has not always been there.**
+  A session started from the web on 2026-10-04 had an empty synced folder until 2026-10-14, and has been synced on every container start since.
+
+Check `~/.claude/plugins/synced/` in the session itself rather than assuming either way, and never treat a synced plugin as the way one reaches a session.
 
 Because the environment's filesystem is snapshotted and reused, the versions a session gets can lag their source — see § Plugin versions lag the marketplace for why, by how much, and what a session can do about it.
 

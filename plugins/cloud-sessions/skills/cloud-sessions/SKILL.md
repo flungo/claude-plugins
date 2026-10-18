@@ -39,6 +39,12 @@ When you hit a fresh, reusable gotcha about the web environment, record it where
   Those hold wherever that connector is used, local CLI and chat included, so they belong to `connector-conventions`.
   What this plugin owns is only which tools the environment leaves you with, which is a fact about the sandbox.
 
+## Plugins chat is missing
+
+This plugin ships a `SessionStart` hook that reads the plugins synced from claude.ai chat and names any dependency of theirs that chat does not have, since a synced plugin missing one loads disabled.
+It reports each gap once per session; when it does, tell the user which plugins to install in claude.ai — only they can.
+To check again, run `${CLAUDE_PLUGIN_ROOT}/scripts/synced-dependencies.py`; it reads the folder as the last container start left it, so an install in chat shows on the next restart.
+
 ## The reference files
 
 - **`references/egress-and-tooling.md`** — the egress proxy and its CA bundle, which registries and GitHub hosts work, which parts of the GitHub API the proxy serves and which `gh` commands therefore fail, the proxy's own routes for review threads and draft state, running interactive git commands without a terminal, how to run Terraform in a session, and why `sleep` is blocked.

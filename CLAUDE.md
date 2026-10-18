@@ -45,6 +45,11 @@ Only what is specific to *this marketplace* stays here:
 - **A new user-scope plugin must be reachable from a bundle.**
   `personal-defaults` carries the surface-independent set and `personal-cloud-environment` carries what a cloud session needs; between them they are the only things anything installs by name.
   A plugin in neither is one nobody installs, and nothing fails to say so.
+- **A new dependency on a plugin Fabrizio has in chat must be installed in chat by hand.**
+  Chat has been seen lacking dependencies its own plugins declare, while Claude Code disables a synced plugin missing one.
+  So a change that adds a dependency to a plugin, or a plugin to a bundle, names in its PR description each plugin to install in claude.ai, and the agent repeats that when the PR merges.
+  Which plugins chat has is in `~/.claude/plugins/synced/*/manifest.json` in a session he started; without one, ask.
+  `cloud-sessions`' startup hook catches what slips past.
 - **The user-scope-only plugins are `scaffolding`, `cloud-sessions`, and `upstream-research`** ([ADR-003](docs/decisions/003-owned-vs-third-party-adoption.md)), so no repo-adopted plugin here may declare one as a dependency or point at it.
 - **Where each kind of fact goes here** ([ADR-008](docs/decisions/008-connector-behaviour-belongs-to-the-connector.md)): a connector's behaviour to its skill in `connector-conventions`, which tools exist at all to the surface plugin (`cloud-sessions`), and platform behaviour an agent reasons about away from any tool to the domain plugin that owns the subject (`git-conventions`).
 
