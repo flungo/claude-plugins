@@ -30,6 +30,22 @@ Compaction drops turns from the context window and leaves them on disk, so a doc
 The script is this plugin's **`scripts/transcript-digest.py`**, at `${CLAUDE_PLUGIN_ROOT}/scripts/transcript-digest.py`.
 Scoped mode needs it just as much: you are after the named threads' full history, and a thread's earliest turns — where it was framed and bounded — are the ones least likely to still be in context.
 
+## Name the session it came from
+
+Every handoff carries a line beneath its title naming the session that wrote it, so the user can trace the work back to where it started.
+`create_session` records its caller as `parent_session_id`, but only `get_session` shows that, and a pasted handoff records nothing at all; the line is the one trace the user can see and follow.
+
+The reference is one this session reads about itself, never one assembled from a pattern:
+
+- **A cloud session** — its link, `https://claude.ai/code/session_…`, as the system prompt gives it, or built from the id `get_session` reports when called with no `session_id`.
+  The `Session` id in the digest header is not this: it names the CLI's transcript inside the container, which claude.ai does not know, so a link built from it leads nowhere.
+- **A local CLI session** — its session UUID, from the `Session` line of the digest's `--stats` header.
+  A local session has no link; the UUID is what `claude --resume` takes to reopen it.
+- **A claude.ai chat** — nothing the session can read names its conversation, so the line is left out.
+
+The line is a record for the user, not a source for the receiving session, and it says so: a receiving cloud session can read the named session's transcript through `list_events`, which spends the context the document exists to save and, in scoped mode, pulls back every thread the document deliberately left out.
+It is labelled as where the work came from rather than as a session, because the receiving session carries its own session link in its system prompt, and a second one under a bare "session" label can end up in its commit trailers in place of its own.
+
 ## Output
 
 Emit the document as a **single fenced markdown block** in the reply, with nothing else inside the fence.
@@ -83,6 +99,8 @@ Use this template, omitting sections that are genuinely empty:
 ```markdown
 # Handoff: [brief topic title]
 
+> Handed off from [session link or UUID] — a record for tracing this work back, not a source to read: this document carries everything needed.
+
 ## What this is about
 [1–2 sentences: the project or task, and what the user is trying to accomplish.]
 
@@ -135,6 +153,7 @@ Judge each item by whether the receiving session would make a worse decision wit
 
 **Omit empty sections silently.**
 A section with nothing meaningful to say is left out entirely: no placeholder, no explanation of its absence.
+The same goes for the "Handed off from" line where the session has no reference to give it.
 
 ## Triggering
 
