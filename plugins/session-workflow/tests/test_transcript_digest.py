@@ -150,6 +150,13 @@ class TestConversationFilter(DigestTestCase):
         self.assertNotIn("queued notice", self.render(rows))
         self.assertIn("notification", self.render(rows, "--include-meta"))
 
+    def test_a_task_delivered_as_a_notification_is_kept(self):
+        rows = [user("# Handoff: rotate the token\n\nPick up where it left off.",
+                     origin={"kind": "task-notification"})]
+        out = self.render(rows)
+        self.assertIn("Handoff: rotate the token", out)
+        self.assertIn("notification", out)
+
     def test_a_prompt_with_another_origin_is_kept(self):
         rows = [user("Rotate the token.", origin={"kind": "human"})]
         self.assertIn("Rotate the token.", self.render(rows))

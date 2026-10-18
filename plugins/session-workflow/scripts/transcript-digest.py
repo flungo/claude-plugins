@@ -223,9 +223,11 @@ def render(path: Path, args: argparse.Namespace) -> str:
                     tags.append("meta")
                 elif (rec.get("origin") or {}).get("kind") == "task-notification":
                     # A harness notice (queued notifications, a fired check-in)
-                    # arrives as a user turn; its content reaches the session
-                    # through a tool result, which is dropped anyway.
-                    if not args.include_meta:
+                    # arrives as a user turn wrapped in <task-notification>; its
+                    # content reaches the session through a tool result, which
+                    # is dropped anyway. A task delivered the same way, such as
+                    # a handoff, carries its text in the turn itself, so keep it.
+                    if body.lstrip().startswith("<task-notification>") and not args.include_meta:
                         continue
                     tags.append("notification")
                 if not args.keep_reminders:
