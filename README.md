@@ -143,6 +143,7 @@ Note separately that claude.ai's ingestion rejects any skill whose name contains
 
 ```text
 .claude-plugin/marketplace.json     — marketplace catalog
+tests/                              — dev-time tests for the manifests and skill frontmatter
 plugins/<plugin-name>/
   .claude-plugin/plugin.json        — plugin manifest
   skills/<skill-name>/SKILL.md      — the skill Claude loads

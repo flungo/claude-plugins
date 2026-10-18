@@ -1,0 +1,39 @@
+# Repo-specific (not a reusable workflow — this marketplace is its only
+# consumer): run the repo's own top-level tests/ suite, which grades the
+# marketplace rather than anything a plugin ships. Its cases read every manifest
+# and every skill's frontmatter and check the rules nothing else does — the
+# platform's field limits, the reserved words, and whether a plugin agrees with
+# its catalogue entry. Named for the directory, not its current content, so a
+# later repo-level suite needs no second workflow.
+name: Tests
+
+on:
+  pull_request:
+    paths:
+      - '.claude-plugin/**'
+      - 'plugins/*/.claude-plugin/**'
+      - 'plugins/*/skills/*/SKILL.md'
+      - 'tests/**'
+      - '.github/workflows/tests.yml'
+  push:
+    branches: [main]
+    paths:
+      - '.claude-plugin/**'
+      - 'plugins/*/.claude-plugin/**'
+      - 'plugins/*/skills/*/SKILL.md'
+      - 'tests/**'
+      - '.github/workflows/tests.yml'
+
+jobs:
+  tests:
+    name: tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+      # The suite reads JSON and Markdown with the standard library alone, so
+      # there is nothing to install.
+      - name: Run the top-level test suite
+        run: python3 -m unittest discover -s tests -v

@@ -101,7 +101,7 @@ In brief:
 
 ## CI
 
-Six workflows run here: four adopted from [flungo/github-workflows](https://github.com/flungo/github-workflows) and pinned `@v2`, plus `plugin-validate` and `script-tests`, which exist only in this repo.
+Seven workflows run here: four adopted from [flungo/github-workflows](https://github.com/flungo/github-workflows) and pinned `@v2`, plus `plugin-validate`, `script-tests` and `tests`, which exist only in this repo.
 
 | Workflow | Check | Runs on | Fails when |
 | --- | --- | --- | --- |
@@ -111,10 +111,12 @@ Six workflows run here: four adopted from [flungo/github-workflows](https://gith
 | Markdown semantic line breaks | `markdown-sembr / sembr` | PR, push to `main` | two sentences share a source line, the one semantic-line-break MUST rule |
 | Plugin validate | `claude plugin validate` | PR, push to `main`, under `.claude-plugin/`, `plugins/` or its own workflow file | the marketplace manifest or any plugin manifest is broken |
 | Script tests | `python unittest` | PR, push to `main`, under `plugins/*/scripts/`, `plugins/*/tests/` or its own workflow file | a case fails in any `plugins/*/tests/` suite, each run from its own plugin root |
+| Tests | `tests` | PR, push to `main`, under a manifest, a `SKILL.md`, root `tests/` or its own workflow file | a case fails in the root `tests/` suite — a field past the platform's limits, a reserved word in a name, or a plugin disagreeing with its catalogue entry |
 | flungo/github-workflows | — | weekly Monday 07:00 UTC, manual | never — it raises and auto-closes an issue if this repo pins a frozen `@vN` major |
 
-The three Markdown callers take no path filter, while the two repo-specific workflows do.
-A path filter stops the check run being created at all on a PR that touches nothing it covers, so a filtered workflow can never be a required context — a cost the Markdown checks decline and these two accept.
+The three Markdown callers take no path filter, while the three repo-specific workflows do.
+A path filter stops the check run being created at all on a PR that touches nothing it covers, so a filtered workflow can never be a required context — a cost the Markdown checks decline and these three accept.
+The two test workflows are split along what they grade rather than bundled: `script-tests` runs what a plugin ships, `tests` the repo's own top-level suite, so each filter triggers on what its cases read and a red check names which of the two it is.
 
 The conventions themselves stay in `markdown-standards` (above); only repo-specific facts belong here:
 
