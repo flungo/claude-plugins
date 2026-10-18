@@ -1,7 +1,8 @@
 # Repo-specific (not a reusable workflow — this marketplace is its only
 # consumer): run the unit tests for scripts shipped inside plugins, so a
 # regression in one can't merge. Every plugins/*/tests/ suite runs, each from
-# its own plugin root.
+# its own plugin root. The marketplace's own manifests are graded separately,
+# by the top-level suite in tests.yml.
 name: Script tests
 
 on:
