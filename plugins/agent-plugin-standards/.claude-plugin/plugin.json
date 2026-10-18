@@ -1,7 +1,7 @@
 {
   "name": "agent-plugin-standards",
-  "description": "Fabrizio's conventions for authoring plugins — the directory and manifest layout, how a skill points at a script the plugin ships and the tests it comes with, composing via first-party dependencies and declaring every one you rely on, whether a plugin is ambient or on-demand and what may depend on it, filing a fact by what it is a property of, skill naming in single- and multi-skill plugins, keeping cross-references current by basename, the reserved words a plugin or skill name may not carry, YAML frontmatter hazards, editing a JSON manifest without mangling it, validating before committing, and when to bump which part of the version. Depends on writing-styles for the instructional-writing style its prose is written in, and on markdown-standards for the Markdown itself.",
-  "version": "1.3.0",
+  "description": "Conventions for authoring plugins — the layout, composition, naming, and versioning that keep one loadable and legible. Covers the directory and manifest layout, pointing at a script the plugin ships and the tests that come with it, composing via declared first-party dependencies, whether a plugin is ambient or on-demand and what may therefore depend on it, the names the platform refuses, what a description says and which copy of it is displayed, and the minor-versus-patch test. Depends on writing-styles for the instructional-writing style its prose follows, and on markdown-standards for the Markdown itself.",
+  "version": "1.4.0",
   "author": {
     "name": "flungo"
   },

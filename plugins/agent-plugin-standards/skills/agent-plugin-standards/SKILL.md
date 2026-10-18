@@ -1,6 +1,6 @@
 ---
 name: agent-plugin-standards
-description: Fabrizio's conventions for authoring Claude Code plugins. Consult this whenever adding a plugin, adding or renaming a skill, shipping a script or a hook, editing a plugin.json or marketplace.json, declaring a dependency, or deciding what to bump a version to. Covers the directory and manifest layout, how a skill points at a script the plugin ships and the tests it comes with, composing via first-party dependencies and declaring every one you rely on, whether a plugin is ambient or on-demand and what may depend on it, filing a fact by what it is a property of, skill naming in single- and multi-skill plugins, keeping cross-references current by basename, the reserved words a plugin or skill name may not carry, SKILL.md frontmatter hazards, editing a JSON manifest without mangling it, validating and test-installing before committing, and the minor-versus-patch test. The prose inside a plugin follows the instructional-writing style in the writing-styles skill, a declared dependency.
+description: Fabrizio's conventions for authoring Claude Code plugins. Consult this whenever adding a plugin, adding or renaming a skill, shipping a script or a hook, editing a plugin.json or marketplace.json, writing a plugin's description, declaring a dependency, or deciding what to bump a version to. Covers the directory layout, how a skill points at a shipped script and the tests it comes with, composing via declared first-party dependencies, whether a plugin is ambient or on-demand and what may depend on it, filing a fact by what it is a property of, skill naming in single- and multi-skill plugins, keeping cross-references current by basename, the reserved words a name may not carry, SKILL.md frontmatter hazards, what a description says and which copy of a duplicated field applies, editing a JSON manifest without mangling it, validating before committing, and the minor-versus-patch test. Plugin prose follows the instructional-writing style in the writing-styles skill, a declared dependency.
 ---
 
 # Agent Plugin Standards
@@ -112,7 +112,38 @@ Use that same basename everywhere the file is referred to, in other plugins and 
   ```
 
 - The `description` is what drives skill triggering; write it for that.
+  A *plugin's* description is a different text, written for a person choosing whether to install it (§ What a description says).
   For an on-demand plugin, write it to trigger on *being named* rather than on the work itself, and say in it that the skill applies nothing on its own.
+
+## The manifest and its catalogue entry
+
+Three fields are duplicated between a plugin's `.claude-plugin/plugin.json` and its entry in the marketplace's `marketplace.json` — `name`, `version`, and `description` — and the platform resolves each one differently:
+
+| Field | Which copy applies | Where the other one still matters |
+| --- | --- | --- |
+| `name` | Both, for different things: the entry's is the install id (`<entry-name>@<marketplace>`) and the key written under `enabledPlugins`, the manifest's namespaces the plugin's components and is the name `claude plugin details` takes. | They are not alternatives — installing by the manifest name fails where the two differ. |
+| `version` | The manifest's, at install time. | `claude plugin validate` warns on a disagreement and names the value to bring the entry to. |
+| `description` | The entry's, as a display field; the manifest's shows only where the entry omits one. | The manifest holds the only copy a contributor reading the plugin's directory has, and `validate` warns where it is missing. |
+
+**Write one description and put the same text in both files**, in the commit that changes what it describes.
+Nothing reconciles them: a version that disagrees draws a warning, but two different descriptions pass validation in silence, and the text the platform then displays is not the text in the plugin's own directory.
+
+### What a description says
+
+A plugin's description is read by a **person** deciding whether to install it — `/plugin` shows it beside the plugin as they browse, and `claude plugin details` prints it in full.
+A **skill's** description is read by Claude, to decide whether to load the skill (§ `SKILL.md` frontmatter).
+Neither serves as the other: one written to trigger on a kind of work tells a reader nothing about what they would be installing, and one written as a catalogue blurb never fires.
+Matching a session is a third job, and not the description's: `keywords` carries discovery tags, and a `relevance` block on the catalogue entry declares the signals — working directory, commands run, files read — on which Claude Code suggests the plugin.
+
+- **Open with what the plugin provides**, in a sentence that stands on its own, since a browse list gives it a line rather than a paragraph — aim for about 120 characters.
+- **Then name what it covers**, specifically enough that a reader can tell whether their own work is in scope.
+- **Say what enabling it does**, where that is not simply applying its conventions: the dependencies it brings in, by name; that a bundle contributes no skills of its own; that an on-demand plugin applies nothing until something names it; and the scope it is written for, where a reader would otherwise have to guess — enabled for an account and always on, or adopted by a repository.
+- **Leave out what its surroundings already carry** — the marketplace's own name and owner, and the plugin's name.
+  Attribute conventions to a person only where being theirs rather than generalisable is a property of the plugin (§ Composition).
+- **Describe the plugin rather than the change being made to it.**
+  The description is the current offering; what moved belongs in the commit message.
+
+A plugin's description has no enforced ceiling, unlike a skill's — `validate` passes one of any length — so its length is a judgement about the reader rather than a budget to spend.
 
 ## Editing a manifest
 
@@ -125,6 +156,7 @@ Nothing rejects the result — it is valid JSON, and validation passes because t
 - **Validate:** `claude plugin validate .` for the marketplace and `claude plugin validate plugins/<name>` for each plugin.
 - **Test-install from the local path** and confirm the skill loads and any dependency resolves.
 - **Run its tests:** `python3 -m unittest discover -s tests` from the plugin root, for a plugin that ships a script.
+- **Check the pair:** the manifest and the catalogue entry carry the same `name`, `version`, and `description`.
 
 A local-path install skips any symlink whose target lies outside the plugin's own directory, while the same symlink is dereferenced and copied for a plugin installed from the marketplace's git source.
 Content shared that way is therefore present in production and absent under test, which is why sharing runs through a dependency here.
