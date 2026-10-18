@@ -188,6 +188,7 @@ A locally installed plugin of the same name takes precedence over the synced one
   So a session one agent starts for another cannot count on the channel at all.
 - **What arrives is chat's set as it stands, dependencies included or not.**
   Chat does not enforce a plugin's `dependencies`, but Claude Code does, so a synced plugin whose dependency is not also installed in chat arrives disabled, with `claude plugin list` naming the missing dependency.
+  A locally installed namesake hides the synced copy and its error, so this plugin's `SessionStart` hook, [synced-dependencies.py](../../../scripts/synced-dependencies.py), reads the synced folder itself and names each gap; only the user can install the missing plugin in claude.ai.
 - **It has not always been there.**
   A session started from the web on 2026-10-04 had an empty synced folder until 2026-10-14, and has been synced on every container start since.
 
