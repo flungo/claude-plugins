@@ -51,6 +51,11 @@ The control is what makes this conclusive — the removed script used to install
 This matches the [cloud environments reference](https://code.claude.com/docs/en/cloud-environments), whose "What carries over from your setup" table allows account skills and excludes user-scope plugins.
 The setup script is therefore load-bearing rather than a convenience: without it a cloud session has none of these conventions.
 
+> **Amended 2026-10-18:** Plugins installed on claude.ai have since been seen reaching cloud sessions, synced into `~/.claude/plugins/synced/` at each container start and listed as "Synced from claude.ai" — though only in sessions a person started.
+> A session started from the mobile app had chat's plugins six seconds after boot, while one created in the same environment through the session-creation tool had none, at launch or after a restart; a session started from the web on 2026-10-04 had none until 2026-10-14.
+> Chat does not enforce dependencies, so a synced plugin whose dependency is missing from chat arrives disabled.
+> The reference above still does not mention the channel, and the setup script stays load-bearing, since a channel absent from some sessions cannot be the one the conventions depend on.
+
 **The claude.ai failure is a client-side crash, not a refusal.**
 A HAR capture of the Add-marketplace attempt (2026-08-01) shows `POST /marketplaces/create-account-marketplace` returning **200** with `sync_status: "success"`, `already_connected: true`, and `last_synced_sha` tracking this repo's `main`.
 The server accepts the marketplace and syncs it; `auto_sync_on_push` is on and working.
