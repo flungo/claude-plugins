@@ -1,6 +1,6 @@
 {
   "name": "session-workflow",
-  "description": "Fabrizio's named commands for ending a Claude session well — /session-clean to confirm nothing durable is left only in the chat, and /handoff to carry an unfinished session into a fresh one, opening that session directly where the surface can start one.",
+  "description": "Commands for ending a session well — /session-clean to record what the chat alone holds, and /handoff to carry it onward. /session-clean proposes where each loose end belongs and writes nothing unprompted; /handoff produces the document a fresh session starts from and, where the surface can start one, opens it directly. Ships transcript-digest.py, which reduces a transcript to the records worth keeping. Always on; depends on connector-conventions for filing through the GitHub connector and on delegation-conventions for the model a session it starts runs on.",
   "version": "0.5.4",
   "author": {
     "name": "flungo"

@@ -8,85 +8,85 @@
     {
       "name": "personal-defaults",
       "source": "./plugins/personal-defaults",
-      "description": "Fabrizio's always-on personal conventions as one install — a dependency-only bundle carrying git-conventions, contributor-workflow, session-workflow, delegation-conventions, upstream-research, scaffolding, and connector-conventions. Contributes no skills of its own.",
+      "description": "Fabrizio's always-on personal conventions as one install, a bundle that contributes no skills of its own. It carries git-conventions, contributor-workflow, session-workflow, delegation-conventions, upstream-research, scaffolding, and connector-conventions, so installing it installs all seven.",
       "version": "0.4.0"
     },
     {
       "name": "connector-conventions",
       "source": "./plugins/connector-conventions",
-      "description": "Conventions for working through connectors — the rules a connected store carries in its own content, and the rules an agent should follow when using it. A skill per connector (Google Drive, where a CONVENTIONS document governs its folder and everything beneath it; GitHub, whose MCP read path silently mangles issue and pull request text, whose write path corrupts a long URL, which omits reviewDecision, and whose Actions tools carry the run and job timings a wait can be sized from), plus cross-cutting skills such as handling information that crosses between sources.",
+      "description": "Conventions for working through connectors: the rules a store carries in its own content, and the rules for using it. A skill per connector — Google Drive, where a CONVENTIONS document governs its folder and everything beneath it; GitHub, whose MCP read path silently mangles issue and pull request text, whose write path corrupts a long URL, and whose Actions tools carry the timings a wait can be sized from — plus cross-cutting skills, currently data-boundaries, for information that crosses between sources. Always on, so a connector's behaviour is known before its result is trusted.",
       "version": "0.5.0"
     },
     {
       "name": "git-conventions",
       "source": "./plugins/git-conventions",
-      "description": "Standing git/PR hygiene conventions (Conventional Commits, linear history, squash-vs-rebase, no fixup commits, force-push policy, which commit signature warnings to ignore, and watching a PR on its subscription's own wakes rather than a recurring self-check-in).",
+      "description": "Standing git and pull-request hygiene conventions, applied to all git work rather than waiting to be named. Covers branch management, Conventional Commits, linear history and squash-versus-rebase, leaving no fixup commit behind, force-push policy, which commit signature warnings to ignore, and watching an open pull request on its subscription's own wakes rather than a recurring self-scheduled check-in.",
       "version": "0.4.0"
     },
     {
       "name": "contributor-workflow",
       "source": "./plugins/contributor-workflow",
-      "description": "Personal contributor/review workflow commands (currently /ready-to-merge); depends on git-conventions and connector-conventions.",
+      "description": "Commands for the contributor side of review, currently /ready-to-merge: a final sweep of a pull request before it merges. It syncs with the base branch, checks the description and any in-repo status tracker for accuracy, works through unresolved review threads, resolves what is ambiguous elsewhere in the diff, tidies the commit history, reads checks and approvals, and marks the pull request ready only where everything is genuinely green. Always on; depends on git-conventions for the history rules it applies and on connector-conventions for reading the pull request through the GitHub connector.",
       "version": "0.7.0"
     },
     {
       "name": "docs-standards",
       "source": "./plugins/docs-standards",
-      "description": "Repo-adopted documentation conventions — Diátaxis docs, Nygard ADRs, ephemeral-plan lifecycle, README-index and staleness discipline, agent/verify callouts, and a session-end doc-maintenance checklist hook. Depends on markdown-standards and writing-styles.",
+      "description": "Documentation conventions for a repo's docs/ tree, adopted by a repository rather than enabled for an account. Covers the Diátaxis split across decisions, plans, runbooks and reference, Nygard ADRs and their template, the ephemeral-plan lifecycle, README-index and staleness discipline, and the agent and verify callouts. Ships a Stop hook that runs a doc-maintenance checklist at session end. Depends on markdown-standards for the Markdown itself and on writing-styles for the instructional-writing style a reference doc follows.",
       "version": "0.5.0"
     },
     {
       "name": "cloud-sessions",
       "source": "./plugins/cloud-sessions",
-      "description": "Working preferences and hard constraints for Claude Code Web — the egress proxy and CA bundle, which parts of the GitHub API the proxy serves and which gh commands therefore fail, containers that reboot around every turn while their disk persists, repo scoping and add_repo's cross-owner rule, project config in a multi-repo session, which marketplace repo-adopted plugins need before they load, why user-scope ones lag the marketplace and how a session updates them for its own next turn, starting another session from inside one and what it does and doesn't inherit, the PR-subscription boilerplate's standing check-in request and why it is declined, why a subscription replays the session's own writes back at it, and delegating unrunnable steps to CI. Environment-agnostic; how the connectors themselves behave lives in connector-conventions, a dependency.",
+      "description": "Working preferences and hard constraints for a cloud session, so one works with its sandbox rather than fighting it. Covers the egress proxy and its CA bundle, which parts of the GitHub API the proxy serves and which gh commands therefore fail, a container that reboots around every turn while its disk persists, repo scoping and add_repo's cross-owner rule, how a repo's own plugins and the account's user-scope ones each reach a session, the PR-subscription boilerplate's standing check-in request and why it is declined, and delegating to CI what the sandbox cannot run. Always on, and environment-agnostic: how a connector behaves lives in connector-conventions, a dependency, and one environment's own settings in a companion plugin.",
       "version": "1.3.0"
     },
     {
       "name": "personal-cloud-environment",
       "source": "./plugins/personal-cloud-environment",
-      "description": "The record of Fabrizio's own Claude Code Web environment — its network allowlist, environment variables, and setup — as manually applied on top of the platform defaults, plus the round-trip rule that keeps that record and the live environment in step. Installing it also brings in what that environment carries: cloud-sessions and the personal-defaults bundle.",
+      "description": "The record of Fabrizio's own cloud-session environment, as applied on top of the platform defaults. Covers its network allowlist, environment variables, the credentials the proxy injects, its repository scope, and the round-trip rule that keeps this record and the live environment in step. Installing it brings in what that environment carries: cloud-sessions and the personal-defaults bundle.",
       "version": "0.6.0"
     },
     {
       "name": "upstream-research",
       "source": "./plugins/upstream-research",
-      "description": "Researching and verifying facts about third-party/upstream components — go to the authoritative source (the project's own repo and docs), distrust training data, web-search summaries, and generated docs, and record provenance.",
+      "description": "A method for verifying a fact about a third-party or upstream component instead of answering from memory. Go to the authoritative source — the project's own repository and docs, pinned to a ref — distrust training data, web-search summaries and generated docs, and record where each fact came from. Always on, so a claim about someone else's software is checked before anything is built on it.",
       "version": "0.1.2"
     },
     {
       "name": "terraform-standards",
       "source": "./plugins/terraform-standards",
-      "description": "Conventions for a Terraform/HCL configuration repo — one .tf per concern, resource names that mirror the real object, sensitive values as variables, durations as arithmetic, pinned providers with a committed lock, and adopting existing resources via import blocks.",
+      "description": "Conventions for a Terraform and HCL configuration repo, adopted by a repository rather than enabled for an account. Covers one .tf per concern, resource names that mirror the real object, sensitive values as variables, durations as arithmetic, pinned providers with a committed lock, and adopting existing resources with import blocks.",
       "version": "0.2.1"
     },
     {
       "name": "terraform-provider-standards",
       "source": "./plugins/terraform-provider-standards",
-      "description": "Conventions for building a Terraform provider in Go — the terraform-plugin-framework layout, tfplugindocs-generated docs, MPL-2.0 per-file license headers, and adopting the shared flungo/github-workflows provider CI (golangci-lint v2, GoReleaser dual-registry release).",
+      "description": "Conventions for building a Terraform provider in Go, adopted by a repository rather than enabled for an account. Covers the terraform-plugin-framework layout, tfplugindocs-generated documentation, MPL-2.0 per-file license headers, and adopting the shared provider CI in flungo/github-workflows — golangci-lint v2 and a GoReleaser dual-registry release. Scoped to what holds for any provider; one provider's own specifics stay in its repository.",
       "version": "0.2.0"
     },
     {
       "name": "markdown-standards",
       "source": "./plugins/markdown-standards",
-      "description": "Markdown authoring conventions — unambiguous cross-references and link hygiene, semantic line breaks, unique cross-referenced headings, adjacent-blockquote handling, compact tables (delimiter rows included), handling lint rules a linter bump introduces, fix-the-target-never-suppress remediation for markdownlint/link-check failures, and the /adopt-markdown-ci onboarding command.",
+      "description": "Markdown authoring conventions for every Markdown file in a repo, adopted by a repository rather than enabled for an account. Covers unambiguous cross-references and link hygiene, semantic line breaks, unique cross-referenced headings, adjacent blockquotes, compact tables, the lint rules a linter bump introduces, and fixing a markdownlint or link failure at its target instead of suppressing the check. Ships reflow.py, which rewrites prose to one sentence per line, and /adopt-markdown-ci, which onboards a repo to the reusable Markdown CI in flungo/github-workflows.",
       "version": "0.13.2"
     },
     {
       "name": "delegation-conventions",
       "source": "./plugins/delegation-conventions",
-      "description": "Conventions for handing work to another agent or session — a session started from this one, a Routine, or a subagent: choose the model rather than inheriting the caller's, prefer the latest Opus, keep Sonnet for a task that is both simple and fully specified, put the case to the user rather than choosing Fable yourself, and name a model by the short identifier the surface offers.",
+      "description": "Conventions for handing work to another agent or session — one started from this session, a Routine, or a subagent. The model is chosen for the work rather than inherited from the caller: the latest Opus by default, Sonnet where the task is both simple and fully specified, Fable only where the user picks it after hearing the case, and named by the short identifier the surface offers. Always on, so the choice is made wherever work is handed off.",
       "version": "0.1.0"
     },
     {
       "name": "session-workflow",
       "source": "./plugins/session-workflow",
-      "description": "Named commands for ending a Claude session well — /session-clean to confirm nothing durable is left only in the chat, and /handoff to carry an unfinished session into a fresh one, opening that session directly where the surface can start one. Depends on connector-conventions and delegation-conventions.",
+      "description": "Commands for ending a session well — /session-clean to record what the chat alone holds, and /handoff to carry it onward. /session-clean proposes where each loose end belongs and writes nothing unprompted; /handoff produces the document a fresh session starts from and, where the surface can start one, opens it directly. Ships transcript-digest.py, which reduces a transcript to the records worth keeping. Always on; depends on connector-conventions for filing through the GitHub connector and on delegation-conventions for the model a session it starts runs on.",
       "version": "0.5.4"
     },
     {
       "name": "writing-styles",
       "source": "./plugins/writing-styles",
-      "description": "A library of named prose styles, one reference file each, for the plugins and repos that cite them — currently instructional-writing, the style for text a reader acts on as instruction. Applies nothing by being enabled: a style takes effect only where something names it, which is what makes this safe as a dependency at any scope.",
+      "description": "A library of named prose styles, one reference file each, for the plugins and repos that cite them. Currently instructional-writing, the style for text a reader acts on as instruction rather than reads as background. Applies nothing by being enabled — a style takes effect only where something names it — which is what makes it safe as a dependency at any scope.",
       "version": "0.2.0"
     },
     {
@@ -98,7 +98,7 @@
     {
       "name": "scaffolding",
       "source": "./plugins/scaffolding",
-      "description": "Setting up, building out, and extending repos across the fleet — gated on verified ownership (an owned repo adopts the conventions and standards plugins; a fork or third-party repo gets nothing without explicit consent), routing to the shared CI and the helper repos (github-workflows, claude-plugins, terraform-github) added as needed.",
+      "description": "A guide to setting up, building out, and extending the repos across Fabrizio's fleet, gated on verified ownership. An owned repo adopts his conventions and standards plugins; a fork or a third-party repo gets nothing adopted without explicit consent. Routes to the shared CI and to the helper repos — github-workflows, claude-plugins, terraform-github — adding each as it is needed. Always on, and never adopted by a repository: it reasons about a repo from outside it.",
       "version": "0.4.0"
     }
   ]

@@ -1,6 +1,6 @@
 {
   "name": "markdown-standards",
-  "description": "Fabrizio's Markdown authoring conventions — cross-reference/link hygiene, semantic line breaks, unique cross-referenced headings, adjacent-blockquote handling, compact tables (delimiter rows included) — plus handling lint rules a linter bump introduces, how to fix markdownlint and link/anchor CI failures, and the /adopt-markdown-ci onboarding command.",
+  "description": "Markdown authoring conventions for every Markdown file in a repo, adopted by a repository rather than enabled for an account. Covers unambiguous cross-references and link hygiene, semantic line breaks, unique cross-referenced headings, adjacent blockquotes, compact tables, the lint rules a linter bump introduces, and fixing a markdownlint or link failure at its target instead of suppressing the check. Ships reflow.py, which rewrites prose to one sentence per line, and /adopt-markdown-ci, which onboards a repo to the reusable Markdown CI in flungo/github-workflows.",
   "version": "0.13.2",
   "author": {
     "name": "flungo"
