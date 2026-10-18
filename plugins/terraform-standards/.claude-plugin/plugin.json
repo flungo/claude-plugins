@@ -1,6 +1,6 @@
 {
   "name": "terraform-standards",
-  "description": "Fabrizio's conventions for a Terraform/HCL configuration repo — one .tf per concern, resource names that mirror the real object, sensitive values as variables, durations as arithmetic, pinned providers with a committed lock, and adopting existing resources via import blocks.",
+  "description": "Conventions for a Terraform and HCL configuration repo, adopted by a repository rather than enabled for an account. Covers one .tf per concern, resource names that mirror the real object, sensitive values as variables, durations as arithmetic, pinned providers with a committed lock, and adopting existing resources with import blocks.",
   "version": "0.2.1",
   "author": {
     "name": "flungo"

@@ -1,6 +1,6 @@
 {
   "name": "delegation-conventions",
-  "description": "Fabrizio's conventions for handing work to another agent or session — currently which model to give it, and why the choice is made rather than inherited.",
+  "description": "Conventions for handing work to another agent or session — one started from this session, a Routine, or a subagent. The model is chosen for the work rather than inherited from the caller: the latest Opus by default, Sonnet where the task is both simple and fully specified, Fable only where the user picks it after hearing the case, and named by the short identifier the surface offers. Always on, so the choice is made wherever work is handed off.",
   "version": "0.1.0",
   "author": {
     "name": "flungo"

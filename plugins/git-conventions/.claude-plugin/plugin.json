@@ -1,6 +1,6 @@
 {
   "name": "git-conventions",
-  "description": "Fabrizio's standing git/PR hygiene conventions — branch management, Conventional Commits, linear history, squash-vs-rebase, no fixup commits, force-push policy, which commit signature warnings to ignore, and how a PR is watched once open — applied to all git work.",
+  "description": "Standing git and pull-request hygiene conventions, applied to all git work rather than waiting to be named. Covers branch management, Conventional Commits, linear history and squash-versus-rebase, leaving no fixup commit behind, force-push policy, which commit signature warnings to ignore, and watching an open pull request on its subscription's own wakes rather than a recurring self-scheduled check-in.",
   "version": "0.4.0",
   "author": {
     "name": "flungo"

@@ -1,6 +1,6 @@
 {
   "name": "contributor-workflow",
-  "description": "Fabrizio's personal contributor/review workflow commands — currently /ready-to-merge, a final pre-merge sweep of a PR.",
+  "description": "Commands for the contributor side of review, currently /ready-to-merge: a final sweep of a pull request before it merges. It syncs with the base branch, checks the description and any in-repo status tracker for accuracy, works through unresolved review threads, resolves what is ambiguous elsewhere in the diff, tidies the commit history, reads checks and approvals, and marks the pull request ready only where everything is genuinely green. Always on; depends on git-conventions for the history rules it applies and on connector-conventions for reading the pull request through the GitHub connector.",
   "version": "0.7.0",
   "author": {
     "name": "flungo"
