@@ -121,11 +121,11 @@ The conventions themselves stay in `markdown-standards` (above); only repo-speci
 - **Tool version — read it from a CI run, don't trust this note.**
   The shared workflow tracks the action's major tag, so the linter version *floats*: it moved from `markdownlint-cli2-action@v19` (markdownlint-cli2 0.17.2 / markdownlint 0.37.4) to `@v24` (0.23.1 / 0.41.1) without any change here, and the new major added `MD060` — which failed CI on tables that had been clean for months (PR #31).
   Take the version from the first line of the markdownlint job's log and match it locally (`npx markdownlint-cli2@<version> "**/*.md" "!node_modules/**"`) before chasing findings; matching a *stale* pin gives a false pass, which is the failure mode this note exists to prevent.
-  Last seen: **0.23.2** (markdownlint 0.41.1), 2026-09-20.
+  Last seen: **0.23.2** (markdownlint 0.41.1), 2026-10-17.
 - **`claude` CLI version — it floats too, deliberately.**
   `plugin-validate` installs `@anthropic-ai/claude-code` unpinned, so a new validator rule fails CI here before it can fail an install: 2.1.289 began rejecting plugin names that start with `claude-`, failing `main` on content that had passed days earlier ([ADR-010](docs/decisions/010-plugin-and-skill-names-avoid-reserved-words.md)).
   Take the version from the job's "Claude Code CLI version" step and validate with that one (`npx -y @anthropic-ai/claude-code@<version> plugin validate .`), since the CLI a session happens to have installed may be older or newer.
-  Last seen: **2.1.299**, 2026-10-14.
+  Last seen: **2.1.302**, 2026-10-17.
 - **`.lycheeignore`** is populated only from this repo's own token-enabled `workflow_dispatch` runs, per the rules in its header.
 - **The pre-canned-data exclusion lands on `fixtures/`, not `evals/`, and is declared once.**
   `.markdownlint-cli2.jsonc` ignores `**/fixtures/**`, which is where a plugin's eval inputs live, so they are out of scope for the prose conventions entirely (`markdown-standards` carries why).
