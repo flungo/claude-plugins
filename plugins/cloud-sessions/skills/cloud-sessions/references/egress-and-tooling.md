@@ -28,7 +28,7 @@ Take it from the system prompt, from a companion skill that records that environ
 
 ## GitHub access
 
-*Last verified 2026-10-17, through both `curl` and `gh api`: REST for an in-scope repository → `200`; `/graphql`, `search/issues`, and an out-of-scope repository → `403`; `GET …/pulls/<n>/ccr/review_threads` → `200`; `POST …/ccr/ready_for_review` → `{"draft":false}`; `POST …/ccr/comments/<id>/resolve` → `"resolved":true`; a job's log download → refused at its blob-storage redirect; `raw.githubusercontent.com` → `200`; CA bundle present at the path above.
+*Last verified 2026-10-17, through both `curl` and `gh api`: REST for an in-scope repository → `200`; `/graphql`, `search/issues`, and an out-of-scope repository → `403`; `GET …/pulls/<n>/ccr/review_threads` → `200`; `POST …/ccr/ready_for_review` → `{"draft":false}`; `POST …/ccr/comments/<id>/resolve` → `"resolved":true`; `PATCH …/pulls/<n>` → `200`; deleting a branch → `403` through both `git push --delete` and `DELETE …/git/refs/heads/<branch>`; a job's log download → refused at its blob-storage redirect; `raw.githubusercontent.com` → `200`; CA bundle present at the path above.
 Re-probed 2026-07-29 for the download shapes: `/releases/download/…` → `200` (a real 9 MB asset), while `/archive/refs/tags/…` and `codeload.github.com` → `403`.*
 
 - **The proxy serves GitHub's REST API for the repositories in the session's scope, and attaches the credential itself.**
@@ -46,6 +46,9 @@ Re-probed 2026-07-29 for the download shapes: `/releases/download/…` → `200`
 - **How that connector then behaves is `connector-conventions:github`'s subject, not this plugin's** — most importantly that the text it returns for issues and pull requests is sanitised and lossy, so a description that reads as mangled or truncated must never be "fixed" on the strength of that read.
   Those properties belong to the MCP server and hold wherever it is used; only the fact that it is one of the routes belongs here.
 - **`git` over `github.com` works** for repositories in the session's scope (clone, fetch, push).
+- **A session cannot delete a remote branch.**
+  `git push origin --delete <branch>` fails with an HTTP `403`, and `DELETE …/git/refs/heads/<branch>` is refused with a `403` saying write access to that path is not permitted, though other REST writes such as `PATCH …/pulls/<n>` go through.
+  After a merge, check whether the repository deleted the head branch itself, and report any branch still on the remote rather than describing it as deleted.
 - **Read public files with `WebFetch` against `raw.githubusercontent.com`** (`https://raw.githubusercontent.com/<owner>/<repo>/<branch>/<path>`) — this works unauthenticated, even for repositories outside the session's scope.
 - **Source archives for an out-of-scope repo are blocked; published release assets are not**.
   `github.com/<owner>/<repo>/archive/…` and `codeload.github.com/…` return a `403` with an `"access not enabled"` JSON body, so repository *source* must come from `raw.githubusercontent.com` (or `add_repo` + clone).
