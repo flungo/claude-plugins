@@ -61,6 +61,7 @@ Included by default, in transcript order:
 - **`COMPACTION SUMMARY`** — the summary compaction injected in place of what it dropped.
 
 Left out: tool calls, tool results, injected context and attachments, subagent turns, thinking blocks, synthetic turns, and harness notices that arrive as user turns (queued-notification and check-in alerts).
+A task the harness delivers the same way, such as a handoff that opens the session, stays in, tagged `notification`, since its text is the prompt itself.
 
 ## Read it for the sweep
 
