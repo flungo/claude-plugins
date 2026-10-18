@@ -25,7 +25,7 @@ Read the relevant reference before doing the work — each is the authoritative 
 
 - **`references/documentation-model.md`** — the core model: the Diátaxis directory split (`decisions/`, `plans/`, `runbooks/`, `reference/`), what belongs in each, which style a reference doc is written in, keeping every `README.md` index current in the same commit, the ephemeral two-PR plan lifecycle, the end-of-session staleness scan, and the two callout devices.
   Read it before adding or moving any doc, before revising a reference, or at session end.
-- **`references/adr-template.md`** — the canonical Nygard ADR format (the exact heading shape, the `Date` and `Status` metadata, the `Context` / `Decision` / `Consequences` sections), sequential numbering, and supersession.
+- **`references/adr-template.md`** — the canonical Nygard ADR format (the exact heading shape, the `Date` and `Status` metadata, the `Context` / `Decision` / `Consequences` sections), sequential numbering, amending an accepted ADR, when to reconsider one, and supersession.
   Read it before writing or changing an ADR.
 - **`references/stop-hook.md`** — the session-end doc-maintenance checklist: the `Stop` hook this plugin ships, and the equivalent `.claude/settings.json` snippet for a repo that wants it without adopting the plugin.
 
