@@ -3,10 +3,10 @@
 The organising model for a repository's `docs/` tree, and the maintenance discipline that keeps it trustworthy.
 Documentation is a first-class deliverable — treat stale docs as a defect, not a cosmetic issue, because a future session reads them as truth.
 
-## The Diátaxis split — four kinds of doc
+## The Diátaxis split — five kinds of doc
 
-Docs are either **task-oriented** (how-to) or **information-oriented** (reference), following the [Divio/Diátaxis](https://diataxis.fr/) split; ADRs add a third, **decision-oriented**, kind.
-That yields four directories under `docs/`, each with a `README.md` index:
+Docs are either **task-oriented** (how-to) or **information-oriented** (reference), following the [Divio/Diátaxis](https://diataxis.fr/) split; ADRs add a third, **decision-oriented**, kind, and incident reports a fourth, the **record** of what went wrong.
+That yields five directories under `docs/`, each with a `README.md` index:
 
 | Directory | Kind | Holds | Lifecycle |
 | --- | --- | --- | --- |
@@ -14,12 +14,14 @@ That yields four directories under `docs/`, each with a `README.md` index:
 | `docs/plans/` | Task (one-time) | A single build/onboarding procedure tracked to completion | Ephemeral — retired (deleted) once done |
 | `docs/runbooks/` | Task (repeatable) | A how-to run indefinitely (rotation, onboarding, importing) | Permanent; no completion checkboxes |
 | `docs/reference/` | Information | Descriptive lookup docs (settings catalogues, name registries, coverage maps) | Permanent; no steps, exists to be looked up |
+| `docs/incidents/` | Record | An incident report — an unplanned failure, its impact, cause and resolution (`incident-template.md`) | Permanent; dated, never deleted; the directory exists only where a repository tracks incidents, from its first report |
 
 The distinction that most often trips people:
 
 - A doc with **steps to follow that will be run more than once** is a **runbook**, not a reference.
 - A doc with **no steps, that exists to be looked up**, is a **reference**, not a runbook.
 - A doc with **steps that are followed exactly once and then done** is a **plan**, not a runbook.
+- A doc about **something that went wrong** is an **incident report**; the recovery it needs is a plan, the procedure it teaches is a runbook, and the behaviour it uncovers goes in a reference.
 
 Only create a directory when it has content — an empty `runbooks/` or `reference/` is noise until the first doc lands.
 
@@ -37,14 +39,14 @@ It puts the history in the commit message and, where a decision was made, in an 
 
 ## README index per directory — kept current in the same commit
 
-Every one of the four directories has a `README.md` that indexes its contents.
+Every one of the five directories has a `README.md` that indexes its contents.
 The index is the single-glance truth for that directory; a stale row is actively misleading.
 
 Keep the index current in the same commit as any doc you add, change, or remove — never a follow-up.
 This is a best practice for humans and agents alike, not an agent-only chore.
 
 Each index does two jobs: it lists the directory's contents, and it documents that doc type's expected structure — the template or required sections a new doc of that kind should follow.
-The decisions index carries the ADR template (see `references/adr-template.md`) and one summary row per ADR; the plans index describes a plan's shape (a status row plus numbered checkbox steps) and carries one status row per plan; a runbooks or reference index likewise states what a runbook or reference doc should contain.
+The decisions index carries the ADR template (see `references/adr-template.md`) and one summary row per ADR; the plans index describes a plan's shape (a status row plus numbered checkbox steps) and carries one status row per plan; the incidents index carries the incident template (see `references/incident-template.md`) and one row per report; a runbooks or reference index likewise states what a runbook or reference doc should contain.
 Don't update a doc without also updating its parent README row.
 
 **A row is a pointer, not a précis.**
@@ -55,7 +57,7 @@ A row that carries the document's reasoning has moved that reasoning to the plac
 
 **Ordering.**
 Unless a doc type has a clear chronology, order pages — and their index rows — alphabetically.
-ADRs look like the exception, but they use zero-padded monotonic numbers (`001`, `002`, …) precisely so that alphabetical order *is* chronological order — so ADRs sort alphabetically too.
+ADRs look like the exception, but they use zero-padded monotonic numbers (`001`, `002`, …) precisely so that alphabetical order *is* chronological order — so ADRs sort alphabetically too, and so do incident reports, named by date.
 
 ## Callouts — two distinct devices, kept separate
 
@@ -107,7 +109,8 @@ A plan is safe to delete only once nothing load-bearing lives in it alone.
 
 **Plans are ephemeral — never reference them from permanent docs or code.**
 Architecture, decisions, and repeatable procedures belong in their permanent home (README, ADRs, runbooks, code comments), expressed as *outcomes* — what the thing is, what was decided, when — not as a link to the plan that produced it.
-The one exception is the "Active work" section of `CLAUDE.md`, which may link a plan **while it is in progress**; remove the link when the plan is retired.
+The exceptions are the "Active work" section of `CLAUDE.md` and an incident report, either of which may link a plan **while it is in progress**; remove the link when the plan is retired, and in a report write the plan's outcome in its place.
+A permanent doc that needs to point at what happened links the incident report instead, which is permanent.
 
 ## Staleness discipline
 
@@ -118,6 +121,7 @@ Stale docs mislead, so maintenance is not optional — it happens after every ch
 - Recording or revising a decision → write or update the ADR and its index row (`references/adr-template.md`).
 - Introducing a new resource, feature, or component → update the repo `README` ("what this manages" / equivalent) and any affected reference doc.
 - Advancing a plan → tick its steps and update both the plans README and "Active work".
+- An unplanned failure that needs investigating → open an incident report (`references/incident-template.md`) while it is live, and keep its status and timeline current.
 - Touching anything under `docs/` → refresh that directory's README index in the same commit.
 
 **End-of-session staleness scan** — before finishing, search for anything that may have drifted:
