@@ -16,6 +16,7 @@ ADRs are numbered sequentially and **never deleted or renumbered** — a superse
 | [009](009-plugin-authoring-standards.md) | Authoring conventions ship as plugins, with shared styles cited on demand | Accepted |
 | [010](010-plugin-and-skill-names-avoid-reserved-words.md) | Plugin and skill names avoid Anthropic's reserved words | Accepted |
 | [011](011-locating-a-shipped-script.md) | A shipped script is located from the file that names it | Accepted |
+| [012](012-incident-reports.md) | Incident reports are a fifth kind of doc, in a fixed lightweight format | Proposed |
 
 ## Template
 
