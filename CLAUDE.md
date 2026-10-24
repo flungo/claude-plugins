@@ -79,7 +79,7 @@ In brief:
 The authoritative documentation conventions are the `docs-standards` plugin (`plugins/docs-standards/skills/docs-standards/SKILL.md` and its `references/`) — this repo dogfoods them, enabling it at project scope via [`.claude/settings.json`](.claude/settings.json), and its own `docs/` is the plugin's reference implementation (ADR-002).
 In brief:
 
-- **Diátaxis split** — `docs/decisions/` (ADRs), `docs/plans/` (one-time, retired when done), and — when there is content — `docs/runbooks/` (repeatable) and `docs/reference/` (lookup).
+- **Diátaxis split** — `docs/decisions/` (ADRs), `docs/plans/` (one-time, retired when done), and — when there is content — `docs/runbooks/` (repeatable), `docs/reference/` (lookup) and `docs/incidents/` (incident reports).
   Each directory has a `README.md` index kept current **in the same commit** as any change to its documents.
 - **ADRs** use the Nygard format (template in [`docs/decisions/README.md`](docs/decisions/README.md)); numbered sequentially, never deleted or renumbered.
   One overtaken by later work is **amended** — a dated note beneath what changed — rather than rewritten; a new ADR supersedes only when the decision itself no longer holds.
@@ -151,3 +151,4 @@ In short:
 - Prose styles ship as an on-demand `writing-styles` plugin that `agent-plugin-standards` and `docs-standards` both depend on, so the instructional-writing rules are stated once and cited by name; applying nothing until named is what makes it safe to depend on from either scope, and plugin *structure* conventions live in `agent-plugin-standards` ([ADR-009](docs/decisions/009-plugin-authoring-standards.md)).
 - Plugin and skill names keep `claude` and `anthropic` out altogether — the `claude` CLI rejects a plugin name passing as Anthropic's own and claude.ai a skill name containing `claude` — which renamed `claude-code-web` to `cloud-sessions` and `claude-plugin-standards` to `agent-plugin-standards` ([ADR-010](docs/decisions/010-plugin-and-skill-names-avoid-reserved-words.md)).
 - A reference locates a script its plugin ships by a path relative to itself, because `${CLAUDE_PLUGIN_ROOT}` resolves in skill content but not in a reference read from disk nor in the Bash tool's environment; `SKILL.md` names the runnable path, and nothing searches the plugin cache ([ADR-011](docs/decisions/011-locating-a-shipped-script.md)).
+- Incident reports are a fifth kind of doc, `docs/incidents/`, with a required core of Summary, Impact, Timeline, Cause, Resolution and Follow-ups and no team machinery ([ADR-012](docs/decisions/012-incident-reports.md), proposed).
