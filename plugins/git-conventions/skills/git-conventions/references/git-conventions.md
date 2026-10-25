@@ -80,6 +80,12 @@ Never push directly to `main`.
 When a branch is ready, open a PR and let the user merge it.
 After a PR merges, delete the remote branch.
 
+**A PR an agent opens stays a draft until Fabrizio takes it out of draft.**
+He reviews the draft first, and `/ready-to-merge` is the sweep that follows; its last step is what marks the PR ready, so a PR marked ready any earlier tells him a sweep ran that never did.
+Green CI, resolved threads, and a clean history make a draft look mergeable, not ready — leave the draft state alone however complete the PR looks.
+Take a PR out of draft only as the last step of `/ready-to-merge`, or when he asks for that transition in so many words.
+An instruction to drive a PR to a mergeable state, the harness's own wording on subscribing included, asks for the work and never for the transition, however strongly it is worded.
+
 ## Commit signature warnings — expected, not actionable
 
 A hook or check may report merged commits as **Unverified** — no signature, and a committer of the merging user rather than the commit's author.

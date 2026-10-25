@@ -28,6 +28,33 @@ Anything added to it persists into **every future session** that uses it, not ju
 
 > **🤖 Agent** — treat environment changes as global and lasting: only propose adding something (an allowlist entry, an environment variable, a tool) that's appropriate to share across every session using that environment, and confirm with the user before it's added.
 
+## A Projects thread runs on its project's environment
+
+A session started as a thread of a claude.ai Project — the coordinator-and-threads surface, which reports `CLAUDE_CODE_ENTRYPOINT=remote_projects` — runs on the cloud environment **selected in that project's settings**, not one chosen by the session or its repositories.
+A project with none selected runs on a built-in environment that has no settings at all: no setup script, no extra allowed domains, no environment variables.
+`CLAUDE_CODE_REMOTE_ENVIRONMENT_TYPE` reads `cloud_default` there.
+So nothing a setup script installs is present, no marketplace is configured, and no repo's adopted plugins load either (§ A repo's own plugins load only from a marketplace the environment adds).
+What does still arrive is whatever reaches every web session without a setup script (§ User-scope plugins arrive through the environment's setup script).
+
+*Verified 2026-10-25 on Claude Code 2.1.310, in a thread of a project with no environment selected: `claude plugin marketplace list` named only the built-in Anthropic directory, two hosts on the owner's own environment's allowlist were unreachable, and a variable that environment sets was absent.*
+
+> **Verify:** that selecting an environment reaches only threads started afterwards, while a running thread keeps the one it started on — reported when the setting was changed, not observed from inside a thread.
+
+**A slash command is not a command there.**
+The person's messages reach the session wrapped as events rather than typed at a Claude Code prompt, so the input box offers no completion for a skill, and a leading `/name` is never parsed as an invocation.
+A skill still triggers from its description as it does anywhere else.
+
+> **Verify:** that a message beginning `/name` is never run as a command — inferred from how messages arrive, and from the missing completion, not tested by sending one.
+
+<!-- -->
+
+> **🤖 Agent** — in a Projects thread, read a message that names a skill as `/name` as the request to run it, and invoke it with the Skill tool.
+
+<!-- -->
+
+> **🤖 Agent** — when a Projects thread lacks plugins its environment should carry, check `CLAUDE_CODE_REMOTE_ENVIRONMENT_TYPE` before anything else.
+> `cloud_default` means the project has no environment selected, and only the user can select one, in the project's settings; say so rather than installing plugins by hand.
+
 ## Repo scoping and `add_repo`
 
 The session is scoped to a specific set of repositories, **listed individually** in the system prompt — there is no owner-level wildcard, and an owner is rendered lower-case there however GitHub cases it.
