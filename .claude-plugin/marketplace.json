@@ -20,8 +20,8 @@
     {
       "name": "git-conventions",
       "source": "./plugins/git-conventions",
-      "description": "Standing git/PR hygiene conventions (Conventional Commits, linear history, squash-vs-rebase, no fixup commits, force-push policy, which commit signature warnings to ignore, and watching a PR on its subscription's own wakes rather than a recurring self-check-in).",
-      "version": "0.4.0"
+      "description": "Standing git/PR hygiene conventions (Conventional Commits, linear history, squash-vs-rebase, no fixup commits, force-push policy, PRs staying draft until the user takes them out, which commit signature warnings to ignore, and watching a PR on its subscription's own wakes rather than a recurring self-check-in).",
+      "version": "0.5.0"
     },
     {
       "name": "contributor-workflow",
@@ -38,8 +38,8 @@
     {
       "name": "cloud-sessions",
       "source": "./plugins/cloud-sessions",
-      "description": "Working preferences and hard constraints for Claude Code Web — the egress proxy and CA bundle, which parts of the GitHub API the proxy serves and which gh commands therefore fail, containers that reboot around every turn while their disk persists, repo scoping and add_repo's cross-owner rule, project config in a multi-repo session, which marketplace repo-adopted plugins need before they load, why user-scope ones lag the marketplace and how a session updates them for its own next turn, starting another session from inside one and what it does and doesn't inherit, the PR-subscription boilerplate's standing check-in request and why it is declined, why a subscription replays the session's own writes back at it, and delegating unrunnable steps to CI. Environment-agnostic; how the connectors themselves behave lives in connector-conventions, a dependency.",
-      "version": "1.3.0"
+      "description": "Working preferences and hard constraints for Claude Code Web — the egress proxy and CA bundle, which parts of the GitHub API the proxy serves and which gh commands therefore fail, containers that reboot around every turn while their disk persists, repo scoping and add_repo's cross-owner rule, project config in a multi-repo session, which marketplace repo-adopted plugins need before they load, why user-scope ones lag the marketplace and how a session updates them for its own next turn, starting another session from inside one and what it does and doesn't inherit, the PR-subscription boilerplate's standing check-in request and why it is declined, why a subscription replays the session's own writes back at it, which environment a claude.ai Projects thread runs on and why a slash command is not one there, and delegating unrunnable steps to CI. Environment-agnostic; how the connectors themselves behave lives in connector-conventions, a dependency.",
+      "version": "1.4.0"
     },
     {
       "name": "personal-cloud-environment",
