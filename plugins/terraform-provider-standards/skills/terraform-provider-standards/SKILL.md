@@ -13,7 +13,7 @@ These are the conventions that hold for **any** provider in this namespace; anyt
 These are repo-adopted defaults: a repo turns them on in its `.claude/settings.json`, and they **complement its own `CLAUDE.md`, never supersede it** — where the repo specifies something different, follow the repo.
 
 This plugin is provider-authoring specific.
-It does **not** restate the standing git/PR hygiene (branch management, Conventional Commits, linear history, squash-vs-rebase) or the docs discipline (Diátaxis, Nygard ADRs, index maintenance) — those live in `git-conventions` and `docs-standards`, which a provider repo also adopts.
+It does **not** restate the standing git/PR hygiene (branch management, Conventional Commits, linear history, squash-vs-rebase) or the docs discipline (the `docs/` split, Nygard ADRs, index maintenance) — those live in `git-conventions` and `docs-standards`, which a provider repo also adopts.
 
 ## The reference files
 

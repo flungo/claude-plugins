@@ -3,7 +3,7 @@
 The organising model for a repository's `docs/` tree, and the maintenance discipline that keeps it trustworthy.
 Documentation is a first-class deliverable — treat stale docs as a defect, not a cosmetic issue, because a future session reads them as truth.
 
-## The Diátaxis split — five kinds of doc
+## The directory split — five kinds of doc
 
 Docs are either **task-oriented** (how-to) or **information-oriented** (reference), following the [Divio/Diátaxis](https://diataxis.fr/) split; ADRs add a third, **decision-oriented**, kind, and incident reports a fourth, the **record** of what went wrong.
 That yields five directories under `docs/`, each with a `README.md` index:

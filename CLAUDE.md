@@ -79,7 +79,7 @@ In brief:
 The authoritative documentation conventions are the `docs-standards` plugin (`plugins/docs-standards/skills/docs-standards/SKILL.md` and its `references/`) — this repo dogfoods them, enabling it at project scope via [`.claude/settings.json`](.claude/settings.json), and its own `docs/` is the plugin's reference implementation (ADR-002).
 In brief:
 
-- **Diátaxis split** — `docs/decisions/` (ADRs), `docs/plans/` (one-time, retired when done), and — when there is content — `docs/runbooks/` (repeatable), `docs/reference/` (lookup) and `docs/incidents/` (incident reports).
+- **Directory split** — `docs/decisions/` (ADRs), `docs/plans/` (one-time, retired when done), and — when there is content — `docs/runbooks/` (repeatable), `docs/reference/` (lookup) and `docs/incidents/` (incident reports).
   Each directory has a `README.md` index kept current **in the same commit** as any change to its documents.
 - **ADRs** use the Nygard format (template in [`docs/decisions/README.md`](docs/decisions/README.md)); numbered sequentially, never deleted or renumbered.
   One overtaken by later work is **amended** — a dated note beneath what changed — rather than rewritten; a new ADR supersedes only when the decision itself no longer holds.
@@ -142,7 +142,7 @@ See [`docs/decisions/README.md`](docs/decisions/README.md).
 In short:
 
 - Split plugins by enablement scope (personal user-scope vs repo-adopted project-scope); compose via first-party dependencies; reusable CI lives in `github-workflows`, not the marketplace ([ADR-001](docs/decisions/001-marketplace-structure.md)).
-- Diátaxis docs, Nygard ADRs, self-encoded rather than depending on a third-party ADR plugin ([ADR-002](docs/decisions/002-documentation-and-adr-model.md)).
+- A `docs/` directory split, Nygard ADRs, self-encoded rather than depending on a third-party ADR plugin ([ADR-002](docs/decisions/002-documentation-and-adr-model.md)).
 - Markdown authoring conventions ship as the `markdown-standards` plugin here, referenced from the `github-workflows` docs instead of being inlined there or copied into consumer `CLAUDE.md`s ([ADR-004](docs/decisions/004-markdown-standards-plugin.md)).
 - Generalisable guidance and Fabrizio's own applied configuration ship as separate plugins — `cloud-sessions` holds for any user in any environment, `personal-cloud-environment` records his, and depends on it ([ADR-005](docs/decisions/005-generic-plugins-and-personal-configuration.md)).
 - Plugin delivery differs per surface — a cloud-environment setup script carries the user-scope plugins into every cloud session, chat installs from the marketplace as its own enablement decision, and repo-adopted plugins are left at project scope, loading in a cloud session only where its setup script added their marketplace ([ADR-006](docs/decisions/006-plugin-delivery-per-surface.md)).

@@ -10,7 +10,7 @@ The repo itself is often created and configured through the `terraform-github` h
    These are on before any real content lands, so the content is written to standard the first time.
    Enabling a plugin does not necessarily load it into the session that enables it, so where a later step relies on one that is not among your skills, read its `SKILL.md` and `references/` under `plugins/<name>/` in the `flungo/claude-plugins` helper repo (`helper-repos.md`) rather than writing to it from memory.
 2. **Write an initial `CLAUDE.md`** — repo purpose, structure, "Active work", and "Key decisions", **pointing at** the standards plugins and the `github-workflows` CI contract rather than restating them (`docs-standards` owns the doc conventions; the shared-CI reference owns the CI contract).
-3. **Create the `docs/` skeleton** — per `docs-standards` (its Diátaxis model and per-directory indexes; don't restate it here), plus the founding **ADR-001** recording why the repo exists and its core structural choices.
+3. **Create the `docs/` skeleton** — per `docs-standards` (its directory model and per-directory indexes; don't restate it here), plus the founding **ADR-001** recording why the repo exists and its core structural choices.
 4. **Seed a build-out plan** — a `docs/plans/` plan following `docs-standards`' plan lifecycle, tracking the onboarding to completion.
    Start from the generic build-out checklist below and **extend it with the repo's own goals**, and retire it once complete per that lifecycle.
 5. **Adopt the shared CI** — the `github-workflows` family for the repo's type plus `flungo-workflows` (`helper-repos.md`).
@@ -25,7 +25,7 @@ Every fresh owned repo's plan starts from roughly this, then grows repo-specific
 
 - [ ] `.claude/settings.json` — core + type-specific standards plugins enabled.
 - [ ] `CLAUDE.md` — purpose, structure, active work, key decisions, pointers to standards + CI contract.
-- [ ] `docs/` Diátaxis skeleton + indexes + founding ADR-001.
+- [ ] `docs/` skeleton + indexes + founding ADR-001.
 - [ ] Shared CI adopted for the repo type + `flungo-workflows`; repo-specific config (`.tf`, `.markdownlint-cli2.jsonc`, `.goreleaser.yml`, …) added where the family needs it.
 - [ ] First real content stubbed (see below).
 - [ ] *(repo-specific goals appended here)*
