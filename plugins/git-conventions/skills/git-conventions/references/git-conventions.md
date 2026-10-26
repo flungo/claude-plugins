@@ -18,16 +18,85 @@ Apply whatever is relevant to the command you're running — not every command t
 - If `main` is checked out at the start of a session: pull to update, then create a new feature branch before making changes.
 - If a non-`main` branch is already checked out: confirm with the user whether to continue on it or start fresh, before proceeding.
 - Before finishing a task, fetch `origin main`.
-  If it has moved, rebase the feature branch onto it:
+  If it has moved, rebase the feature branch onto it, as § Rebasing onto the base branch describes.
 
-  ```sh
-  git fetch origin main
-  git rebase origin/main   # only if fetch produced new commits
+## Rebasing onto the base branch
+
+Every rebase of a feature branch onto its base follows this section, whether the user asked for it or another rule called for it.
+It has three parts: review what the base brought in, rebase so that the base's changes and your conflict resolutions land in separate pushes, and summarise both for the user.
+
+### Review the incoming changes first
+
+Before rebasing, read what the base gained since the branch last sat on it:
+
+```sh
+git fetch origin <base>
+BASE=$(git rev-parse origin/<base>)        # pin it: every step below uses this sha
+OLD_BASE=$(git merge-base HEAD "$BASE")
+git log --oneline "$OLD_BASE..$BASE"
+git diff --stat "$OLD_BASE" "$BASE"
+```
+
+Judge what those commits mean for the work in hand: the branch's own commits, any uncommitted work, and the rest of the plan for the task.
+Look past textual overlap: a renamed helper, a changed convention, or a decision record the base added can bear on the branch without touching a line it touches.
+
+**Hand the review to a subagent when the incoming changes are large** — more than you could read in full without crowding out the work itself; a few hundred changed lines or more than a handful of commits is a rough mark.
+Give it the range (`$OLD_BASE..$BASE`) to read for itself rather than pasting the diff, and what the branch is for and what is still in progress, and have it report which incoming changes bear on the branch and how.
+That keeps the full diff in its context instead of yours.
+A small range you read yourself.
+
+If anything incoming conflicts with a decision already made on the branch, or is ambiguous about what the branch should now do, stop and ask the user rather than resolving it silently.
+
+### Rebase with the base's changes and your resolutions in separate pushes
+
+The aim is that each force-push shows one thing in GitHub's compare view, so the user can see what the base changed apart from how you resolved it.
+That matters only once someone is looking, so it applies **while a PR is open on the branch**.
+With no PR open, rebase onto `$BASE`, resolve each conflict properly, and push once if the branch is pushed at all.
+
+With a PR open:
+
+1. **Push what is not yet pushed.**
+   First confirm the remote branch holds nothing the local one lacks — anything there you have not seen is someone else's work, to reconcile before going further, never to overwrite.
+   Commit or stash uncommitted work before rebasing; it stays out of these pushes, and stashed work is reapplied once the rebase is done.
+   Then push the local head — a force-push if it rewrote commits already pushed — and record it as `PRE`.
+2. **Find out whether the rebase conflicts.**
+   Run `git rebase "$BASE"`.
+   If it completes without stopping, there is nothing to separate: force-push it and go on to the summary.
+   If it stops on a conflict, `git rebase --abort` and continue below.
+3. **Rebase taking the base's side, and force-push that.**
+   Run `git rebase -X ours "$BASE"`.
+   In a rebase the sides are swapped from a merge: "ours" is the base being rebased onto and "theirs" is the branch's own commit being replayed, so `-X ours` is the one where the base wins.
+   It settles content conflicts silently, but still stops on structural ones (modify/delete, rename/delete, binary); resolve those to the base's side as well — `git checkout --ours -- <path>` where the base has the file, `git rm <path>` where the base deleted it — then `git rebase --continue`.
+   A commit whose every change lost to the base drops out here and returns in the next push; that is expected.
+   Force-push and record the head as `BASE_WINS`.
+4. **Redo the rebase from `PRE`, resolving each conflict properly, and force-push that.**
+   `git reset --hard "$PRE"`, then `git rebase "$BASE"` against the same pinned sha, and resolve each conflict as it stops on by keeping the intent of both sides.
+   Note each conflict and how you resolved it as you go — the summary needs them, and step 3 resolved the same conflicts without leaving any record.
+   With `rerere.enabled`, a resolution recorded earlier can apply itself silently; review every file rerere reports as resolved as you would any other conflict.
+   Before pushing, `git diff --stat "$BASE_WINS" HEAD` must list only files that conflicted in this pass; anything else means the two rebases diverged, and is to be found and fixed before pushing.
+   Force-push and record the head as `RESOLVED`.
+5. **Fold in any adjustment the review called for as its own push.**
+   Changes the incoming commits make necessary beyond the conflicts — a call site to update, a doc to bring in line — go into the commits they belong to as fixups (see "Rebase hygiene" below), in a push after `RESOLVED` rather than mixed into it.
+
+Use the force-push form from § Force-push policy each time, leasing on the head the previous step pushed.
+
+### Summarise the rebase
+
+Report to the user in chat with:
+
+- **What the base brought in that bears on the branch** — each relevant change, how it affects the work, and what you adjusted for it.
+  Say in one line that the rest was not relevant, rather than listing it.
+- **Each conflict and its resolution** — the file, what each side was doing, what you kept, and why.
+- **A GitHub compare link for each push**, from the head before it to the head it pushed, with full shas:
+
+  ```text
+  https://github.com/<owner>/<repo>/compare/<before>..<after>
   ```
 
-  Review what changed upstream (diff, updated docs/decision records) before continuing.
-  If upstream changes affect work already on the branch, fold in the adjustment via amend/fixup (see "Rebase hygiene" below) rather than a new corrective commit.
-  If anything is ambiguous or conflicts with a decision already made on the branch, stop and ask the user — don't silently resolve it.
+  Use two dots: GitHub renders that as a direct comparison between the two commits.
+  Three dots, its default, diffs from their merge base, which shows the wrong thing for a branch rewritten by a rebase.
+  Label each link with what it shows: the commits pushed before rebasing (old remote head to `PRE`), the base's changes taken whole (`PRE` to `BASE_WINS`), the conflict resolutions (`BASE_WINS` to `RESOLVED`), any follow-up adjustments, and the whole rebase end to end.
+  Add the incoming range itself, `$OLD_BASE..$BASE`, so the base's own commits are one click away.
 
 ## Commit message convention
 
