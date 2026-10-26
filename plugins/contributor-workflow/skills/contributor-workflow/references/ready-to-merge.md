@@ -48,8 +48,7 @@ Resolving a thread is the MCP's `resolve_review_thread`, or the `resolveReviewTh
 
 ## 1. Sync with base branch
 
-Fetch the base branch (usually `main`) and rebase if it has moved, per git-conventions.
-Review what changed upstream before continuing — if it affects work on this branch, fold the adjustment in now (fixup/amend, not a new commit).
+Fetch the base branch (usually `main`) and, if it has moved, rebase onto it by the `/rebase` procedure (`references/rebase.md`), carrying its report into step 8.
 
 ## 2. Accuracy — PR description and in-repo status trackers
 
@@ -199,6 +198,7 @@ Never mark ready "provisionally" or because the remaining item seems minor.
 Report back in chat (not as a PR comment) with:
 
 - **Verdict**: ready to merge (and marked as such), or not yet — and exactly what's blocking.
+- The `/rebase` report from step 1, if it rebased.
 - Description edits made, if any.
 - Per unresolved thread you touched: which case it was (already addressed / fixed now) and what you found or changed.
   Don't just say "resolved threads" — list them.

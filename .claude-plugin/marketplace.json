@@ -26,8 +26,8 @@
     {
       "name": "contributor-workflow",
       "source": "./plugins/contributor-workflow",
-      "description": "Personal contributor/review workflow commands (currently /ready-to-merge); depends on git-conventions and connector-conventions.",
-      "version": "0.7.0"
+      "description": "Personal contributor/review workflow commands (/ready-to-merge and /rebase); depends on git-conventions, connector-conventions, and delegation-conventions.",
+      "version": "0.8.0"
     },
     {
       "name": "docs-standards",

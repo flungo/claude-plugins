@@ -1,12 +1,13 @@
 {
   "name": "contributor-workflow",
-  "description": "Fabrizio's personal contributor/review workflow commands — currently /ready-to-merge, a final pre-merge sweep of a PR.",
-  "version": "0.7.0",
+  "description": "Fabrizio's personal contributor/review workflow commands — /ready-to-merge, a final pre-merge sweep of a PR, and /rebase, which brings a branch up to date with its base.",
+  "version": "0.8.0",
   "author": {
     "name": "flungo"
   },
   "dependencies": [
     "git-conventions",
-    "connector-conventions"
+    "connector-conventions",
+    "delegation-conventions"
   ]
 }
